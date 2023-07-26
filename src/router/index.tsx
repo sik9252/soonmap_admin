@@ -3,6 +3,8 @@ import Layout from '../components/Layout';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import CreateCampusPage from '../pages/CampusPage/CreateCampusPage';
+import CampusManagePage from '../pages/CampusPage/CampusManagePage';
 import CreateNoticePage from '../pages/NoticePage/CreateNoticePage';
 import NoticeManagePage from '../pages/NoticePage/NoticeManagePage';
 import CreateInfoPage from '../pages/InfoPage/CreateInfoPage';
@@ -20,6 +22,9 @@ function Router() {
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/campus" element={<Navigate replace to="/campus/create" />} />
+          <Route path="/campus/create" element={<CreateCampusPage />} />
+          <Route path="/campus/manage" element={<CampusManagePage />} />
           <Route path="/notice" element={<Navigate replace to="/notice/create" />} />
           <Route path="/notice/create" element={<CreateNoticePage />} />
           <Route path="/notice/manage" element={<NoticeManagePage />} />
