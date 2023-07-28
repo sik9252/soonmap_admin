@@ -9,6 +9,7 @@ import CreateNoticePage from '../pages/NoticePage/CreateNoticePage';
 import NoticeManagePage from '../pages/NoticePage/NoticeManagePage';
 import CreateInfoPage from '../pages/InfoPage/CreateInfoPage';
 import InfoManagePage from '../pages/InfoPage/InfoManagePage';
+import InfoCategoryManage from '../pages/InfoPage/InfoCategoryManage';
 import AccountManagePage from '../pages/AccountManagePage';
 import NotFoundPage from '../pages/NotFoundPage';
 
@@ -22,17 +23,26 @@ function Router() {
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/campus" element={<Navigate replace to="/campus/create" />} />
-          <Route path="/campus/create" element={<CreateCampusPage />} />
-          <Route path="/campus/manage" element={<CampusManagePage />} />
-          <Route path="/notice" element={<Navigate replace to="/notice/create" />} />
-          <Route path="/notice/create" element={<CreateNoticePage />} />
-          <Route path="/notice/manage" element={<NoticeManagePage />} />
-          <Route path="/info" element={<Navigate replace to="/info/create" />} />
-          <Route path="/info/create" element={<CreateInfoPage />} />
-          <Route path="/info/manage" element={<InfoManagePage />} />
-          <Route path="/account" element={<Navigate replace to="/account/manage" />} />
-          <Route path="/account/manage" element={<AccountManagePage />} />
+          <Route path="/campus/*">
+            <Route path="" element={<Navigate replace to="/notice/create" />} />
+            <Route path="create" element={<CreateCampusPage />} />
+            <Route path="manage" element={<CampusManagePage />} />
+          </Route>
+          <Route path="/notice/*">
+            <Route path="" element={<Navigate replace to="/notice/create" />} />
+            <Route path="create" element={<CreateNoticePage />} />
+            <Route path="manage" element={<NoticeManagePage />} />
+          </Route>
+          <Route path="/info/*">
+            <Route path="" element={<Navigate replace to="/info/create" />} />
+            <Route path="create" element={<CreateInfoPage />} />
+            <Route path="manage" element={<InfoManagePage />} />
+            <Route path="category" element={<InfoCategoryManage />} />
+          </Route>
+          <Route path="/account/*">
+            <Route path="" element={<Navigate replace to="/account/manage" />} />
+            <Route path="manage" element={<AccountManagePage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
