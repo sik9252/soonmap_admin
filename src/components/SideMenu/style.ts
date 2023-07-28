@@ -47,7 +47,7 @@ export const MenuTitle = styled.div`
 export const Item = styled.div<ItemProps>`
   width: 100%;
   font-size: 14px;
-  padding: 5px;
+  padding: 8px 5px;
   cursor: pointer;
 
   & > span {
