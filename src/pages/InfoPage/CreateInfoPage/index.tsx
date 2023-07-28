@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import TextEditor from '../../../components/TextEditor';
-import { ButtonGroup, Button, IconButton, Input } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import { Container, PageTitle, TitleInputSection, ButtonContainer } from './style';
 import SelectUI from '../../../components/SelectUI';
+import InputUI from '../../../components/InputUI';
+import { DefaultButton, FileUploadButton } from '../../../components/ButtonUI';
 
 function CreateInfoPage() {
   const editorRef = useRef(null);
@@ -36,36 +36,14 @@ function CreateInfoPage() {
       <PageTitle>정보 글 업로드</PageTitle>
       <TitleInputSection>
         <SelectUI options={options} />
-        <Input
-          placeholder="제목을 입력해주세요."
-          size="lg"
-          variant="outline"
-          borderColor="gray.300"
-          focusBorderColor="gray.300"
-          _focus={{
-            boxShadow: 'none',
-          }}
-        />
+        <InputUI placeholder={'제목을 입력해주세요.'} />
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} />
       <ButtonContainer>
-        <ButtonGroup size="sm" isAttached variant="outline">
-          <Button>파일 업로드</Button>
-          <IconButton aria-label="Add File" icon={<AddIcon />} />
-        </ButtonGroup>
-        <Button
-          isLoading={isLoading}
-          loadingText="등록 중"
-          bg="#24549C"
-          color="white"
-          _hover={{
-            bg: '#1a478a',
-          }}
-          variant="outline"
-          onClick={() => clickSubmitting()}
-        >
+        <FileUploadButton />
+        <DefaultButton isLoading={isLoading} loadingText="등록 중" onClick={() => clickSubmitting()}>
           게시글 등록
-        </Button>
+        </DefaultButton>
       </ButtonContainer>
     </Container>
   );
