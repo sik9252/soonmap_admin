@@ -1,4 +1,9 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+
+type ItemProps = {
+  $isSelected: boolean;
+};
 
 // SideMenu
 export const SideMenuContainer = styled.div`
@@ -39,12 +44,15 @@ export const MenuTitle = styled.div`
   cursor: pointer;
 `;
 
-export const Item = styled.div`
+export const Item = styled.div<ItemProps>`
+  width: 100%;
   font-size: 14px;
-  margin: 8px 0;
+  padding: 5px;
   cursor: pointer;
 
   & > span {
     padding-right: 3.5px;
   }
+
+  background-color: ${({ $isSelected }) => ($isSelected ? '#1a478a' : 'transparent')};
 `;
