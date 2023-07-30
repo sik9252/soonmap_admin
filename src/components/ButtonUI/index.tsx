@@ -2,15 +2,17 @@ import { ButtonGroup, Button, IconButton } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
 interface ButtonProps {
+  width?: string;
   children: React.ReactNode;
   isLoading?: boolean;
   loadingText?: string;
   onClick: () => void;
 }
 
-export const DefaultButton = ({ children, isLoading, loadingText, onClick }: ButtonProps) => {
+export const DefaultButton = ({ width, children, isLoading, loadingText, onClick }: ButtonProps) => {
   return (
     <Button
+      width={width ? width : ''}
       isLoading={isLoading}
       loadingText={loadingText}
       bg="#24549C"
