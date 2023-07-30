@@ -7,7 +7,7 @@ import InputUI from '../../../components/InputUI';
 import CheckboxUI from '../../../components/CheckboxUI';
 import toast from 'react-hot-toast';
 import { DefaultButton, FileUploadButton } from '../../../components/ButtonUI';
-import { useCreateNoticeRequest } from '../../../api/CreateNotice';
+import { useCreateNoticeRequest } from '../../../api/Notice';
 
 type EditorInstance = Editor | null;
 
