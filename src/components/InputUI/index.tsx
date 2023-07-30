@@ -5,7 +5,7 @@ interface InputProps {
   placeholder: string;
   show?: boolean;
   onClick?: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function InputUI({ width, placeholder, onChange }: InputProps) {
