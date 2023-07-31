@@ -6,11 +6,12 @@ import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 
 interface TextEditorProps {
-  editorRef: React.MutableRefObject<null>;
+  editorRef: React.MutableRefObject<Editor | null>;
   content?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function TextEditor({ editorRef, content }: TextEditorProps) {
+function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
   // useEffect(() => {
   //   if (editorRef.current) {
   //     editorRef.current.getInstance().removeHook('addImageBlobHook');
@@ -52,6 +53,7 @@ function TextEditor({ editorRef, content }: TextEditorProps) {
         ]}
         plugins={[colorSyntax]}
         useCommandShortcut={true}
+        onChange={onChange}
       />
     </div>
   );
