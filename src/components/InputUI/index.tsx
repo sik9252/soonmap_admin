@@ -13,6 +13,7 @@ export default function InputUI({ width, placeholder, onChange }: InputProps) {
     <Input
       width={width ? width : '91%'}
       placeholder={placeholder}
+      fontSize="14px"
       size="lg"
       variant="outline"
       borderColor="gray.300"
