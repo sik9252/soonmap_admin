@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError, AxiosError } from 'axios';
 
+interface MyAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
 export const useAxios = axios.create({
   baseURL: 'http://15.164.249.28:8080',
-  withCredentials: true,
 });
 
 export async function httpClient<T>(config: AxiosRequestConfig) {
@@ -18,19 +21,27 @@ export async function httpClient<T>(config: AxiosRequestConfig) {
 
 useAxios.interceptors.request.use((config) => {
   const ACCESS_TOKEN = localStorage.getItem('accessToken');
-  if (ACCESS_TOKEN) config.headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`;
+
+  // 특정 api 요청에 header 제거하기 위한 코드
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const skipAuthHeader = config.headers?.skipAuthHeader;
+
+  if (ACCESS_TOKEN && !skipAuthHeader && config.headers) {
+    config.headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`;
+  }
+
+  if (skipAuthHeader) {
+    delete config.headers?.skipAuthHeader;
+  }
 
   return config;
 });
-
-interface MyAxiosRequestConfig extends AxiosRequestConfig {
-  _retry?: boolean;
-}
 
 useAxios.interceptors.response.use(
   (response) => {
     return response;
   },
+
   async (error: AxiosError) => {
     const originalRequest = error.config as MyAxiosRequestConfig;
 
@@ -40,18 +51,25 @@ useAxios.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
 
       if (refreshToken) {
-        const response = await useAxios.post<{ accessToken: string }>('/admin/refresh', {
-          refreshToken,
-        });
+        try {
+          const response = await useAxios.post<string>(
+            '/admin/refresh',
+            { refreshToken },
+            { headers: { skipAuthHeader: true } },
+          );
 
-        if (response.status === 200) {
-          localStorage.setItem('accessToken', response.data.accessToken);
+          if (response.status === 200) {
+            localStorage.setItem('accessToken', response.data);
 
-          // 실패한 요청에 대한 액세스 토큰 업데이트 후 요청 다시 실행
-          if (originalRequest && originalRequest.headers) {
-            originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
-            return useAxios.request(originalRequest);
+            if (originalRequest && originalRequest.headers) {
+              originalRequest.headers['Authorization'] = `Bearer ${response.data}`;
+              return useAxios.request(originalRequest);
+            }
           }
+        } catch (error) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          window.location.href = '/login';
         }
       }
     }
