@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
-import TextEditor from '../../../components/TextEditor';
-import { Container, PageTitle, TitleInputSection, ButtonContainer } from './style';
-import SelectUI from '../../../components/SelectUI';
-import InputUI from '../../../components/InputUI';
-import { DefaultButton, FileUploadButton } from '../../../components/ButtonUI';
+import RightContainer from '../../../components/layout/RightContainer';
+import TextEditor from '../../../components/features/TextEditor';
+import { TitleInputSection, ButtonContainer } from './style';
+import SelectUI from '../../../components/ui/SelectUI';
+import InputUI from '../../../components/ui/InputUI';
+import { DefaultButton, FileUploadButton } from '../../../components/ui/ButtonUI';
 
 function CreateInfoPage() {
   const editorRef = useRef(null);
@@ -32,8 +33,7 @@ function CreateInfoPage() {
   };
 
   return (
-    <Container>
-      <PageTitle>정보 글 업로드</PageTitle>
+    <RightContainer title={'정보 글 업로드'}>
       <TitleInputSection>
         <SelectUI options={options} />
         <InputUI placeholder={'제목을 입력해주세요.'} />
@@ -45,7 +45,7 @@ function CreateInfoPage() {
           게시글 등록
         </DefaultButton>
       </ButtonContainer>
-    </Container>
+    </RightContainer>
   );
 }
 

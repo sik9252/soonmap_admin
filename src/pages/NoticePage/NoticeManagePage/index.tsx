@@ -1,16 +1,9 @@
 import { useState } from 'react';
-import {
-  Container,
-  PageTitle,
-  NoticeSection,
-  NoticeListSection,
-  NoticePreviewSection,
-  PreviewTitle,
-  PreviewInfo,
-} from './style';
-import CardUI from '../../../components/CardUI';
-import TextViewer from '../../../components/TextViewer';
-import Pagination from '../../../components/Pagination';
+import RightContainer from '../../../components/layout/RightContainer';
+import { NoticeSection, NoticeListSection, NoticePreviewSection, PreviewTitle, PreviewInfo } from './style';
+import CardUI from '../../../components/ui/CardUI';
+import TextViewer from '../../../components/features/TextViewer';
+import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 
 interface NoticeProps {
@@ -98,8 +91,7 @@ function NoticeManagePage() {
   const postPerPages = 9;
 
   return (
-    <Container>
-      <PageTitle>공지사항 글 관리</PageTitle>
+    <RightContainer title={'공지사항 글 관리'}>
       <NoticeSection>
         <NoticeListSection>
           <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
@@ -125,7 +117,7 @@ function NoticeManagePage() {
           <TextViewer content={previewNotice.content} />
         </NoticePreviewSection>
       </NoticeSection>
-    </Container>
+    </RightContainer>
   );
 }
 

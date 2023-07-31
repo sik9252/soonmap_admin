@@ -1,16 +1,9 @@
 import { useState } from 'react';
-import {
-  Container,
-  PageTitle,
-  InfoSection,
-  InfoListSection,
-  InfoPreviewSection,
-  PreviewTitle,
-  PreviewInfo,
-} from './style';
-import CardUI from '../../../components/CardUI';
-import TextViewer from '../../../components/TextViewer';
-import Pagination from '../../../components/Pagination';
+import RightContainer from '../../../components/layout/RightContainer';
+import { InfoSection, InfoListSection, InfoPreviewSection, PreviewTitle, PreviewInfo } from './style';
+import CardUI from '../../../components/ui/CardUI';
+import TextViewer from '../../../components/features/TextViewer';
+import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 
 interface InfoProps {
@@ -98,8 +91,7 @@ function InfoManagePage() {
   const postPerPages = 9;
 
   return (
-    <Container>
-      <PageTitle>정보 게시판 글 관리</PageTitle>
+    <RightContainer title={'정보 게시판 글 관리'}>
       <InfoSection>
         <InfoListSection>
           <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
@@ -125,7 +117,7 @@ function InfoManagePage() {
           <TextViewer content={previewInfo.content} />
         </InfoPreviewSection>
       </InfoSection>
-    </Container>
+    </RightContainer>
   );
 }
 

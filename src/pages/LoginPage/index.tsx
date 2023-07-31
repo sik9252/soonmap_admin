@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import InputUI, { PasswordInputUI } from '../../components/InputUI';
-import { DefaultButton } from '../../components/ButtonUI';
+import InputUI, { PasswordInputUI } from '../../components/ui/InputUI';
+import { DefaultButton } from '../../components/ui/ButtonUI';
 import toast from 'react-hot-toast';
 import { LoginPageContainer, PageTitle, ButtonSection } from './style';
 import { useLoginRequest } from '../../api/Auth';

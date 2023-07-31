@@ -15,7 +15,7 @@ interface AlertProps {
   setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AlertDialogUI({ isAlertOpen, setIsAlertOpen }: AlertProps) {
+function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
   const cancelRef = useRef(null);
 
   const handleAlertDialog = () => {
@@ -52,4 +52,4 @@ function AlertDialogUI({ isAlertOpen, setIsAlertOpen }: AlertProps) {
   );
 }
 
-export default AlertDialogUI;
+export default AlertDialogModal;
