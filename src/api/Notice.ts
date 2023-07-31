@@ -23,3 +23,33 @@ export function useCreateNoticeRequest() {
     }),
   );
 }
+
+export function useGetNoticeRequest() {
+  return useMutation(() =>
+    httpClient<CreateNoticeResponse>({
+      method: 'GET',
+      // url 수정 필요
+      url: '/admin/notice',
+    }),
+  );
+}
+
+export function useUpdateNoticeRequest() {
+  return useMutation((data: { id: number }) =>
+    httpClient<CreateNoticeResponse>({
+      method: 'PATCH',
+      url: '/admin/notice',
+      data,
+    }),
+  );
+}
+
+export function useDeleteNoticeRequest() {
+  return useMutation((data: { id: number }) =>
+    httpClient<CreateNoticeResponse>({
+      method: 'DELETE',
+      url: '/admin/notice',
+      data,
+    }),
+  );
+}
