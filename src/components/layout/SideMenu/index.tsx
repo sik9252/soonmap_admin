@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SideMenuContainer, ProfileSection, Logo, Title, Item } from './style';
 import MenuSection from './MenuSection';
-import SoonMapWhiteLogo from '../../assets/soonmap_white.png';
+import SoonMapWhiteLogo from '../../../assets/soonmap_white.png';
 import { Menu, MenuButton, MenuList, MenuItem, IconButton } from '@chakra-ui/react';
 import { HamburgerIcon, InfoIcon, SmallCloseIcon } from '@chakra-ui/icons';
 

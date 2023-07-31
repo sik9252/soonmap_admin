@@ -2,8 +2,8 @@ import { useState } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
 import { InfoSection, InfoListSection, InfoPreviewSection, PreviewTitle, PreviewInfo } from './style';
 import CardUI from '../../../components/ui/CardUI';
-import TextViewer from '../../../components/TextViewer';
-import Pagination from '../../../components/Pagination';
+import TextViewer from '../../../components/features/TextViewer';
+import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 
 interface InfoProps {

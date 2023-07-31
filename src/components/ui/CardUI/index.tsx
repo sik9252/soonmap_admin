@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import AlertDialogUI from '../AlertDialogUI';
-import ArticleModifyModal from '../../ArticleModifyModal';
+import AlertDialogModal from '../../features/AlertDialogModal';
+import ArticleModifyModal from '../../features/ArticleModifyModal';
 
 interface CardProps {
   title: string;
@@ -25,7 +25,7 @@ function CardUI({ title, createdAt, writer, onClick }: CardProps) {
 
   return (
     <>
-      <AlertDialogUI isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
+      <AlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
       <ArticleModifyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Card
         cursor={'pointer'}

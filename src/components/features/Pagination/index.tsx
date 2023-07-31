@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PaginationContainer, PageNum, HiddenBtn } from './style';
-import { ReactComponent as PagePrevBtn } from '../../assets/PagePrevBtn.svg';
-import { ReactComponent as PageNextBtn } from '../../assets/PageNextBtn.svg';
+import { ReactComponent as PagePrevBtn } from '../../../assets/PagePrevBtn.svg';
+import { ReactComponent as PageNextBtn } from '../../../assets/PageNextBtn.svg';
 
 interface PaginationProps {
   totalPosts: number;

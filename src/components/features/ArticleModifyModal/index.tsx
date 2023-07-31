@@ -1,19 +1,10 @@
 import { useRef, useState } from 'react';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-} from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react';
 import { Editor } from '@toast-ui/react-editor';
 import TextEditor from '../TextEditor';
-import InputUI from '../ui/InputUI';
-import CheckboxUI from '../ui/CheckboxUI';
-import { FileUploadButton } from '../ui/ButtonUI';
+import InputUI from '../../ui/InputUI';
+import CheckboxUI from '../../ui/CheckboxUI';
+import { FileUploadButton } from '../../ui/ButtonUI';
 import { TitleInputSection, ButtonContainer } from './style';
 
 interface ModalProps {

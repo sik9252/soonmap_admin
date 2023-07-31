@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Table, Thead, Tbody, Tr, Th, TableCaption, TableContainer } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import RightContainer from '../../../components/layout/RightContainer';
-import AlertDialogUI from '../../../components/ui/AlertDialogUI';
+import AlertDialogModal from '../../../components/features/AlertDialogModal';
 import CategoryInput from '../../../components/ui/CategoryUI/CategoryInput';
 import AddMode from '../../../components/ui/CategoryUI/AddMode';
 
@@ -43,7 +43,7 @@ function InfoCategoryManage() {
 
   return (
     <RightContainer title={'정보 게시판 카테고리 관리'}>
-      <AlertDialogUI isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
+      <AlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
       <TableContainer>
         <Table variant="simple">
           <TableCaption>

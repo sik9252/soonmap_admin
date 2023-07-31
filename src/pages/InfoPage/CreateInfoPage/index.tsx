@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
-import TextEditor from '../../../components/TextEditor';
+import TextEditor from '../../../components/features/TextEditor';
 import { TitleInputSection, ButtonContainer } from './style';
 import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';

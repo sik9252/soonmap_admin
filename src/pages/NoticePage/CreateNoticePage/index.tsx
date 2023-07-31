@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Editor } from '@toast-ui/react-editor';
 import RightContainer from '../../../components/layout/RightContainer';
-import TextEditor from '../../../components/TextEditor';
+import TextEditor from '../../../components/features/TextEditor';
 import { TitleInputSection, ButtonContainer } from './style';
 import InputUI from '../../../components/ui/InputUI';
 import CheckboxUI from '../../../components/ui/CheckboxUI';
