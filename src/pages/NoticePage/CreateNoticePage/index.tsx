@@ -1,12 +1,13 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Editor } from '@toast-ui/react-editor';
+import RightContainer from '../../../components/layout/RightContainer';
 import TextEditor from '../../../components/TextEditor';
-import { Container, PageTitle, TitleInputSection, ButtonContainer } from './style';
-import InputUI from '../../../components/InputUI';
-import CheckboxUI from '../../../components/CheckboxUI';
+import { TitleInputSection, ButtonContainer } from './style';
+import InputUI from '../../../components/ui/InputUI';
+import CheckboxUI from '../../../components/ui/CheckboxUI';
 import toast from 'react-hot-toast';
-import { DefaultButton, FileUploadButton } from '../../../components/ButtonUI';
+import { DefaultButton, FileUploadButton } from '../../../components/ui/ButtonUI';
 import { useCreateNoticeRequest } from '../../../api/Notice';
 
 type EditorInstance = Editor | null;
@@ -64,8 +65,7 @@ function CreateNoticePage() {
   }, [adminCreateNoticeData, adminCreateNoticeError]);
 
   return (
-    <Container>
-      <PageTitle>공지사항 글 업로드</PageTitle>
+    <RightContainer title={'공지사항 글 업로드'}>
       <TitleInputSection>
         <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitleInput} />
         <CheckboxUI isChecked={isTopChecked} onChange={() => clickSelectTopNotice()}>
@@ -83,7 +83,7 @@ function CreateNoticePage() {
           게시글 등록
         </DefaultButton>
       </ButtonContainer>
-    </Container>
+    </RightContainer>
   );
 }
 

@@ -1,6 +1,6 @@
 import { LayoutContainer } from './style';
 import { Outlet } from 'react-router-dom';
-import SideMenu from '../SideMenu';
+import SideMenu from '../../SideMenu';
 
 function Layout() {
   return (

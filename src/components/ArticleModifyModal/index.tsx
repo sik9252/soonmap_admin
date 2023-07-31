@@ -11,9 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { Editor } from '@toast-ui/react-editor';
 import TextEditor from '../TextEditor';
-import InputUI from '../InputUI';
-import CheckboxUI from '../CheckboxUI';
-import { FileUploadButton } from '../ButtonUI';
+import InputUI from '../ui/InputUI';
+import CheckboxUI from '../ui/CheckboxUI';
+import { FileUploadButton } from '../ui/ButtonUI';
 import { TitleInputSection, ButtonContainer } from './style';
 
 interface ModalProps {

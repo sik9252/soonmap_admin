@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import AlertDialogUI from '../AlertDialogUI';
-import ArticleModifyModal from '../ArticleModifyModal';
+import ArticleModifyModal from '../../ArticleModifyModal';
 
 interface CardProps {
   title: string;
