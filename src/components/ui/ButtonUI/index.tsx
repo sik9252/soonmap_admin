@@ -10,6 +10,10 @@ interface ButtonProps {
   onClick: () => void;
 }
 
+interface FileButtonProps {
+  fileType?: string;
+}
+
 export const DefaultButton = ({ width, children, isLoading, loadingText, mr, onClick }: ButtonProps) => {
   return (
     <Button
@@ -49,10 +53,10 @@ export const CancelButton = ({ width, children, isLoading, loadingText, onClick 
   );
 };
 
-export const FileUploadButton = () => {
+export const FileUploadButton = ({ fileType }: FileButtonProps) => {
   return (
     <ButtonGroup size="sm" isAttached variant="outline">
-      <Button>파일 업로드</Button>
+      <Button>{fileType ? fileType : '파일'} 업로드</Button>
       <IconButton aria-label="Add File" icon={<AddIcon />} />
     </ButtonGroup>
   );
