@@ -1,5 +1,4 @@
-import { ButtonGroup, Button, IconButton } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { Button } from '@chakra-ui/react';
 
 interface ButtonProps {
   width?: string;
@@ -8,10 +7,6 @@ interface ButtonProps {
   loadingText?: string;
   mr?: string;
   onClick: () => void;
-}
-
-interface FileButtonProps {
-  fileType?: string;
 }
 
 export const DefaultButton = ({ width, children, isLoading, loadingText, mr, onClick }: ButtonProps) => {
@@ -50,14 +45,5 @@ export const CancelButton = ({ width, children, isLoading, loadingText, onClick 
     >
       {children}
     </Button>
-  );
-};
-
-export const FileUploadButton = ({ fileType }: FileButtonProps) => {
-  return (
-    <ButtonGroup size="sm" isAttached variant="outline">
-      <Button>{fileType ? fileType : '파일'} 업로드</Button>
-      <IconButton aria-label="Add File" icon={<AddIcon />} />
-    </ButtonGroup>
   );
 };
