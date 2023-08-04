@@ -34,6 +34,7 @@ export const PasswordInputUI = ({ width, placeholder, show, onClick, onChange }:
         width={width}
         type={show ? 'text' : 'password'}
         placeholder={placeholder}
+        fontSize="14px"
         size="lg"
         variant="outline"
         borderColor="gray.300"

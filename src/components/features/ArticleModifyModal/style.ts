@@ -12,9 +12,7 @@ export const ButtonContainer = styled.div`
   justify-content: space-between;
   padding: 0 24px 50px 24px;
 
-  & > div:nth-child(1) {
-    & > span {
-      margin-right: 10px;
-    }
+  & > div:nth-of-type(1) {
+    width: 80%;
   }
 `;

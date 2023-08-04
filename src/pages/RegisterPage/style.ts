@@ -8,7 +8,7 @@ export const RegisterPageContainer = styled.div`
   transform: translate(-50%, -50%);
 
   & > form {
-    & > input:nth-child(1) {
+    & > input:nth-of-type(1) {
       margin-bottom: 10px;
     }
   }
