@@ -4,7 +4,7 @@ import { Editor } from '@toast-ui/react-editor';
 import TextEditor from '../TextEditor';
 import InputUI from '../../ui/InputUI';
 import CheckboxUI from '../../ui/CheckboxUI';
-import { FileUploadButton } from '../../ui/ButtonUI';
+import { FileUploaderUI } from '../../ui/FileUploaderUI';
 import { TitleInputSection, ButtonContainer } from './style';
 
 interface ModalProps {
@@ -55,8 +55,7 @@ function ArticleModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
           </ModalBody>
           <ButtonContainer>
             <div>
-              <span>기존 파일 링크</span>
-              <FileUploadButton />
+              <FileUploaderUI />
             </div>
             <div>
               <Button onClick={() => handleArticleModifyModal()}>취소</Button>

@@ -7,7 +7,8 @@ import { TitleInputSection, ButtonContainer } from './style';
 import InputUI from '../../../components/ui/InputUI';
 import CheckboxUI from '../../../components/ui/CheckboxUI';
 import toast from 'react-hot-toast';
-import { DefaultButton, FileUploadButton } from '../../../components/ui/ButtonUI';
+import { DefaultButton } from '../../../components/ui/ButtonUI';
+import { FileUploaderUI } from '../../../components/ui/FileUploaderUI';
 import { useCreateNoticeRequest } from '../../../api/Notice';
 
 type EditorInstance = Editor | null;
@@ -74,7 +75,7 @@ function CreateNoticePage() {
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContentInput} />
       <ButtonContainer>
-        <FileUploadButton />
+        <FileUploaderUI />
         <DefaultButton
           isLoading={adminCreateNoticeLoading}
           loadingText="등록 중"

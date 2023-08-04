@@ -4,7 +4,8 @@ import TextEditor from '../../../components/features/TextEditor';
 import { TitleInputSection, ButtonContainer } from './style';
 import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';
-import { DefaultButton, FileUploadButton } from '../../../components/ui/ButtonUI';
+import { DefaultButton } from '../../../components/ui/ButtonUI';
+import { FileUploaderUI } from '../../../components/ui/FileUploaderUI';
 
 function CreateInfoPage() {
   const editorRef = useRef(null);
@@ -40,7 +41,7 @@ function CreateInfoPage() {
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} />
       <ButtonContainer>
-        <FileUploadButton />
+        <FileUploaderUI />
         <DefaultButton isLoading={isLoading} loadingText="등록 중" onClick={() => clickSubmitting()}>
           게시글 등록
         </DefaultButton>
