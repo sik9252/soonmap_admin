@@ -75,7 +75,6 @@ function CreateNoticePage() {
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContentInput} />
       <ButtonContainer>
-        {/* <FileUploadButton /> */}
         <FileUploaderUI />
         <DefaultButton
           isLoading={adminCreateNoticeLoading}

@@ -13,8 +13,6 @@ export const ButtonContainer = styled.div`
   padding: 0 24px 50px 24px;
 
   & > div:nth-of-type(1) {
-    & > span {
-      margin-right: 10px;
-    }
+    width: 80%;
   }
 `;
