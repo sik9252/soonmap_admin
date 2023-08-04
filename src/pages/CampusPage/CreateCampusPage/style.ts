@@ -12,9 +12,8 @@ export const SubContainer = styled.div`
 `;
 
 export const LeftSection = styled.div`
-  width: 49.5%;
+  width: 45%;
   padding: 15px;
-  //box-shadow: 0px 3px 10px #00000029;
 
   & > button {
     position: absolute;
@@ -23,7 +22,7 @@ export const LeftSection = styled.div`
 `;
 
 export const RightSection = styled.div`
-  width: 49.5%;
+  width: 55%;
   height: calc(100vh - 110px);
 `;
 
@@ -42,7 +41,8 @@ export const FloorInputSection = styled.div`
   width: 100%;
   overflow-y: scroll;
   padding: 10px;
-  box-shadow: 0px 3px 10px #00000029;
+  box-shadow: 0px 2px 5px #00000029;
+  border-radius: 5px;
   height: calc(100vh - 140px);
 
   & > div:nth-of-type(1) {

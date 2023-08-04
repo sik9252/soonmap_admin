@@ -2,13 +2,32 @@ import { useState } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
 import { SubTitle, SubContainer, LeftSection, RightSection, InputItem, FloorInputSection, FloorItem } from './style';
 import InputUI from '../../../components/ui/InputUI';
-import { DefaultButton, FileUploadButton } from '../../../components/ui/ButtonUI';
+import { DefaultButton } from '../../../components/ui/ButtonUI';
+import { FloorImageUploaderUI } from '../../../components/ui/FloorImageUploaderUI';
 
 function CreateCampusPage() {
   const [floorCount, setFloorCount] = useState(5);
 
   const handleUploadButton = () => {
     //
+  };
+
+  const [imgPreview, setImgPreview] = useState<string[]>(Array(floorCount).fill(''));
+
+  const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgPreview((prevImgPreview) => [
+          ...prevImgPreview.slice(0, index),
+          reader.result as string,
+          ...prevImgPreview.slice(index + 1),
+        ]);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   return (
@@ -49,7 +68,12 @@ function CreateCampusPage() {
             {Array.from({ length: floorCount }).map((_, index) => (
               <FloorItem key={index}>
                 <div>{index + 1}층</div>
-                <FileUploadButton fileType="도면" />
+                <FloorImageUploaderUI
+                  floorCount={floorCount}
+                  index={index}
+                  imgPreview={imgPreview}
+                  onImageChange={handleImageChange}
+                />
               </FloorItem>
             ))}
           </FloorInputSection>
