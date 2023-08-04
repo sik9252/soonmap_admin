@@ -71,6 +71,7 @@ function CampusManagePage() {
         <Table variant="simple">
           <Thead>
             <Tr>
+              <Th>건물 고유번호</Th>
               <Th>건물 명</Th>
               <Th>건물 정보</Th>
               <Th>건물 층 수</Th>
@@ -81,7 +82,8 @@ function CampusManagePage() {
             {buildingList &&
               buildingList.map((building) => (
                 <Tr>
-                  <Td width="25%">{building.name}</Td>
+                  <Td width="5%">{building.unique_num}</Td>
+                  <Td width="20%">{building.name}</Td>
                   <Td width="45%">{building.description}</Td>
                   <Td width="15%">{building.floors} 층</Td>
                   <Td width="10%">
