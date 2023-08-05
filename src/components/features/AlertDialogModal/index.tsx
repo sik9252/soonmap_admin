@@ -53,3 +53,40 @@ function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
 }
 
 export default AlertDialogModal;
+
+export const BanAlertDialogModal = ({ isAlertOpen, setIsAlertOpen }: AlertProps) => {
+  const cancelRef = useRef(null);
+
+  const handleBanAlertDialog = () => {
+    setIsAlertOpen(false);
+  };
+
+  const handleAccountBan = () => {
+    // 계정 정지하기
+  };
+
+  return (
+    <AlertDialog
+      motionPreset="slideInBottom"
+      leastDestructiveRef={cancelRef}
+      onClose={() => handleBanAlertDialog()}
+      isOpen={isAlertOpen}
+      isCentered
+    >
+      <AlertDialogOverlay />
+      <AlertDialogContent>
+        <AlertDialogHeader>해당 계정을 정지하시겠습니까?</AlertDialogHeader>
+        <AlertDialogCloseButton />
+        {/* <AlertDialogBody>삭제하면 복구할 수 없습니다.</AlertDialogBody> */}
+        <AlertDialogFooter>
+          <Button ref={cancelRef} onClick={() => handleBanAlertDialog()}>
+            취소
+          </Button>
+          <Button colorScheme="red" ml={3} onClick={() => handleAccountBan()}>
+            정지
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
