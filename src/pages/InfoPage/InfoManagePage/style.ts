@@ -20,9 +20,14 @@ export const InfoListSection = styled.div`
   }
 `;
 
+export const SearchSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const InfoPreviewSection = styled.div`
   width: 40%;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 110px);
   margin-left: 10px;
   box-shadow: 0px 3px 10px #00000029;
   border-radius: 6px;

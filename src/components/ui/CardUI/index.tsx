@@ -28,6 +28,7 @@ function CardUI({ title, createdAt, writer, onClick }: CardProps) {
       <AlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
       <ArticleModifyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Card
+        height="180px"
         cursor={'pointer'}
         _hover={{
           bg: '#eee',
@@ -37,7 +38,7 @@ function CardUI({ title, createdAt, writer, onClick }: CardProps) {
         <CardHeader>
           <Heading size="md">{title}</Heading>
         </CardHeader>
-        <CardBody>
+        <CardBody pt="5px" pb="5px">
           <Text fontSize={14}>작성자: {writer}</Text>
           <Text fontSize={14}>작성일: {createdAt}</Text>
         </CardBody>
