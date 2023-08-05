@@ -1,7 +1,16 @@
 import { useState } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
-import { NoticeSection, NoticeListSection, NoticePreviewSection, PreviewTitle, PreviewInfo } from './style';
+import {
+  NoticeSection,
+  SearchSection,
+  NoticeListSection,
+  NoticePreviewSection,
+  PreviewTitle,
+  PreviewInfo,
+} from './style';
 import CardUI from '../../../components/ui/CardUI';
+import SearchUI from '../../../components/ui/SearchUI';
+import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
@@ -94,6 +103,10 @@ function NoticeManagePage() {
     <RightContainer title={'공지사항 글 관리'}>
       <NoticeSection>
         <NoticeListSection>
+          <SearchSection>
+            <SearchUI placeholder="검색어를 입력해주세요." />
+            <DatePickerUI />
+          </SearchSection>
           <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
             {noticeList &&
               noticeList.map((notice) => (

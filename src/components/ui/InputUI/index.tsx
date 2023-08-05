@@ -21,7 +21,7 @@ export default function InputUI({ width, placeholder, onChange }: InputProps) {
       _focus={{
         boxShadow: 'none',
       }}
-      backgroundColor="#ffffff"
+      backgroundColor="transparent"
       onChange={onChange}
     />
   );
