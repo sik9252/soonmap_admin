@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
-import { InfoSection, InfoListSection, InfoPreviewSection, PreviewTitle, PreviewInfo } from './style';
+import { InfoSection, InfoListSection, SearchSection, InfoPreviewSection, PreviewTitle, PreviewInfo } from './style';
 import CardUI from '../../../components/ui/CardUI';
+import SearchUI from '../../../components/ui/SearchUI';
+import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
@@ -94,6 +96,10 @@ function InfoManagePage() {
     <RightContainer title={'정보 게시판 글 관리'}>
       <InfoSection>
         <InfoListSection>
+          <SearchSection>
+            <SearchUI placeholder="검색어를 입력해주세요." />
+            <DatePickerUI />
+          </SearchSection>
           <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
             {infoList &&
               infoList.map((Info) => (
