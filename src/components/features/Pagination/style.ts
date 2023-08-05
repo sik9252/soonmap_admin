@@ -10,7 +10,7 @@ export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px 0px 40px 0px;
+  padding: 30px 0px 10px 0px;
 
   & > svg {
     cursor: pointer;
