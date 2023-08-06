@@ -4,11 +4,12 @@ interface InputProps {
   width?: string;
   placeholder: string;
   show?: boolean;
+  defaultValue?: string;
   onClick?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function InputUI({ width, placeholder, onChange }: InputProps) {
+export default function InputUI({ width, placeholder, defaultValue, onChange }: InputProps) {
   return (
     <Input
       width={width ? width : '91%'}
@@ -23,6 +24,7 @@ export default function InputUI({ width, placeholder, onChange }: InputProps) {
       }}
       backgroundColor="transparent"
       onChange={onChange}
+      defaultValue={defaultValue}
     />
   );
 }
