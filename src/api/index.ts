@@ -8,9 +8,9 @@ export const useAxios = axios.create({
   baseURL: 'http://15.164.249.28:8080',
 });
 
-export async function httpClient<T>(config: AxiosRequestConfig) {
+export async function httpClient<T>(config: AxiosRequestConfig, headers?: Record<string, string>) {
   try {
-    const response: AxiosResponse<T> = await useAxios.request(config);
+    const response: AxiosResponse<T> = await useAxios.request({ ...config, headers: headers });
     return response;
   } catch (error) {
     if (isAxiosError<AxiosError>(error)) {
