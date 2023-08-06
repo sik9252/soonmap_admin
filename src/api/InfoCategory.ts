@@ -12,6 +12,21 @@ interface CategoryResponse {
   articleTypeList: [];
 }
 
+interface AllCategoryResponse {
+  id: number;
+  typeName: string;
+  description: string;
+}
+
+export function useGetAllCategoryRequest() {
+  return useMutation(() =>
+    httpClient<AllCategoryResponse[]>({
+      method: 'GET',
+      url: `/admin/article/category`,
+    }),
+  );
+}
+
 export function useGetCategoryRequest() {
   return useMutation((page: number) =>
     httpClient<CategoryResponse>({
