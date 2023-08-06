@@ -17,12 +17,7 @@ interface TextEditorProps {
 }
 
 function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
-  const {
-    mutateAsync: uploadImageRequest,
-    data: uploadImageData,
-    error: uploadImageError,
-    isLoading: uploadImageLoading,
-  } = useUploadImageRequest();
+  const { mutateAsync: uploadImageRequest, error: uploadImageError } = useUploadImageRequest();
 
   useEffect(() => {
     const editorInstance = editorRef.current?.getInstance();
@@ -31,11 +26,9 @@ function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
       editorInstance.addHook('addImageBlobHook', (blob: Blob, callback: (url: string, altText: string) => void) => {
         void (async () => {
           try {
-            await uploadImageRequest({ image: blob });
-            if (uploadImageData) {
-              console.log(typeof uploadImageData.data);
-              callback(uploadImageData.data, 'alt text');
-            }
+            await uploadImageRequest({ image: blob }).then((res) => {
+              if (res) callback(res.data, '');
+            });
           } catch (error) {
             toast.error((uploadImageError as Error).message);
           }

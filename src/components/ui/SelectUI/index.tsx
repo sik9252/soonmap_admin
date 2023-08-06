@@ -27,7 +27,7 @@ function SelectUI({ options, handleCategory }: SelectProps) {
       mr="10px"
     >
       {options.map((option) => (
-        <option key={option.id} value={option.typeName}>
+        <option key={option.id} value={Number(option.id)}>
           {option.typeName}
         </option>
       ))}
