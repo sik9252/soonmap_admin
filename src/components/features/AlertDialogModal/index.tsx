@@ -22,9 +22,12 @@ interface AlertProps {
 function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlertOpen }: AlertProps) {
   const cancelRef = useRef(null);
 
-  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
-    page: 0,
-  });
+  const { refetch: getCategoryRefetch } = useGetCategoryRequest(
+    {
+      page: 0,
+    },
+    false,
+  );
 
   const {
     mutate: categoryDeleteRequest,

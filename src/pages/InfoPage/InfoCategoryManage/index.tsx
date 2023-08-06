@@ -24,17 +24,9 @@ function InfoCategoryManage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
 
-  const {
-    data: categoryResult,
-    isError: categoryError,
-    refetch: getCategoryRefetch,
-  } = useGetCategoryRequest({
+  const { data: categoryResult, isError: categoryError } = useGetCategoryRequest({
     page: currentPage - 1,
   });
-
-  useEffect(() => {
-    void getCategoryRefetch();
-  }, [currentPage]);
 
   useEffect(() => {
     if (categoryResult) {

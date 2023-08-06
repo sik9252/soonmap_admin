@@ -31,13 +31,16 @@ export function useGetAllCategoryRequest() {
   );
 }
 
-export function useGetCategoryRequest(params: CategoryQueryRequest) {
-  return useQuery([`/admin/article/category/page?page=${params.page}`, params], () =>
-    httpClient<CategoryResponse>({
-      method: 'GET',
-      url: `/admin/article/category/page?page=${params.page}`,
-      params: params,
-    }),
+// 해당 호출을 적용한 컴포넌트 렌더링 시 바로 query가 실행되지 않고 트리거 발생시 refetch 등을 통해 실행되게 하려면 isEnabled 속성 추가하기
+export function useGetCategoryRequest(params: CategoryQueryRequest, isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/article/category/page?page=${params.page}`, params],
+    () =>
+      httpClient<CategoryResponse>({
+        method: 'GET',
+        url: `/admin/article/category/page?page=${params.page}`,
+      }),
+    { enabled: isEnabled },
   );
 }
 
