@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,14 +9,25 @@ import {
   AlertDialogCloseButton,
   Button,
 } from '@chakra-ui/react';
+import { useDeleteCategoryRequest } from '../../../api/InfoCategory';
+import toast from 'react-hot-toast';
 
 interface AlertProps {
+  location: string;
+  selectedItemIndex: number;
   isAlertOpen: boolean;
   setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
+function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlertOpen }: AlertProps) {
   const cancelRef = useRef(null);
+
+  const {
+    mutate: categoryDeleteRequest,
+    data: categoryDeleteData,
+    error: categoryDeleteError,
+    isLoading: categoryDeleteLoading,
+  } = useDeleteCategoryRequest();
 
   const handleAlertDialog = () => {
     setIsAlertOpen(false);
@@ -24,7 +35,19 @@ function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
 
   const handleDelete = () => {
     // 삭제 요청, url 파싱헤서 카테고리면 카테고리에 공지사항이면 공지사항에 요청?
+    if (location === '카테고리') {
+      categoryDeleteRequest({ id: selectedItemIndex });
+    }
   };
+
+  useEffect(() => {
+    if (categoryDeleteData) {
+      toast.success('삭제되었습니다.');
+      setIsAlertOpen(false);
+    } else if (categoryDeleteError) {
+      toast.error((categoryDeleteError as Error).message);
+    }
+  }, [categoryDeleteData, categoryDeleteError]);
 
   return (
     <AlertDialog
