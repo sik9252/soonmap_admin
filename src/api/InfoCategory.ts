@@ -1,5 +1,5 @@
 import { httpClient } from '.';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 interface CategoryRequestProps {
   id?: number;
@@ -18,8 +18,12 @@ interface AllCategoryResponse {
   description: string;
 }
 
+interface CategoryQueryRequest {
+  page: number;
+}
+
 export function useGetAllCategoryRequest() {
-  return useMutation(() =>
+  return useQuery([`/admin/article/category`], () =>
     httpClient<AllCategoryResponse[]>({
       method: 'GET',
       url: `/admin/article/category`,
@@ -27,11 +31,12 @@ export function useGetAllCategoryRequest() {
   );
 }
 
-export function useGetCategoryRequest() {
-  return useMutation((page: number) =>
+export function useGetCategoryRequest(params: CategoryQueryRequest) {
+  return useQuery([`/admin/article/category/page?page=${params.page}`, params], () =>
     httpClient<CategoryResponse>({
       method: 'GET',
-      url: `/admin/article/category/page?page=${page}`,
+      url: `/admin/article/category/page?page=${params.page}`,
+      params: params,
     }),
   );
 }

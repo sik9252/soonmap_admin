@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
 import InputUI from '../../InputUI';
 import { DefaultButton, CancelButton } from '../../ButtonUI';
-import { useCreateCategoryRequest } from '../../../../api/InfoCategory';
+import { useCreateCategoryRequest, useGetCategoryRequest } from '../../../../api/InfoCategory';
 import toast from 'react-hot-toast';
 
 interface AddModeProps {
@@ -10,6 +10,10 @@ interface AddModeProps {
 }
 
 function AddMode({ setIsAddClick }: AddModeProps) {
+  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
+    page: 0,
+  });
+
   const {
     mutate: categoryCreateRequest,
     data: categoryCreateData,
@@ -40,6 +44,7 @@ function AddMode({ setIsAddClick }: AddModeProps) {
     if (categoryCreateData) {
       toast.success('카테고리 등록에 성공하였습니다.');
       setIsAddClick(false);
+      void getCategoryRefetch();
     } else if (categoryCreateError) {
       toast.error((categoryCreateError as Error).message);
     }

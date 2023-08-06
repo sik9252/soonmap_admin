@@ -16,13 +16,6 @@ interface CategoryType {
 }
 
 function InfoCategoryManage() {
-  const {
-    mutate: categoryGetRequest,
-    data: categoryGetData,
-    error: categoryGetError,
-    isLoading: categoryGetLoading,
-  } = useGetCategoryRequest();
-
   const [categoryList, setCategoryList] = useState<CategoryType[] | null>([]);
   const [isAddClick, setIsAddClick] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -31,18 +24,26 @@ function InfoCategoryManage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
 
-  useEffect(() => {
-    categoryGetRequest(currentPage - 1);
-  }, [currentPage, isAddClick, isAlertOpen]);
+  const {
+    data: categoryResult,
+    isError: categoryError,
+    refetch: getCategoryRefetch,
+  } = useGetCategoryRequest({
+    page: currentPage - 1,
+  });
 
   useEffect(() => {
-    if (categoryGetData) {
-      setCategoryList(categoryGetData?.data.articleTypeList);
-      setTotalPosts(categoryGetData?.data.totalPage);
-    } else if (categoryGetError) {
-      toast.error((categoryGetError as Error).message);
+    void getCategoryRefetch();
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (categoryResult) {
+      setCategoryList(categoryResult?.data.articleTypeList);
+      setTotalPosts(categoryResult?.data.totalPage);
+    } else if (categoryError) {
+      toast.error('카테고리 목록을 불러오는데 실패했습니다.');
     }
-  }, [categoryGetData, categoryGetError]);
+  }, [categoryResult, categoryError]);
 
   const handleCategoryAddButton = () => {
     setIsAddClick(true);

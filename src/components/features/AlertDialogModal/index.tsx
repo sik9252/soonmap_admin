@@ -9,7 +9,7 @@ import {
   AlertDialogCloseButton,
   Button,
 } from '@chakra-ui/react';
-import { useDeleteCategoryRequest } from '../../../api/InfoCategory';
+import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api/InfoCategory';
 import toast from 'react-hot-toast';
 
 interface AlertProps {
@@ -21,6 +21,10 @@ interface AlertProps {
 
 function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlertOpen }: AlertProps) {
   const cancelRef = useRef(null);
+
+  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
+    page: 0,
+  });
 
   const {
     mutate: categoryDeleteRequest,
@@ -43,6 +47,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
   useEffect(() => {
     if (categoryDeleteData) {
       toast.success('삭제되었습니다.');
+      void getCategoryRefetch();
       setIsAlertOpen(false);
     } else if (categoryDeleteError) {
       toast.error((categoryDeleteError as Error).message);
