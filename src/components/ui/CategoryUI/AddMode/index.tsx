@@ -36,7 +36,7 @@ function AddMode({ setIsAddClick }: AddModeProps) {
     if (!categoryName || !categoryDescription) {
       toast.error('카테고리명과 설명은 필수값입니다.');
     } else {
-      categoryCreateRequest({ name: categoryName, description: categoryDescription });
+      categoryCreateRequest({ typeName: categoryName, description: categoryDescription });
     }
   };
 

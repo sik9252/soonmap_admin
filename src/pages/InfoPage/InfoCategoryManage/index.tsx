@@ -16,7 +16,7 @@ interface CategoryType {
 }
 
 function InfoCategoryManage() {
-  const [categoryList, setCategoryList] = useState<CategoryType[] | null>([]);
+  const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
   const [isAddClick, setIsAddClick] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [location, setLocation] = useState('');

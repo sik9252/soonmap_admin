@@ -35,10 +35,16 @@ function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
   };
 
   const handleUpdate = () => {
+    const data = {
+      id: category.id,
+      typeName: categoryName,
+      description: categoryDescription,
+    };
+
     if (!categoryName || !categoryDescription) {
       toast.error('카테고리명과 설명은 필수값입니다.');
     } else {
-      categoryUpdateRequest({ id: category.id, name: categoryName, description: categoryDescription });
+      categoryUpdateRequest({ ...data });
     }
   };
 
