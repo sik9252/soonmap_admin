@@ -11,8 +11,8 @@ type TodoItemViewerProps = {
 function ViewMode({ category, onChangeEditMode, handleAlertDialog }: TodoItemViewerProps) {
   return (
     <Tr>
-      <Td width="30%">{category.categoryName}</Td>
-      <Td width="50%">{category.categoryDescription}</Td>
+      <Td width="30%">{category.typeName}</Td>
+      <Td width="50%">{category.description}</Td>
       <Td width="20%">
         <EditIcon mr="10px" cursor={'pointer'} onClick={onChangeEditMode} />
         <DeleteIcon cursor={'pointer'} onClick={handleAlertDialog} />

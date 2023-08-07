@@ -1,17 +1,17 @@
 import { Select } from '@chakra-ui/react';
-
-type OptionType = {
-  id: number;
-  value: string;
-};
+import { CategoryDataType } from '../../../api/InfoCategory';
 
 interface SelectProps {
-  options: OptionType[];
+  options: CategoryDataType[];
+  defaultValue?: string;
+  handleCategory: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-function SelectUI({ options }: SelectProps) {
+function SelectUI({ options, defaultValue, handleCategory }: SelectProps) {
   return (
     <Select
+      onChange={handleCategory}
+      defaultValue={defaultValue}
       placeholder="카테고리를 선택하세요."
       variant="outline"
       borderColor="gray.300"
@@ -24,8 +24,8 @@ function SelectUI({ options }: SelectProps) {
       mr="10px"
     >
       {options.map((option) => (
-        <option key={option.id} value={option.value}>
-          {option.value}
+        <option key={option.id} value={option.typeName}>
+          {option.typeName}
         </option>
       ))}
     </Select>

@@ -18,7 +18,7 @@ export const FileUploaderUI = () => {
         </Button>
         <IconButton as="label" htmlFor="file" aria-label="Add File" icon={<AddIcon />} cursor={'pointer'} />
       </ButtonGroup>
-      <StyledFileInput placeholder="" value={FileName} />
+      <StyledFileInput placeholder="" defaultValue={FileName} />
       <input type="file" id="file" onChange={changeFileName} />
     </FileUploaderContainer>
   );

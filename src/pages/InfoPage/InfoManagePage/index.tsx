@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
 import { InfoSection, InfoListSection, SearchSection, InfoPreviewSection, PreviewTitle, PreviewInfo } from './style';
 import CardUI from '../../../components/ui/CardUI';
@@ -7,90 +7,34 @@ import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
-
-interface InfoProps {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  writer: string;
-}
+import { useGetInfoRequest } from '../../../api/Info';
+import toast from 'react-hot-toast';
+import { InfoDataType } from '../../../api/Info';
+import { useSelectedArticleAtom } from '../../../store/articleAtom';
 
 function InfoManagePage() {
-  const [infoList, setInfoList] = useState([
-    {
-      id: 1,
-      title: '정보 1',
-      content: '정보 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 2,
-      title: '정보 2',
-      content: '정보 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 3,
-      title: '정보 3',
-      content: '정보 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 4,
-      title: '정보 1',
-      content: '정보 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 5,
-      title: '정보 2',
-      content: '정보 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 6,
-      title: '정보 3',
-      content: '정보 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 7,
-      title: '정보 1',
-      content: '정보 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 8,
-      title: '정보 2',
-      content: '정보 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 9,
-      title: '정보 3',
-      content: '정보 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-  ]);
-  const [previewInfo, setPreviewInfo] = useState(infoList[0]);
+  const [infoList, setInfoList] = useState<InfoDataType[] | null>([]);
+  const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
 
-  const handleInfoPreview = (Info: InfoProps) => {
-    setPreviewInfo(Info);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(1);
+
+  const { data: infoResult, isError: infoError } = useGetInfoRequest({
+    page: currentPage - 1,
+  });
+
+  useEffect(() => {
+    if (infoResult) {
+      setInfoList(infoResult?.data.articleList);
+      setTotalPosts(infoResult?.data.totalPage);
+    } else if (infoError) {
+      toast.error('정보 글 목록을 불러오는데 실패했습니다.');
+    }
+  }, [infoResult, infoError]);
+
+  const handleInfoPreview = (info: InfoDataType) => {
+    setSelectedArticle(info);
   };
-
-  // 테스트용 총 페이지 수
-  const totalPosts = 56;
-  const postPerPages = 9;
 
   return (
     <RightContainer title={'정보 게시판 글 관리'}>
@@ -100,27 +44,40 @@ function InfoManagePage() {
             <SearchUI placeholder="검색어를 입력해주세요." />
             <DatePickerUI />
           </SearchSection>
-          <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-            {infoList &&
-              infoList.map((Info) => (
-                <CardUI
-                  key={Info.id}
-                  title={Info.title}
-                  createdAt={Info.createdAt}
-                  writer={Info.writer}
-                  onClick={() => handleInfoPreview(Info)}
-                />
-              ))}
-          </SimpleGrid>
-          <Pagination totalPosts={totalPosts} postPerPages={postPerPages} />
+          {infoList && infoList.length > 0 ? (
+            <>
+              <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
+                {infoList &&
+                  infoList.map((info) => (
+                    <CardUI key={info.id} infoData={info} onClick={() => handleInfoPreview(info)} />
+                  ))}
+              </SimpleGrid>
+              <Pagination
+                totalPosts={totalPosts * 9}
+                postPerPages={9}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
+          ) : (
+            <div>게시글이 없습니다.</div>
+          )}
         </InfoListSection>
         <InfoPreviewSection>
-          <PreviewTitle>{previewInfo.title}</PreviewTitle>
-          <PreviewInfo>
-            <span>작성자: {previewInfo.writer}</span>
-            <span>작성일: {previewInfo.createdAt}</span>
-          </PreviewInfo>
-          <TextViewer content={previewInfo.content} />
+          {selectedArticle.title ? (
+            <>
+              <PreviewTitle>
+                [{selectedArticle.articleTypeName}] {selectedArticle.title}
+              </PreviewTitle>
+              <PreviewInfo>
+                <span>작성자: {selectedArticle.writer}</span>
+                <span>작성일: {selectedArticle.createAt?.slice(0, 10)}</span>
+              </PreviewInfo>
+              <TextViewer content={selectedArticle.content} />
+            </>
+          ) : (
+            <PreviewTitle>선택된 게시글이 없습니다.</PreviewTitle>
+          )}
         </InfoPreviewSection>
       </InfoSection>
     </RightContainer>

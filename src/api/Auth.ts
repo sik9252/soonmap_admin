@@ -9,9 +9,9 @@ interface AuthRequestProps {
 
 interface AuthResponse {
   success: boolean;
-  isAdmin: boolean;
-  isManager: boolean;
-  isStaff: boolean;
+  admin: boolean;
+  manager: boolean;
+  staff: boolean;
   accessToken: string;
   refreshToken: string;
 }

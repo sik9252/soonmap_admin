@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SideMenuContainer, ProfileSection, Logo, Title, Item } from './style';
 import MenuSection from './MenuSection';
@@ -10,8 +10,24 @@ function SideMenu() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
+  const [isStaff, setIsStaff] = useState(false);
+
+  useEffect(() => {
+    const hierarchy = localStorage.getItem('auth');
+
+    if (hierarchy === 'one') {
+      setIsAdmin(true);
+      setIsManager(true);
+      setIsStaff(true);
+    } else if (hierarchy === 'two') {
+      setIsManager(true);
+      setIsStaff(true);
+    } else if (hierarchy === 'three') {
+      setIsStaff(true);
+    }
+  }, []);
 
   const goToPage = (url: string) => {
     navigate(url);
