@@ -15,8 +15,8 @@ import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 
 interface AlertProps {
-  location: string;
-  selectedItemIndex: number;
+  location?: string;
+  selectedItemIndex?: number;
   isAlertOpen: boolean;
   setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

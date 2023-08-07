@@ -1,22 +1,44 @@
 import { httpClient } from '.';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-interface CreateNoticeRequestProps {
-  title: string;
-  content: string;
-  isTop: boolean;
-  isExistImage: null;
+export interface NoticeDataType {
+  id?: number;
+  title?: string;
+  content?: string;
+  createAt?: string;
+  writer?: string;
+  isTop?: boolean;
+  view?: number;
 }
 
-interface CreateNoticeResponse {
+export interface NoticeResponseType extends NoticeDataType {
   success: boolean;
-  id: number;
-  title: string;
+}
+
+export interface NoticeQueryRequestType {
+  page: number;
+}
+
+export interface NoticeQueryResponseType {
+  totalPage: number;
+  articleList: [];
+}
+
+export function useGetNoticeRequest(params: NoticeQueryRequestType, isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/notice?page=${params.page}`, params],
+    () =>
+      httpClient<NoticeQueryResponseType>({
+        method: 'GET',
+        url: `/admin/notice?page=${params.page}`,
+      }),
+    { enabled: isEnabled },
+  );
 }
 
 export function useCreateNoticeRequest() {
-  return useMutation((data: CreateNoticeRequestProps) =>
-    httpClient<CreateNoticeResponse>({
+  return useMutation((data: NoticeDataType) =>
+    httpClient<NoticeResponseType>({
       method: 'POST',
       url: '/admin/notice',
       data,
@@ -24,19 +46,9 @@ export function useCreateNoticeRequest() {
   );
 }
 
-export function useGetNoticeRequest() {
-  return useMutation(() =>
-    httpClient<CreateNoticeResponse>({
-      method: 'GET',
-      // url 수정 필요
-      url: '/admin/notice',
-    }),
-  );
-}
-
 export function useUpdateNoticeRequest() {
   return useMutation((data: { id: number }) =>
-    httpClient<CreateNoticeResponse>({
+    httpClient<NoticeResponseType>({
       method: 'PATCH',
       url: '/admin/notice',
       data,
@@ -46,7 +58,7 @@ export function useUpdateNoticeRequest() {
 
 export function useDeleteNoticeRequest() {
   return useMutation((data: { id: number }) =>
-    httpClient<CreateNoticeResponse>({
+    httpClient<NoticeResponseType>({
       method: 'DELETE',
       url: '/admin/notice',
       data,

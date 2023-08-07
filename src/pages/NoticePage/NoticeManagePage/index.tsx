@@ -15,89 +15,25 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 
-interface NoticeProps {
+interface NoticeType {
   id: number;
   title: string;
   content: string;
-  createdAt: string;
+  createAt: string;
   writer: string;
+  isTop: boolean;
+  view: number;
 }
 
 function NoticeManagePage() {
-  const [noticeList, setNoticeList] = useState([
-    {
-      id: 1,
-      title: '공지 1',
-      content: '공지 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 2,
-      title: '공지 2',
-      content: '공지 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 3,
-      title: '공지 3',
-      content: '공지 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 4,
-      title: '공지 1',
-      content: '공지 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 5,
-      title: '공지 2',
-      content: '공지 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 6,
-      title: '공지 3',
-      content: '공지 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 7,
-      title: '공지 1',
-      content: '공지 1 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 8,
-      title: '공지 2',
-      content: '공지 2 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-    {
-      id: 9,
-      title: '공지 3',
-      content: '공지 3 내용',
-      createdAt: '2023.08.01',
-      writer: '관리자',
-    },
-  ]);
-  const [previewNotice, setPreviewNotice] = useState(noticeList[0]);
+  const [noticeList, setNoticeList] = useState<NoticeType[] | null>([]);
+  const [previewNotice, setPreviewNotice] = useState<NoticeType | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(1);
 
-  const handleNoticePreview = (notice: NoticeProps) => {
+  const handleNoticePreview = (notice: NoticeType) => {
     setPreviewNotice(notice);
   };
-
-  // 테스트용 총 페이지 수
-  const totalPosts = 56;
-  const postPerPages = 9;
 
   return (
     <RightContainer title={'공지사항 글 관리'}>
@@ -107,27 +43,38 @@ function NoticeManagePage() {
             <SearchUI placeholder="검색어를 입력해주세요." />
             <DatePickerUI />
           </SearchSection>
-          <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-            {noticeList &&
-              noticeList.map((notice) => (
-                <CardUI
-                  key={notice.id}
-                  title={notice.title}
-                  createdAt={notice.createdAt}
-                  writer={notice.writer}
-                  onClick={() => handleNoticePreview(notice)}
-                />
-              ))}
-          </SimpleGrid>
-          <Pagination totalPosts={totalPosts} postPerPages={postPerPages} />
+          {noticeList && noticeList.length > 0 ? (
+            <>
+              <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
+                {noticeList &&
+                  noticeList.map((notice) => (
+                    <CardUI key={notice.id} noticeData={notice} onClick={() => handleNoticePreview(notice)} />
+                  ))}
+              </SimpleGrid>
+              <Pagination
+                totalPosts={totalPosts * 9}
+                postPerPages={9}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
+          ) : (
+            <div>게시글이 없습니다.</div>
+          )}
         </NoticeListSection>
         <NoticePreviewSection>
-          <PreviewTitle>{previewNotice.title}</PreviewTitle>
-          <PreviewInfo>
-            <span>작성자: {previewNotice.writer}</span>
-            <span>작성일: {previewNotice.createdAt}</span>
-          </PreviewInfo>
-          <TextViewer content={previewNotice.content} />
+          {previewNotice ? (
+            <>
+              <PreviewTitle>{previewNotice.title}</PreviewTitle>
+              <PreviewInfo>
+                <span>작성자: {previewNotice.writer}</span>
+                <span>작성일: {previewNotice.createAt}</span>
+              </PreviewInfo>
+              <TextViewer content={previewNotice.content} />
+            </>
+          ) : (
+            <PreviewTitle>선택된 게시글이 없습니다.</PreviewTitle>
+          )}
         </NoticePreviewSection>
       </NoticeSection>
     </RightContainer>
