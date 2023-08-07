@@ -27,10 +27,10 @@ function CreateInfoPage() {
   const [options, setOptions] = useState<CategoryOption[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState('');
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(Number(e.target.value));
+    setCategory(e.target.value);
   };
 
   const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +63,7 @@ function CreateInfoPage() {
     const data = {
       title: title,
       content: content,
-      articleTypeId: category,
+      articleTypeName: category,
     };
 
     if (!title || !content) {

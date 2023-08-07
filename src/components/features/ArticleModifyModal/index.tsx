@@ -1,41 +1,119 @@
-import { useRef, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { useRef, useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react';
 import { Editor } from '@toast-ui/react-editor';
 import TextEditor from '../TextEditor';
 import InputUI from '../../ui/InputUI';
+import SelectUI from '../../ui/SelectUI';
 import CheckboxUI from '../../ui/CheckboxUI';
 import { FileUploaderUI } from '../../ui/FileUploaderUI';
 import { TitleInputSection, ButtonContainer } from './style';
+import { useUpdateInfoRequest, useGetInfoRequest } from '../../../api/Info';
+import { useGetAllCategoryRequest } from '../../../api/InfoCategory';
+import toast from 'react-hot-toast';
+import { useSelectedArticleAtom } from '../../../store/articleAtom';
+import { CategoryDataType } from '../../../api/InfoCategory';
+
+type EditorInstance = Editor | null;
 
 interface ModalProps {
+  location: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type EditorInstance = Editor | null;
-
-function ArticleModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
+function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProps) {
   const editorRef = useRef<EditorInstance>(null);
-  const [newTitle, setNewTitle] = useState('');
-  const [newContent, setNewContent] = useState('');
+  const { selectedArticle, resetAtom } = useSelectedArticleAtom();
+
+  const [options, setOptions] = useState<CategoryDataType[]>([]);
+  const [category, setCategory] = useState<string | undefined>('');
+  const [title, setTitle] = useState<string | undefined>('');
+  const [content, setContent] = useState<string | undefined>('');
   const [isTopChecked, setIsTopChecked] = useState(false);
 
-  const handleTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTitle(e.target.value);
-  };
+  const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
+  const { refetch: getInfoRefetch } = useGetInfoRequest(
+    {
+      page: 0,
+    },
+    false,
+  );
 
-  const handleContentInput = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    setNewContent(editorRef.current?.getInstance().getHTML());
-  };
+  const {
+    mutate: infoUpdateRequest,
+    data: infoUpdateData,
+    error: infoUpdateError,
+    isLoading: infoUpdateLoading,
+  } = useUpdateInfoRequest();
 
-  const clickSelectTopNotice = () => {
-    setIsTopChecked((prevState) => !prevState);
-  };
+  useEffect(() => {
+    if (categoryGetAllResult) {
+      setOptions(categoryGetAllResult.data);
+    } else if (categoryGetAllError) {
+      toast.error('카테고리 목록을 불러오는데 실패했습니다.');
+    }
+  }, [categoryGetAllResult, categoryGetAllError]);
+
+  useEffect(() => {
+    setCategory(selectedArticle.articleTypeName);
+    setTitle(selectedArticle.title);
+    setContent(selectedArticle.content);
+  }, [selectedArticle]);
 
   const handleArticleModifyModal = () => {
     setIsModalOpen(false);
   };
+
+  // 정보 글 수정 관련
+  const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategory(e.target.value);
+  };
+
+  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleContent = () => {
+    setContent(editorRef.current?.getInstance().getHTML());
+  };
+
+  // 공지사항 글 수정 관련
+  const clickSelectTopNotice = () => {
+    setIsTopChecked((prevState) => !prevState);
+  };
+
+  const handleUpdateButton = () => {
+    if (location === '정보') {
+      const data = {
+        id: selectedArticle.id,
+        title: title,
+        content: content,
+        articleTypeName: category,
+      };
+
+      if (!title || !content) {
+        toast.error('제목과 내용은 필수 항목 입니다.');
+      } else {
+        infoUpdateRequest({ ...data });
+      }
+    } else if (location === '공지사항') {
+      // 공지사항 수정
+    }
+  };
+
+  useEffect(() => {
+    if (infoUpdateData) {
+      toast.success('게시글 수정이 완료되었습니다.');
+      setIsModalOpen(false);
+      void getInfoRefetch();
+      resetAtom();
+    } else if (infoUpdateError) {
+      toast.error((infoUpdateError as Error).message);
+    }
+  }, [infoUpdateData, infoUpdateError]);
 
   return (
     <>
@@ -44,14 +122,25 @@ function ArticleModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
         <ModalContent>
           <ModalHeader>게시글 수정하기</ModalHeader>
           <ModalCloseButton />
-          <TitleInputSection>
-            <InputUI placeholder={'기존 제목'} onChange={handleTitleInput} />
-            <CheckboxUI isChecked={isTopChecked} onChange={() => clickSelectTopNotice()}>
-              주요 공지
-            </CheckboxUI>
-          </TitleInputSection>
+          {location === '정보' ? (
+            <TitleInputSection>
+              <SelectUI
+                options={options}
+                defaultValue={selectedArticle.articleTypeName}
+                handleCategory={handleCategory}
+              />
+              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} />
+            </TitleInputSection>
+          ) : (
+            <TitleInputSection>
+              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} />
+              <CheckboxUI isChecked={isTopChecked} onChange={() => clickSelectTopNotice()}>
+                주요 공지
+              </CheckboxUI>
+            </TitleInputSection>
+          )}
           <ModalBody>
-            <TextEditor editorRef={editorRef} content={'기존 내용'} onChange={handleContentInput} />
+            <TextEditor editorRef={editorRef} content={selectedArticle.content} onChange={handleContent} />
           </ModalBody>
           <ButtonContainer>
             <div>
@@ -66,6 +155,10 @@ function ArticleModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
                 _hover={{
                   bg: '#1a478a',
                 }}
+                // 나중에 || noticeUpdateLoading 추가하기
+                isLoading={infoUpdateLoading}
+                loadingText={'수정 중'}
+                onClick={() => handleUpdateButton()}
               >
                 수정
               </Button>

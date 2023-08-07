@@ -2,7 +2,7 @@ import { Input, InputGroup, InputRightElement, Button } from '@chakra-ui/react';
 
 interface InputProps {
   width?: string;
-  placeholder: string;
+  placeholder?: string;
   show?: boolean;
   defaultValue?: string;
   onClick?: () => void;
