@@ -46,6 +46,7 @@ function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
   return (
     <div>
       <Editor
+        key={content}
         ref={editorRef}
         initialValue={content}
         previewStyle="vertical"
