@@ -8,23 +8,17 @@ import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
 import { FileUploaderUI } from '../../../components/ui/FileUploaderUI';
-import { useGetAllCategoryRequest } from '../../../api/InfoCategory';
+import { CategoryDataType, useGetAllCategoryRequest } from '../../../api/InfoCategory';
 import { useCreateInfoRequest } from '../../../api/Info';
 import toast from 'react-hot-toast';
 
 type EditorInstance = Editor | null;
 
-interface CategoryOption {
-  id: number;
-  typeName: string;
-  description: string;
-}
-
 function CreateInfoPage() {
   const navigate = useNavigate();
   const editorRef = useRef<EditorInstance>(null);
 
-  const [options, setOptions] = useState<CategoryOption[]>([]);
+  const [options, setOptions] = useState<CategoryDataType[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
