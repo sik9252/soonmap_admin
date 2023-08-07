@@ -32,6 +32,7 @@ export const InfoPreviewSection = styled.div`
   box-shadow: 0px 3px 10px #00000029;
   border-radius: 6px;
   padding: 20px;
+  overflow-y: scroll;
 
   @media only screen and (min-width: 1700px) {
     width: 50%;

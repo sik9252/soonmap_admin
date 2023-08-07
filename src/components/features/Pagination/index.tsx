@@ -6,10 +6,12 @@ import { ReactComponent as PageNextBtn } from '../../../assets/PageNextBtn.svg';
 interface PaginationProps {
   totalPosts: number;
   postPerPages: number;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPosts, postPerPages }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+const Pagination: React.FC<PaginationProps> = ({ totalPosts, postPerPages, currentPage, setCurrentPage }) => {
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const [isFirstPage, setIsFirstPage] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
   const [pageNumbers, setPageNumbers] = useState<number[]>([]);

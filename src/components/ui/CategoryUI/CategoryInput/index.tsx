@@ -4,8 +4,8 @@ import EditMode from '../EditMode';
 
 export interface CategoryItem {
   id: number;
-  categoryName: string;
-  categoryDescription: string;
+  typeName: string;
+  description: string;
 }
 
 export interface CategoryItemProps {

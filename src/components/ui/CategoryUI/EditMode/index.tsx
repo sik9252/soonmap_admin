@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
 import { CategoryItem } from '../CategoryInput';
 import InputUI from '../../InputUI';
 import { DefaultButton, CancelButton } from '../../ButtonUI';
+import { useGetCategoryRequest, useUpdateCategoryRequest } from '../../../../api/InfoCategory';
+import toast from 'react-hot-toast';
 
 type TodoItemEditorProps = {
   category: CategoryItem;
@@ -9,20 +12,72 @@ type TodoItemEditorProps = {
 };
 
 function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
-  const handleModify = () => {
-    // 실제 수정 요청
+  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
+    page: 0,
+  });
+
+  const {
+    mutate: categoryUpdateRequest,
+    data: categoryUpdateData,
+    error: categoryUpdateError,
+    isLoading: categoryUpdateLoading,
+  } = useUpdateCategoryRequest();
+
+  const [categoryName, setCategoryName] = useState(category.typeName);
+  const [categoryDescription, setCategoryDescription] = useState(category.description);
+
+  const handleCategoryName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
   };
+
+  const handleCategoryDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryDescription(e.target.value);
+  };
+
+  const handleUpdate = () => {
+    const data = {
+      id: category.id,
+      typeName: categoryName,
+      description: categoryDescription,
+    };
+
+    if (!categoryName || !categoryDescription) {
+      toast.error('카테고리명과 설명은 필수값입니다.');
+    } else {
+      categoryUpdateRequest({ ...data });
+    }
+  };
+
+  useEffect(() => {
+    if (categoryUpdateData) {
+      toast.success('수정되었습니다.');
+      void getCategoryRefetch();
+      onChangeViewMode();
+    } else if (categoryUpdateError) {
+      toast.error((categoryUpdateError as Error).message);
+    }
+  }, [categoryUpdateData, categoryUpdateError]);
 
   return (
     <Tr>
       <Td>
-        <InputUI placeholder={category.categoryName} width="100%" />
+        <InputUI
+          placeholder={category.typeName}
+          width="100%"
+          onChange={handleCategoryName}
+          defaultValue={category.typeName}
+        />
       </Td>
       <Td>
-        <InputUI placeholder={category.categoryDescription} width="100%" />
+        <InputUI
+          placeholder={category.description}
+          width="100%"
+          onChange={handleCategoryDescription}
+          defaultValue={category.description}
+        />
       </Td>
       <Td>
-        <DefaultButton onClick={() => handleModify()} mr="5px">
+        <DefaultButton onClick={() => handleUpdate()} mr="5px">
           수정
         </DefaultButton>
         <CancelButton onClick={onChangeViewMode}>취소</CancelButton>

@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { LoginPageContainer, PageTitle, ButtonSection } from './style';
 import { useLoginRequest } from '../../api/Auth';
 import { setAuthToken } from '../../utils/setAuthToken';
+import { setAuthHierarchy } from '../../utils/setAuthHierarchy';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ function LoginPage() {
   useEffect(() => {
     if (adminLoginData) {
       setAuthToken(adminLoginData?.data.accessToken, adminLoginData?.data.refreshToken);
+      setAuthHierarchy(adminLoginData?.data);
       toast.success('관리자님 환영합니다.');
       navigate('/home');
     } else if (adminLoginError) {

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,14 +9,49 @@ import {
   AlertDialogCloseButton,
   Button,
 } from '@chakra-ui/react';
+import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api/InfoCategory';
+import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api/Info';
+import toast from 'react-hot-toast';
+import { useSelectedArticleAtom } from '../../../store/articleAtom';
 
 interface AlertProps {
+  location: string;
+  selectedItemIndex: number;
   isAlertOpen: boolean;
   setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
+function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlertOpen }: AlertProps) {
   const cancelRef = useRef(null);
+  const { selectedArticle, resetAtom } = useSelectedArticleAtom();
+
+  const { refetch: getCategoryRefetch } = useGetCategoryRequest(
+    {
+      page: 0,
+    },
+    false,
+  );
+
+  const { refetch: getInfoRefetch } = useGetInfoRequest(
+    {
+      page: 0,
+    },
+    false,
+  );
+
+  const {
+    mutate: categoryDeleteRequest,
+    data: categoryDeleteData,
+    error: categoryDeleteError,
+    isLoading: categoryDeleteLoading,
+  } = useDeleteCategoryRequest();
+
+  const {
+    mutate: infoDeleteRequest,
+    data: infoDeleteData,
+    error: infoDeleteError,
+    isLoading: infoDeleteLoading,
+  } = useDeleteInfoRequest();
 
   const handleAlertDialog = () => {
     setIsAlertOpen(false);
@@ -24,7 +59,33 @@ function AlertDialogModal({ isAlertOpen, setIsAlertOpen }: AlertProps) {
 
   const handleDelete = () => {
     // 삭제 요청, url 파싱헤서 카테고리면 카테고리에 공지사항이면 공지사항에 요청?
+    if (location === '카테고리') {
+      categoryDeleteRequest({ id: selectedItemIndex });
+    } else if (location === '정보') {
+      infoDeleteRequest({ id: selectedArticle.id });
+    }
   };
+
+  useEffect(() => {
+    if (categoryDeleteData) {
+      toast.success('삭제되었습니다.');
+      void getCategoryRefetch();
+      setIsAlertOpen(false);
+    } else if (categoryDeleteError) {
+      toast.error((categoryDeleteError as Error).message);
+    }
+  }, [categoryDeleteData, categoryDeleteError]);
+
+  useEffect(() => {
+    if (infoDeleteData) {
+      toast.success('삭제되었습니다.');
+      void getInfoRefetch();
+      setIsAlertOpen(false);
+      resetAtom();
+    } else if (infoDeleteError) {
+      toast.error((infoDeleteError as Error).message);
+    }
+  }, [infoDeleteData, infoDeleteError]);
 
   return (
     <AlertDialog
@@ -77,7 +138,6 @@ export const BanAlertDialogModal = ({ isAlertOpen, setIsAlertOpen }: AlertProps)
       <AlertDialogContent>
         <AlertDialogHeader>해당 계정을 정지하시겠습니까?</AlertDialogHeader>
         <AlertDialogCloseButton />
-        {/* <AlertDialogBody>삭제하면 복구할 수 없습니다.</AlertDialogBody> */}
         <AlertDialogFooter>
           <Button ref={cancelRef} onClick={() => handleBanAlertDialog()}>
             취소
