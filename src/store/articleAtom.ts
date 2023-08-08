@@ -8,6 +8,7 @@ export const selectedArticleAtom = atom<{
   createAt?: string;
   writer?: string;
   articleTypeName?: string;
+  top?: boolean;
   view?: number;
 }>({});
 
