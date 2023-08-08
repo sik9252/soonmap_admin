@@ -1,64 +1,43 @@
-import { useState } from 'react';
-import { Table, Thead, Tbody, Tr, Td, Th, TableContainer, Switch } from '@chakra-ui/react';
-import { InfoIcon } from '@chakra-ui/icons';
+import { useState, useEffect } from 'react';
+import { Table, Thead, Tbody, Tr, Td, Th, TableContainer } from '@chakra-ui/react';
+import { SettingsIcon } from '@chakra-ui/icons';
+import { BanState } from './style';
 import RightContainer from '../../components/layout/RightContainer';
 import { BanAlertDialogModal } from '../../components/features/AlertDialogModal';
+import AccountManageModal from '../../components/features/AccountManageModal';
+import toast from 'react-hot-toast';
+import { useGetAccountRequest } from '../../api/Account';
+import { AccountDataType } from '../../api/Account';
+import { useSelectedAccountAtom } from '../../store/accountAtom';
 
 function AccountManagePage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [accountList, setAccountList] = useState([
-    {
-      id: 1,
-      name: '순맵',
-      email: 'soonmap@test.com',
-      isAdmin: true,
-      isManager: true,
-      isStaff: true,
-      isBan: false,
-      createdAt: '2023-08-01',
-    },
-    {
-      id: 2,
-      name: '총학생회',
-      email: 'sch@test.com',
-      isAdmin: false,
-      isManager: true,
-      isStaff: true,
-      isBan: false,
-      createdAt: '2023-08-01',
-    },
-    {
-      id: 3,
-      name: '공과대 학생회',
-      email: 'sch_engineer@test.com',
-      isAdmin: false,
-      isManager: false,
-      isStaff: true,
-      isBan: false,
-      createdAt: '2023-08-01',
-    },
-    {
-      id: 4,
-      name: '자연대 학생회',
-      email: 'sch_nature@test.com',
-      isAdmin: false,
-      isManager: false,
-      isStaff: true,
-      isBan: true,
-      createdAt: '2023-08-03',
-    },
-  ]);
+  const [accountList, setAccountList] = useState<AccountDataType[] | null>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const { setSelectedAccount } = useSelectedAccountAtom();
 
-  // const handleAlertDialog = (isBan: boolean) => {
-  //   if (!isBan) {
-  //     setIsAlertOpen(true);
-  //   }
-  // };
+  const { data: accountResult, isError: accountError, refetch: accountRefetch } = useGetAccountRequest();
+
+  useEffect(() => {
+    if (accountResult) {
+      setAccountList(accountResult?.data.memberList);
+      setTotalCount(accountResult?.data.accountCount);
+    } else if (accountError) {
+      toast.error('회원 계정 목록을 불러오는데 실패했습니다.');
+    }
+  }, [accountResult, accountError]);
+
+  const handleAccountManageModal = (account: AccountDataType) => {
+    setSelectedAccount(account);
+    setIsModalOpen(true);
+  };
 
   return (
     <RightContainer title={'계정 관리'}>
       <BanAlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
+      <AccountManageModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -67,8 +46,8 @@ function AccountManagePage() {
               <Th>계정 이메일</Th>
               <Th>계정 권한</Th>
               <Th>계정 생성일</Th>
-              <Th textAlign={'center'}>상세정보</Th>
-              <Th>계정 정지 여부</Th>
+              <Th>가입 승인 상태</Th>
+              <Th textAlign={'center'}>계정 관리</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -77,20 +56,11 @@ function AccountManagePage() {
                 <Tr>
                   <Td>{account.name}</Td>
                   <Td>{account.email}</Td>
-                  <Td> {account.isAdmin ? '관리자' : account.isManager ? '매니저' : account.isStaff ? '일반' : ''}</Td>
-                  <Td>{account.createdAt}</Td>
+                  <Td> {account.admin ? '관리자' : account.manager ? '매니저' : account.staff ? '일반' : ''}</Td>
+                  <Td>{account.createAt}</Td>
+                  <Td>{account.ban ? <BanState>미승인</BanState> : <div>승인</div>}</Td>
                   <Td textAlign={'center'}>
-                    <InfoIcon
-                      cursor={'pointer'}
-                      onClick={() => alert('각 계정에서 작성한 글 목록을 볼 수 있도록하는 기능을 개발중입니다.')}
-                    />
-                  </Td>
-                  <Td>
-                    <Switch
-                      colorScheme="red"
-                      defaultChecked={account.isBan}
-                      //onChange={() => handleAlertDialog(account.isBan)}
-                    />
+                    <SettingsIcon cursor={'pointer'} onClick={() => handleAccountManageModal(account)} />
                   </Td>
                 </Tr>
               ))}
