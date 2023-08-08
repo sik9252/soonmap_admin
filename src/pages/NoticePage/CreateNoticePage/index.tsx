@@ -45,8 +45,7 @@ function CreateNoticePage() {
     const data = {
       title: title,
       content: content,
-      isTop: isTopChecked,
-      isExistImage: null,
+      top: isTopChecked,
     };
 
     if (!title || !content) {
