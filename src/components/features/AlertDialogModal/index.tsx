@@ -70,21 +70,21 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     if (categoryDeleteData) {
       toast.success('삭제되었습니다.');
       void getCategoryRefetch();
-      setIsAlertOpen(false);
     } else if (categoryDeleteError) {
       toast.error((categoryDeleteError as Error).message);
     }
+    setIsAlertOpen(false);
   }, [categoryDeleteData, categoryDeleteError]);
 
   useEffect(() => {
     if (infoDeleteData) {
       toast.success('삭제되었습니다.');
       void getInfoRefetch();
-      setIsAlertOpen(false);
       resetAtom();
     } else if (infoDeleteError) {
       toast.error((infoDeleteError as Error).message);
     }
+    setIsAlertOpen(false);
   }, [infoDeleteData, infoDeleteError]);
 
   return (
