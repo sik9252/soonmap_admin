@@ -15,13 +15,21 @@ import { useSelectedArticleAtom } from '../../../store/articleAtom';
 function InfoManagePage() {
   const [infoList, setInfoList] = useState<InfoDataType[] | null>([]);
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = dateRange;
+  const [keyword, setKeyword] = useState('');
 
-  const { data: infoResult, isError: infoError } = useGetInfoRequest({
-    page: currentPage - 1,
-  });
+  const { data: infoResult, isError: infoError } = useGetInfoRequest(
+    {
+      page: currentPage - 1,
+      // startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
+      // endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
+      // title: keyword ? keyword : '',
+    },
+    false,
+  );
 
   useEffect(() => {
     if (infoResult) {
@@ -42,7 +50,7 @@ function InfoManagePage() {
         <InfoListSection>
           <SearchSection>
             <SearchUI placeholder="검색어를 입력해주세요." />
-            <DatePickerUI />
+            <DatePickerUI setDateRange={setDateRange} startDate={startDate} endDate={endDate} />
           </SearchSection>
           {infoList && infoList.length > 0 ? (
             <>
