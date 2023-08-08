@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { DatePickerContainer, StyledDatePicker } from './style';
 
-export const DatePickerUI = () => {
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-  const [startDate, endDate] = dateRange;
+export interface DatePickerProps {
+  setDateRange: React.Dispatch<React.SetStateAction<[Date | null, Date | null]>>;
+  startDate: Date | null;
+  endDate: Date | null;
+}
 
+export const DatePickerUI = ({ setDateRange, startDate, endDate }: DatePickerProps) => {
   return (
     <DatePickerContainer>
       <StyledDatePicker

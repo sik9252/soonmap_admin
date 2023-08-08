@@ -6,20 +6,11 @@ import AlertDialogModal from '../../features/AlertDialogModal';
 import ArticleModifyModal from '../../features/ArticleModifyModal';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { InfoDataType } from '../../../api/Info';
-
-export interface NoticeType {
-  id: number;
-  title: string;
-  content: string;
-  createAt: string;
-  writer: string;
-  isTop: boolean;
-  view: number;
-}
+import { NoticeDataType } from '../../../api/Notice';
 
 interface CardProps {
   infoData?: InfoDataType;
-  noticeData?: NoticeType;
+  noticeData?: NoticeDataType;
   onClick?: () => void;
   setPreviewInfo?: React.Dispatch<React.SetStateAction<InfoDataType | null>>;
 }
@@ -54,7 +45,7 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
     <>
       <AlertDialogModal
         location={location}
-        selectedItemIndex={infoData!.id || noticeData!.id}
+        selectedItemIndex={infoData?.id || noticeData?.id}
         isAlertOpen={isAlertOpen}
         setIsAlertOpen={setIsAlertOpen}
       />
