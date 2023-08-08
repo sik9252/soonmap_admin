@@ -7,6 +7,7 @@ import {
   NoticePreviewSection,
   PreviewTitle,
   PreviewInfo,
+  TopNotice,
 } from './style';
 import CardUI from '../../../components/ui/CardUI';
 import SearchUI from '../../../components/ui/SearchUI';
@@ -110,7 +111,10 @@ function NoticeManagePage() {
         <NoticePreviewSection>
           {selectedArticle.title ? (
             <>
-              <PreviewTitle>{selectedArticle.title}</PreviewTitle>
+              <PreviewTitle>
+                {selectedArticle.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
+                {selectedArticle.title}
+              </PreviewTitle>
               <PreviewInfo>
                 <span>작성자: {selectedArticle.writer}</span>
                 <span>작성일: {selectedArticle.createAt?.slice(0, 10)}</span>

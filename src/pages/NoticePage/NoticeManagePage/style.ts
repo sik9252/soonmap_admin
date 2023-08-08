@@ -64,3 +64,8 @@ export const PreviewInfo = styled.div`
   margin-top: 15px;
   font-size: 15px;
 `;
+
+export const TopNotice = styled.span`
+  color: #dc143c;
+  padding-right: 3px;
+`;
