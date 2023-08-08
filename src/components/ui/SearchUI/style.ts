@@ -15,5 +15,6 @@ export const SearchBarContainer = styled.div`
     position: absolute;
     right: 10px;
     color: #a6afb7;
+    z-index: 1;
   }
 `;

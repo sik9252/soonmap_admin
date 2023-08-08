@@ -2,24 +2,16 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { TopNotice } from './style';
 import AlertDialogModal from '../../features/AlertDialogModal';
 import ArticleModifyModal from '../../features/ArticleModifyModal';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { InfoDataType } from '../../../api/Info';
-
-export interface NoticeType {
-  id: number;
-  title: string;
-  content: string;
-  createAt: string;
-  writer: string;
-  isTop: boolean;
-  view: number;
-}
+import { NoticeDataType } from '../../../api/Notice';
 
 interface CardProps {
   infoData?: InfoDataType;
-  noticeData?: NoticeType;
+  noticeData?: NoticeDataType;
   onClick?: () => void;
   setPreviewInfo?: React.Dispatch<React.SetStateAction<InfoDataType | null>>;
 }
@@ -35,6 +27,8 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
   const handleAlertDialog = (info: InfoDataType) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
+    } else if (path.pathname === '/notice/manage') {
+      setLocation('공지');
     }
 
     setSelectedArticle(info);
@@ -44,6 +38,8 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
   const handleArticleModifyModal = (info: InfoDataType) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
+    } else if (path.pathname === '/notice/manage') {
+      setLocation('공지');
     }
 
     setSelectedArticle(info);
@@ -54,7 +50,7 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
     <>
       <AlertDialogModal
         location={location}
-        selectedItemIndex={infoData!.id || noticeData!.id}
+        selectedItemIndex={infoData?.id || noticeData?.id}
         isAlertOpen={isAlertOpen}
         setIsAlertOpen={setIsAlertOpen}
       />
@@ -68,7 +64,10 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
         onClick={onClick}
       >
         <CardHeader pt="20px" pb="15px">
-          <Heading size="sm">{infoData?.title || noticeData?.title}</Heading>
+          <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
+            {noticeData?.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
+            {infoData?.title || noticeData?.title}
+          </Heading>
         </CardHeader>
         <CardBody pt="5px" pb="5px">
           <Text fontSize={13}>작성자: {infoData?.writer || noticeData?.writer}</Text>

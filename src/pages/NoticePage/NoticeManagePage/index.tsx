@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
 import {
   NoticeSection,
@@ -7,6 +7,7 @@ import {
   NoticePreviewSection,
   PreviewTitle,
   PreviewInfo,
+  TopNotice,
 } from './style';
 import CardUI from '../../../components/ui/CardUI';
 import SearchUI from '../../../components/ui/SearchUI';
@@ -14,25 +15,65 @@ import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
-
-interface NoticeType {
-  id: number;
-  title: string;
-  content: string;
-  createAt: string;
-  writer: string;
-  isTop: boolean;
-  view: number;
-}
+import { useGetNoticeRequest } from '../../../api/Notice';
+import toast from 'react-hot-toast';
+import { NoticeDataType } from '../../../api/Notice';
+import { useSelectedArticleAtom } from '../../../store/articleAtom';
+import { changeDateFormat } from '../../../utils/changeDateFormat';
+import { DefaultButton } from '../../../components/ui/ButtonUI';
 
 function NoticeManagePage() {
-  const [noticeList, setNoticeList] = useState<NoticeType[] | null>([]);
-  const [previewNotice, setPreviewNotice] = useState<NoticeType | null>(null);
+  const [noticeList, setNoticeList] = useState<NoticeDataType[] | null>([]);
+  const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = dateRange;
+  const [keyword, setKeyword] = useState('');
 
-  const handleNoticePreview = (notice: NoticeType) => {
-    setPreviewNotice(notice);
+  const handleSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
+  const {
+    data: noticeResult,
+    isError: noticeError,
+    refetch: noticeRefetch,
+  } = useGetNoticeRequest(
+    {
+      page: currentPage - 1,
+      startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
+      endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
+      title: keyword ? keyword : '',
+    },
+    false,
+  );
+
+  useEffect(() => {
+    void noticeRefetch();
+  }, [currentPage]);
+
+  const handleDateSearchButton = () => {
+    void noticeRefetch();
+  };
+
+  const handleOnEnterKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      void noticeRefetch();
+    }
+  };
+
+  useEffect(() => {
+    if (noticeResult) {
+      setNoticeList(noticeResult?.data.noticeList);
+      setTotalPosts(noticeResult?.data.totalPage);
+    } else if (noticeError) {
+      toast.error('정보 글 목록을 불러오는데 실패했습니다.');
+    }
+  }, [noticeResult, noticeError]);
+
+  const handleNoticePreview = (notice: NoticeDataType) => {
+    setSelectedArticle(notice);
   };
 
   return (
@@ -40,8 +81,13 @@ function NoticeManagePage() {
       <NoticeSection>
         <NoticeListSection>
           <SearchSection>
-            <SearchUI placeholder="검색어를 입력해주세요." />
-            <DatePickerUI />
+            <SearchUI
+              placeholder="검색어를 입력하거나 날짜 필터링을 설정한 후 검색 버튼을 눌러주세요."
+              onChange={handleSearchKeyword}
+              onKeyDown={handleOnEnterKeyDown}
+            />
+            <DatePickerUI setDateRange={setDateRange} startDate={startDate} endDate={endDate} />
+            <DefaultButton onClick={() => handleDateSearchButton()}>검색</DefaultButton>
           </SearchSection>
           {noticeList && noticeList.length > 0 ? (
             <>
@@ -63,14 +109,17 @@ function NoticeManagePage() {
           )}
         </NoticeListSection>
         <NoticePreviewSection>
-          {previewNotice ? (
+          {selectedArticle.title ? (
             <>
-              <PreviewTitle>{previewNotice.title}</PreviewTitle>
+              <PreviewTitle>
+                {selectedArticle.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
+                {selectedArticle.title}
+              </PreviewTitle>
               <PreviewInfo>
-                <span>작성자: {previewNotice.writer}</span>
-                <span>작성일: {previewNotice.createAt}</span>
+                <span>작성자: {selectedArticle.writer}</span>
+                <span>작성일: {selectedArticle.createAt?.slice(0, 10)}</span>
               </PreviewInfo>
-              <TextViewer content={previewNotice.content} />
+              <TextViewer content={selectedArticle.content} />
             </>
           ) : (
             <PreviewTitle>선택된 게시글이 없습니다.</PreviewTitle>

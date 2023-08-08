@@ -7,6 +7,12 @@ export const NoticeSection = styled.div`
 export const SearchSection = styled.div`
   display: flex;
   align-items: center;
+
+  & > button {
+    height: 49px;
+    margin-bottom: 9px;
+    margin-left: 5px;
+  }
 `;
 
 export const NoticeListSection = styled.div`
@@ -32,6 +38,7 @@ export const NoticePreviewSection = styled.div`
   box-shadow: 0px 3px 10px #00000029;
   border-radius: 6px;
   padding: 20px;
+  overflow-y: scroll;
 
   @media only screen and (min-width: 1700px) {
     width: 50%;
@@ -56,4 +63,9 @@ export const PreviewInfo = styled.div`
   justify-content: space-between;
   margin-top: 15px;
   font-size: 15px;
+`;
+
+export const TopNotice = styled.span`
+  color: #dc143c;
+  padding-right: 3px;
 `;

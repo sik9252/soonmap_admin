@@ -2,7 +2,7 @@ import { Checkbox } from '@chakra-ui/react';
 
 interface CheckboxProps {
   children: React.ReactNode;
-  isChecked: boolean;
+  isChecked: boolean | undefined;
   onChange: () => void;
 }
 
