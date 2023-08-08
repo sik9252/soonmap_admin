@@ -43,19 +43,25 @@ function DefaultInfoSection({ selectedAccount, setIsModalOpen }: SelectedAccount
   return (
     <div>
       <div>이름: {selectedAccount.name}</div>
-      {selectedAccount.ban ? (
-        <DefaultButton onClick={() => handleChangeBanState()}>계정 활성화하기</DefaultButton>
+      {selectedAccount.admin && selectedAccount.manager && selectedAccount.staff ? (
+        ''
       ) : (
-        <Button
-          bgColor="#dc143c"
-          color="#ffffff"
-          _hover={{
-            bg: '#CE2029',
-          }}
-          onClick={() => handleChangeBanState()}
-        >
-          계정 비활성화하기
-        </Button>
+        <>
+          {selectedAccount.ban ? (
+            <DefaultButton onClick={() => handleChangeBanState()}>계정 활성화하기</DefaultButton>
+          ) : (
+            <Button
+              bgColor="#dc143c"
+              color="#ffffff"
+              _hover={{
+                bg: '#CE2029',
+              }}
+              onClick={() => handleChangeBanState()}
+            >
+              계정 비활성화하기
+            </Button>
+          )}
+        </>
       )}
     </div>
   );
