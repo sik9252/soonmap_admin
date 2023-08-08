@@ -55,3 +55,19 @@ export const Item = styled.div<ItemProps>`
 
   background-color: ${({ $isSelected }) => ($isSelected ? '#1a478a' : 'transparent')};
 `;
+
+export const FooterSection = styled.div`
+  position: absolute;
+  bottom: 30px;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.7;
+
+    & > svg {
+      margin-left: 5px;
+    }
+  }
+`;
