@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { TopNotice } from './style';
 import AlertDialogModal from '../../features/AlertDialogModal';
 import ArticleModifyModal from '../../features/ArticleModifyModal';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
@@ -59,7 +60,10 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
         onClick={onClick}
       >
         <CardHeader pt="20px" pb="15px">
-          <Heading size="sm">{infoData?.title || noticeData?.title}</Heading>
+          <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
+            {noticeData?.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
+            {infoData?.title || noticeData?.title}
+          </Heading>
         </CardHeader>
         <CardBody pt="5px" pb="5px">
           <Text fontSize={13}>작성자: {infoData?.writer || noticeData?.writer}</Text>
