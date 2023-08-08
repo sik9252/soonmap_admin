@@ -7,7 +7,7 @@ export interface NoticeDataType {
   content?: string;
   createAt?: string;
   writer?: string;
-  isTop?: boolean;
+  top?: boolean;
   view?: number;
 }
 
@@ -17,20 +17,30 @@ export interface NoticeResponseType extends NoticeDataType {
 
 export interface NoticeQueryRequestType {
   page: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  title?: string | null;
 }
 
 export interface NoticeQueryResponseType {
   totalPage: number;
-  articleList: [];
+  noticeList: [];
 }
 
 export function useGetNoticeRequest(params: NoticeQueryRequestType, isEnabled?: boolean) {
   return useQuery(
-    [`/admin/notice?page=${params.page}`, params],
+    [
+      `/admin/notice/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
+        params.endDate || ''
+      }&title=${params.title || ''}`,
+      params,
+    ],
     () =>
       httpClient<NoticeQueryResponseType>({
         method: 'GET',
-        url: `/admin/notice?page=${params.page}`,
+        url: `/admin/notice/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
+          params.endDate || ''
+        }&title=${params.title || ''}`,
       }),
     { enabled: isEnabled },
   );
