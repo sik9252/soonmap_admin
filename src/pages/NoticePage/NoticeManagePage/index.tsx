@@ -41,8 +41,8 @@ function NoticeManagePage() {
   } = useGetNoticeRequest(
     {
       page: currentPage - 1,
-      startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDThh:mm:ss') : '',
-      endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDThh:mm:ss') : '',
+      startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
+      endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
       title: keyword ? keyword : '',
     },
     false,
