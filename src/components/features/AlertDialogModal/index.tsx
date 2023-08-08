@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api/InfoCategory';
 import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api/Info';
+import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api/Notice';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 
@@ -39,6 +40,16 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     false,
   );
 
+  const { refetch: getNoticeRefetch } = useGetNoticeRequest(
+    {
+      page: 0,
+      startDate: '',
+      endDate: '',
+      title: '',
+    },
+    false,
+  );
+
   const {
     mutate: categoryDeleteRequest,
     data: categoryDeleteData,
@@ -53,6 +64,13 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     isLoading: infoDeleteLoading,
   } = useDeleteInfoRequest();
 
+  const {
+    mutate: noticeDeleteRequest,
+    data: noticeDeleteData,
+    error: noticeDeleteError,
+    isLoading: noticeDeleteLoading,
+  } = useDeleteNoticeRequest();
+
   const handleAlertDialog = () => {
     setIsAlertOpen(false);
   };
@@ -63,6 +81,8 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
       categoryDeleteRequest({ id: selectedItemIndex });
     } else if (location === '정보') {
       infoDeleteRequest({ id: selectedArticle.id });
+    } else if (location === '공지') {
+      noticeDeleteRequest({ id: selectedArticle.id });
     }
   };
 
@@ -86,6 +106,17 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     }
     setIsAlertOpen(false);
   }, [infoDeleteData, infoDeleteError]);
+
+  useEffect(() => {
+    if (noticeDeleteData) {
+      toast.success('삭제되었습니다.');
+      void getNoticeRefetch();
+      resetAtom();
+    } else if (noticeDeleteError) {
+      toast.error((noticeDeleteError as Error).message);
+    }
+    setIsAlertOpen(false);
+  }, [noticeDeleteData, noticeDeleteError]);
 
   return (
     <AlertDialog

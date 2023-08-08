@@ -27,6 +27,8 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
   const handleAlertDialog = (info: InfoDataType) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
+    } else if (path.pathname === '/notice/manage') {
+      setLocation('공지');
     }
 
     setSelectedArticle(info);
@@ -36,6 +38,8 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
   const handleArticleModifyModal = (info: InfoDataType) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
+    } else if (path.pathname === '/notice/manage') {
+      setLocation('공지');
     }
 
     setSelectedArticle(info);

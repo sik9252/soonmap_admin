@@ -57,21 +57,20 @@ export function useCreateNoticeRequest() {
 }
 
 export function useUpdateNoticeRequest() {
-  return useMutation((data: { id: number }) =>
+  return useMutation((data: NoticeDataType) =>
     httpClient<NoticeResponseType>({
       method: 'PATCH',
-      url: '/admin/notice',
+      url: `/admin/notice/${data.id ? data.id : ''}`,
       data,
     }),
   );
 }
 
 export function useDeleteNoticeRequest() {
-  return useMutation((data: { id: number }) =>
+  return useMutation((data: NoticeDataType) =>
     httpClient<NoticeResponseType>({
       method: 'DELETE',
-      url: '/admin/notice',
-      data,
+      url: `/admin/notice/${data.id ? data.id : ''}`,
     }),
   );
 }
