@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SideMenuContainer, ProfileSection, Logo, Title, Item } from './style';
+import { SideMenuContainer, ProfileSection, Logo, Title, Item, FooterSection } from './style';
 import MenuSection from './MenuSection';
+import { removeAuthToken } from '../../../utils/setAuthToken';
 import SoonMapWhiteLogo from '../../../assets/soonmap_white.png';
-import { Menu, MenuButton, MenuList, MenuItem, IconButton } from '@chakra-ui/react';
-import { HamburgerIcon, InfoIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import toast from 'react-hot-toast';
 
 function SideMenu() {
   const navigate = useNavigate();
@@ -33,22 +34,17 @@ function SideMenu() {
     navigate(url);
   };
 
+  const handleLogoutButton = () => {
+    removeAuthToken();
+    toast.success('로그아웃 되었습니다.');
+    navigate('/login');
+  };
+
   return (
     <SideMenuContainer>
       <ProfileSection>
         <Logo src={SoonMapWhiteLogo} alt="logo" onClick={() => goToPage('/home')} />
         <Title>관리자 계정</Title>
-        <Menu>
-          <MenuButton as={IconButton} icon={<HamburgerIcon />} variant="none" />
-          <MenuList>
-            <MenuItem color="#000000" icon={<InfoIcon />}>
-              내 정보
-            </MenuItem>
-            <MenuItem color="#000000" icon={<SmallCloseIcon />}>
-              로그아웃
-            </MenuItem>
-          </MenuList>
-        </Menu>
       </ProfileSection>
       {isAdmin ? (
         <>
@@ -88,6 +84,12 @@ function SideMenu() {
           </Item>
         </MenuSection>
       ) : null}
+      <FooterSection>
+        <div onClick={() => handleLogoutButton()}>
+          로그아웃
+          <ArrowForwardIcon />
+        </div>
+      </FooterSection>
     </SideMenuContainer>
   );
 }
