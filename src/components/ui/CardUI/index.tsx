@@ -70,8 +70,12 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
           </Heading>
         </CardHeader>
         <CardBody pt="5px" pb="5px">
-          <Text fontSize={13}>작성자: {infoData?.writer || noticeData?.writer}</Text>
-          <Text fontSize={13}>작성일: {infoData?.createAt?.slice(0, 10) || noticeData?.createAt?.slice(0, 10)}</Text>
+          <Text fontSize={13} mb="3px">
+            작성자: {infoData?.writer || noticeData?.writer}
+          </Text>
+          <Text fontSize={13} mb="3px">
+            작성일: {infoData?.createAt?.slice(0, 10) || noticeData?.createAt?.slice(0, 10)}
+          </Text>
           {infoData ? <Text fontSize={13}>카테고리: {infoData.articleTypeName}</Text> : ''}
         </CardBody>
         <CardFooter>
