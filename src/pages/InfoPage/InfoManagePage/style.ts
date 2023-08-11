@@ -23,6 +23,20 @@ export const InfoListSection = styled.div`
 export const SearchSection = styled.div`
   display: flex;
   align-items: center;
+
+  & > button {
+    height: 49px;
+    margin-bottom: 9px;
+    margin-left: 5px;
+  }
+`;
+
+export const CategoryFilterSection = styled.div`
+  width: 100%;
+  overflow-x: scroll;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
 export const InfoPreviewSection = styled.div`

@@ -17,6 +17,10 @@ export interface InfoResponseType extends InfoDataType {
 
 export interface InfoQueryRequestType {
   page: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  title?: string | null;
+  typeName?: string | null;
 }
 
 export interface InfoQueryResponseType {
@@ -26,11 +30,18 @@ export interface InfoQueryResponseType {
 
 export function useGetInfoRequest(params: InfoQueryRequestType, isEnabled?: boolean) {
   return useQuery(
-    [`/admin/article/all?page=${params.page}`, params],
+    [
+      `/admin/article/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
+        params.endDate || ''
+      }&title=${params.title || ''}&typeName=${params.typeName || ''}`,
+      params,
+    ],
     () =>
       httpClient<InfoQueryResponseType>({
         method: 'GET',
-        url: `/admin/article/all?page=${params.page}`,
+        url: `/admin/article/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
+          params.endDate || ''
+        }&title=${params.title || ''}&typeName=${params.typeName || ''}`,
       }),
     { enabled: isEnabled },
   );
