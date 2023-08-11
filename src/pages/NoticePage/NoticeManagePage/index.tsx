@@ -15,6 +15,7 @@ import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
+import { RepeatIcon } from '@chakra-ui/icons';
 import { useGetNoticeRequest } from '../../../api/Notice';
 import toast from 'react-hot-toast';
 import { NoticeDataType } from '../../../api/Notice';
@@ -44,7 +45,7 @@ function NoticeManagePage() {
       page: currentPage - 1,
       startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
       endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
-      title: keyword ? keyword : '',
+      title: keyword ? encodeURIComponent(keyword) : '',
     },
     false,
   );
@@ -76,18 +77,25 @@ function NoticeManagePage() {
     setSelectedArticle(notice);
   };
 
+  const handleSearchRefreshButton = () => {
+    setDateRange([null, null]);
+    setKeyword('');
+  };
+
   return (
     <RightContainer title={'공지사항 글 관리'}>
       <NoticeSection>
         <NoticeListSection>
           <SearchSection>
             <SearchUI
-              placeholder="검색어를 입력하거나 날짜 필터링을 설정한 후 검색 버튼을 눌러주세요."
+              placeholder="검색어 입력 혹은 기간을 설정한 후 검색 버튼을 눌러주세요."
               onChange={handleSearchKeyword}
               onKeyDown={handleOnEnterKeyDown}
+              value={keyword}
             />
             <DatePickerUI setDateRange={setDateRange} startDate={startDate} endDate={endDate} />
             <DefaultButton onClick={() => handleDateSearchButton()}>검색</DefaultButton>
+            <RepeatIcon w={6} h={6} ml="5px" cursor={'pointer'} onClick={() => handleSearchRefreshButton()} />
           </SearchSection>
           {noticeList && noticeList.length > 0 ? (
             <>

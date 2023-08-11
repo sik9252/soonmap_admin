@@ -5,16 +5,18 @@ interface InputProps {
   placeholder?: string;
   show?: boolean;
   defaultValue?: string;
+  value?: string;
   onClick?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export default function InputUI({ width, placeholder, defaultValue, onChange, onKeyDown }: InputProps) {
+export default function InputUI({ width, placeholder, value, defaultValue, onChange, onKeyDown }: InputProps) {
   return (
     <Input
       width={width ? width : '91%'}
       placeholder={placeholder}
+      value={value}
       fontSize="14px"
       size="lg"
       variant="outline"
