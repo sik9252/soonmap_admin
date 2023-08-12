@@ -15,10 +15,10 @@ export const LeftSection = styled.div`
   width: 45%;
   padding: 15px;
 
-  & > button {
+  /* & > button {
     position: absolute;
     bottom: 35px;
-  }
+  } */
 `;
 
 export const RightSection = styled.div`
@@ -59,5 +59,19 @@ export const FloorItem = styled.div`
 
   & > div:nth-of-type(1) {
     width: 50px;
+  }
+`;
+
+export const Notice = styled.div`
+  font-size: 13px;
+  color: #dc143c;
+`;
+
+export const ButtonSection = styled.div`
+  position: absolute;
+  bottom: 35px;
+
+  & > button {
+    margin-right: 10px;
   }
 `;
