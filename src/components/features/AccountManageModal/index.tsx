@@ -59,12 +59,12 @@ function AccountManageModal({ isModalOpen, setIsModalOpen }: ModalProps) {
           <Tabs variant="enclosed">
             <TabList>
               {ACCOUNT_MENU.map((menu) => (
-                <Tab>{menu.tabName}</Tab>
+                <Tab key={menu.id}>{menu.tabName}</Tab>
               ))}
             </TabList>
             <TabPanels>
               {ACCOUNT_SCREEN.map((screen) => (
-                <TabPanel>{screen.screen}</TabPanel>
+                <TabPanel key={screen.id}>{screen.screen}</TabPanel>
               ))}
             </TabPanels>
           </Tabs>

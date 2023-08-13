@@ -53,7 +53,7 @@ function AccountManagePage() {
           <Tbody>
             {accountList &&
               accountList.map((account) => (
-                <Tr>
+                <Tr key={account.id}>
                   <Td>{account.name}</Td>
                   <Td>{account.email}</Td>
                   <Td> {account.admin ? '관리자' : account.manager ? '매니저' : account.staff ? '일반' : ''}</Td>
