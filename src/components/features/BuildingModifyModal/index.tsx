@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react';
 import InputUI from '../../ui/InputUI';
 import { FloorImageUploaderUI } from '../../ui/FloorImageUploaderUI';
@@ -11,33 +11,133 @@ import {
   InputItem,
   FloorInputSection,
   FloorItem,
+  Notice,
 } from './style';
-
-interface SelectedBuildingType {
-  id?: number;
-  unique_num?: number;
-  name?: string;
-  floors?: number;
-  description?: string;
-  x?: number;
-  y?: number;
-}
+import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
+import {
+  useGetBuildingRequest,
+  useGetFloorRequest,
+  useUpdateBuildingRequest,
+  useUpdateFloorImageRequest,
+  FloorQueryResponseType,
+} from '../../../api/Building';
+import toast from 'react-hot-toast';
+import { DefaultButton } from '../../ui/ButtonUI';
 
 interface ModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedBuilding: SelectedBuildingType;
 }
 
-function BuildingModifyModal({ isModalOpen, setIsModalOpen, selectedBuilding }: ModalProps) {
+function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
+  const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
+  const [floorImages, setFloorImages] = useState<FloorQueryResponseType[] | null>([]);
+  const [buildingNumber, setBuildingNumber] = useState<string | undefined>('');
+  const [buildingName, setBuildingName] = useState<string | undefined>('');
+  const [buildingDescription, setBuildingDescription] = useState<string | undefined>('');
+  const [buildingFloors, setBuildingNumberFloors] = useState<number | undefined>(0);
+  const [buildingXpos, setBuildingXpos] = useState<number | undefined>(0);
+  const [buildingYpos, setBuildingYpos] = useState<number | undefined>(0);
+  const [imgPreview, setImgPreview] = useState<string[]>(Array(selectedBuilding.floors).fill(''));
+  const [updatedImgList, setUpdatedImgList] = useState<Blob[] | null>(Array(selectedBuilding.floors).fill(null));
+
+  useEffect(() => {
+    setBuildingNumber(selectedBuilding.uniqueNumber);
+    setBuildingName(selectedBuilding.name);
+    setBuildingDescription(selectedBuilding.description);
+    setBuildingNumberFloors(selectedBuilding.floors);
+    setBuildingXpos(selectedBuilding.latitude);
+    setBuildingYpos(selectedBuilding.longitude);
+  }, [selectedBuilding]);
+
+  const { refetch: getBuildingRefetch } = useGetBuildingRequest(
+    {
+      page: 0,
+    },
+    false,
+  );
+
+  const {
+    data: getFloorResult,
+    isError: getFloorError,
+    refetch: getFloorRefetch,
+  } = useGetFloorRequest(
+    {
+      buildingId: selectedBuilding.id ? selectedBuilding.id : 0,
+    },
+    false,
+  );
+
+  const {
+    mutate: updateBuildingInfoRequest,
+    data: updateBuildingInfoData,
+    error: updateBuildingInfoError,
+    isLoading: updateBuildingInfoLoading,
+  } = useUpdateBuildingRequest();
+
+  const {
+    mutate: updateFloorImageRequest,
+    data: updateFloorImageData,
+    error: updateFloorImageError,
+    isLoading: updateFloorImageLoading,
+  } = useUpdateFloorImageRequest();
+
+  useEffect(() => {
+    if (isModalOpen) void getFloorRefetch();
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    if (getFloorResult) {
+      setFloorImages(getFloorResult?.data as FloorQueryResponseType[] | null);
+    } else if (getFloorError) {
+      toast.error('건물 목록을 불러오는데 실패했습니다.');
+    }
+  }, [getFloorResult, getFloorError]);
+
+  useEffect(() => {
+    const floorImageList: string[] = [];
+
+    floorImages?.forEach((image) => {
+      if (image) {
+        floorImageList.push(image.dir || '');
+      }
+    });
+
+    setImgPreview(floorImageList);
+  }, [floorImages]);
+
   const handleBuildingModifyModal = () => {
     setIsModalOpen(false);
   };
 
-  const [imgPreview, setImgPreview] = useState<string[]>(Array(selectedBuilding.floors).fill(''));
+  const handleBuildingNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingNumber(e.target.value);
+  };
+
+  const handleBuildingName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingName(e.target.value);
+  };
+
+  const handleBuildingDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingDescription(e.target.value);
+  };
+
+  const handleBuildingFloors = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingNumberFloors(Number(e.target.value));
+  };
+
+  const handleBuildingXpos = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingXpos(Number(e.target.value));
+  };
+
+  const handleBuildingYpos = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingYpos(Number(e.target.value));
+  };
 
   const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
+    const updatedImageList: Blob[] = [];
 
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
@@ -49,8 +149,53 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, selectedBuilding }: 
         ]);
       };
       reader.readAsDataURL(e.target.files[0]);
+      updatedImageList[index] = e.target.files[0];
+      setUpdatedImgList(updatedImageList);
     }
   };
+
+  const handleBuildingInfoUpdateButton = () => {
+    const data = {
+      id: selectedBuilding.id,
+      name: buildingName,
+      floors: buildingFloors,
+      description: buildingDescription,
+      latitude: buildingXpos,
+      longitude: buildingYpos,
+      uniqueNumber: buildingNumber,
+    };
+
+    if (!buildingName || !buildingFloors || !buildingDescription || !buildingXpos || !buildingYpos || !buildingNumber) {
+      toast.error('모든 항목은 필수값입니다.');
+    } else {
+      console.log(data);
+      updateBuildingInfoRequest({ ...data });
+    }
+  };
+
+  useEffect(() => {
+    if (updateBuildingInfoData) {
+      toast.success('건물 정보 수정이 완료되었습니다.');
+      void getBuildingRefetch();
+    } else if (updateBuildingInfoError) {
+      toast.error((updateBuildingInfoError as Error).message);
+    }
+  }, [updateBuildingInfoData, updateBuildingInfoError]);
+
+  const handleFloorImageUpdate = (floorId?: number, image?: Blob) => {
+    updateFloorImageRequest({
+      floorId: floorId,
+      image: image,
+    });
+  };
+
+  useEffect(() => {
+    if (updateFloorImageData) {
+      toast.success('도면 수정이 완료되었습니다.');
+    } else if (updateFloorImageError) {
+      toast.error('수정할 이미지가 등록되지 않았습니다.');
+    }
+  }, [updateFloorImageData, updateFloorImageError]);
 
   return (
     <>
@@ -65,42 +210,75 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, selectedBuilding }: 
                 <SubTitle>건물 정보 수정</SubTitle>
                 <InputItem>
                   <div>고유번호</div>
-                  <InputUI placeholder="건물의 고유번호를 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 고유번호를 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.uniqueNumber}
+                    onChange={handleBuildingNumber}
+                  />
                 </InputItem>
                 <InputItem>
                   <div>이름</div>
-                  <InputUI placeholder="건물의 이름을 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 이름을 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.name}
+                    onChange={handleBuildingName}
+                  />
                 </InputItem>
                 <InputItem>
                   <div>정보</div>
-                  <InputUI placeholder="건물의 정보를 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 정보를 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.description}
+                    onChange={handleBuildingDescription}
+                  />
                 </InputItem>
                 <InputItem>
                   <div>총 층수</div>
-                  <InputUI placeholder="건물의 총 층수를 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 총 층수를 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.floors?.toString()}
+                    onChange={handleBuildingFloors}
+                  />
                 </InputItem>
                 <InputItem>
                   <div>X 좌표</div>
-                  <InputUI placeholder="건물의 X 좌표를 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 X 좌표를 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.latitude?.toString()}
+                    onChange={handleBuildingXpos}
+                  />
                 </InputItem>
                 <InputItem>
                   <div>Y 좌표</div>
-                  <InputUI placeholder="건물의 Y 좌표를 입력해주세요." width="75%" />
+                  <InputUI
+                    placeholder="건물의 Y 좌표를 입력해주세요."
+                    width="75%"
+                    defaultValue={selectedBuilding.longitude?.toString()}
+                    onChange={handleBuildingYpos}
+                  />
                 </InputItem>
               </LeftSection>
               <RightSection>
-                <SubTitle>층별 도면 수정</SubTitle>
+                <SubTitle>
+                  층별 도면 수정
+                  <Notice>각 도면 옆의 수정하기 버튼을 눌러야 이미지 수정이 완료됩니다.</Notice>
+                </SubTitle>
                 <FloorInputSection>
                   <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
                   {Array.from({ length: selectedBuilding.floors || 0 }).map((_, index) => (
                     <FloorItem key={index}>
                       <div>{index + 1}층</div>
-                      <FloorImageUploaderUI
-                        floorCount={selectedBuilding.floors || 0}
-                        index={index}
-                        imgPreview={imgPreview}
-                        onImageChange={handleImageChange}
-                      />
+                      <FloorImageUploaderUI index={index} imgPreview={imgPreview} onImageChange={handleImageChange} />
+                      <DefaultButton
+                        onClick={() => handleFloorImageUpdate(floorImages![index].id, updatedImgList![index])}
+                      >
+                        {index + 1}층 도면 수정하기
+                      </DefaultButton>
                     </FloorItem>
                   ))}
                 </FloorInputSection>
@@ -117,8 +295,11 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, selectedBuilding }: 
                 _hover={{
                   bg: '#1a478a',
                 }}
+                onClick={() => handleBuildingInfoUpdateButton()}
+                isLoading={updateBuildingInfoLoading}
+                loadingText="건물 정보 수정중"
               >
-                수정
+                건물 정보 수정
               </Button>
             </div>
           </ButtonContainer>

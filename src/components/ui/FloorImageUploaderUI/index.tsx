@@ -4,7 +4,6 @@ import { AddIcon } from '@chakra-ui/icons';
 import { FileUploaderContainer, StyledFileInput, StyledImgInput } from './style';
 
 interface FloorImageUploaderProps {
-  floorCount: number;
   index: number;
   imgPreview: string[];
   onImageChange: (index: number, e: React.ChangeEvent<HTMLInputElement>) => void;

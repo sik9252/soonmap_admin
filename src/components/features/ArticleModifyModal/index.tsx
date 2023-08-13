@@ -187,9 +187,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
             <TextEditor editorRef={editorRef} content={selectedArticle.content} onChange={handleContent} />
           </ModalBody>
           <ButtonContainer>
-            <div>
-              <FileUploaderUI />
-            </div>
+            <div>{/* <FileUploaderUI /> */}</div>
             <div>
               <Button onClick={() => handleArticleModifyModal()}>취소</Button>
               <Button

@@ -84,9 +84,9 @@ function CreateInfoPage() {
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContent} />
       <ButtonContainer>
-        <FileUploaderUI />
+        <div>{/* <FileUploaderUI /> */}</div>
         <DefaultButton isLoading={createInfoLoading} loadingText="등록 중" onClick={() => clickSubmitting()}>
-          게시글 등록
+          정보 글 등록
         </DefaultButton>
       </ButtonContainer>
     </RightContainer>

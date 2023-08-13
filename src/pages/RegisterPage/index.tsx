@@ -12,12 +12,12 @@ function RegisterPage() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [name, setName] = useState('');
+  const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 
   const handleUserNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setUserName(e.target.value);
   };
 
   const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,10 +40,16 @@ function RegisterPage() {
   } = useRegisterRequest();
 
   const clickRegisterSubmit = () => {
+    const data = {
+      name: userName,
+      userId: userId,
+      userPw: userPw,
+    };
+
     if (!userId || !userPw) {
       toast.error('모든 입력 칸을 채워주세요.');
     } else {
-      adminRegisterRequest({ name, userId, userPw });
+      adminRegisterRequest({ ...data });
     }
   };
 

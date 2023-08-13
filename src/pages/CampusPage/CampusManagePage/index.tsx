@@ -1,72 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Table, Thead, Tbody, Tr, Td, Th, TableContainer } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import RightContainer from '../../../components/layout/RightContainer';
 import AlertDialogModal from '../../../components/features/AlertDialogModal';
 import BuildingModifyModal from '../../../components/features/BuildingModifyModal';
+import Pagination from '../../../components/features/Pagination';
+import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
+import toast from 'react-hot-toast';
+import { BuildingDataType, useGetBuildingRequest } from '../../../api/Building';
 
 function CampusManagePage() {
+  const path = useLocation();
+  const [location, setLocation] = useState('');
+  const { selectedBuilding, setSelectedBuilding } = useSelectedBuildingAtom();
+
+  const [buildingList, setBuildingList] = useState<BuildingDataType[] | null>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(1);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [buildingList, setBuildingList] = useState([
-    {
-      id: 1,
-      unique_num: 9,
-      name: '공학관',
-      floors: 4,
-      description: '공학관 주소',
-      x: 36.123413,
-      y: 126.343415,
-    },
-    {
-      id: 2,
-      unique_num: 9,
-      name: '인문관',
-      floors: 5,
-      description: '인문관 주소',
-      x: 36.123413,
-      y: 126.343415,
-    },
-    {
-      id: 3,
-      unique_num: 9,
-      name: '자연과학관',
-      floors: 6,
-      description: '자연과학관 주소',
-      x: 36.123413,
-      y: 126.343415,
-    },
-    {
-      id: 4,
-      unique_num: 9,
-      name: '유니토피아',
-      floors: 11,
-      description: '유니토피아 주소',
-      x: 36.123413,
-      y: 126.343415,
-    },
-  ]);
+  const { data: getBuildingResult, isError: getBuildingError } = useGetBuildingRequest({ page: currentPage - 1 });
 
-  const [selectedBuilding, setSelectedBuilding] = useState({});
+  useEffect(() => {
+    if (getBuildingResult) {
+      setBuildingList(getBuildingResult?.data.buildingResponseDtoList);
+      setTotalPosts(getBuildingResult?.data.totalPage);
+    } else if (getBuildingError) {
+      toast.error('건물 목록을 불러오는데 실패했습니다.');
+    }
+  }, [getBuildingResult, getBuildingError]);
 
-  const handleAlertDialog = () => {
+  const handleAlertDialog = (building: BuildingDataType) => {
+    if (path.pathname === '/campus/manage') {
+      setLocation('건물');
+    }
+
+    setSelectedBuilding(building);
     setIsAlertOpen(true);
   };
 
-  const handleBuildingModifyModal = (buildingId: number) => {
-    setSelectedBuilding(buildingId);
+  const handleBuildingModifyModal = (building: BuildingDataType) => {
+    if (path.pathname === '/campus/manage') {
+      setLocation('건물');
+    }
+
+    setSelectedBuilding(building);
     setIsModalOpen(true);
   };
 
   return (
     <RightContainer title={'건물 및 강의실 관리'}>
-      <BuildingModifyModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        selectedBuilding={selectedBuilding}
+      <BuildingModifyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <AlertDialogModal
+        location={location}
+        selectedItemIndex={selectedBuilding.id}
+        isAlertOpen={isAlertOpen}
+        setIsAlertOpen={setIsAlertOpen}
       />
-      <AlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -81,20 +73,26 @@ function CampusManagePage() {
           <Tbody>
             {buildingList &&
               buildingList.map((building) => (
-                <Tr>
-                  <Td width="5%">{building.unique_num}</Td>
+                <Tr key={building.id}>
+                  <Td width="5%">{building.uniqueNumber}</Td>
                   <Td width="20%">{building.name}</Td>
                   <Td width="45%">{building.description}</Td>
                   <Td width="15%">{building.floors} 층</Td>
                   <Td width="10%">
-                    <EditIcon mr="10px" cursor={'pointer'} onClick={() => handleBuildingModifyModal(building.id)} />
-                    <DeleteIcon cursor={'pointer'} onClick={handleAlertDialog} />
+                    <EditIcon mr="10px" cursor={'pointer'} onClick={() => handleBuildingModifyModal(building)} />
+                    <DeleteIcon cursor={'pointer'} onClick={() => handleAlertDialog(building)} />
                   </Td>
                 </Tr>
               ))}
           </Tbody>
         </Table>
       </TableContainer>
+      <Pagination
+        totalPosts={totalPosts * 10}
+        postPerPages={10}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </RightContainer>
   );
 }

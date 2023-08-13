@@ -1,5 +1,5 @@
 import { httpClient } from '.';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 interface AuthRequestProps {
   name?: string;
@@ -33,5 +33,17 @@ export function useRegisterRequest() {
       url: '/admin/register',
       data,
     }),
+  );
+}
+
+export function useLogoutRequest(isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/logout`],
+    () =>
+      httpClient({
+        method: 'GET',
+        url: `/admin/logout`,
+      }),
+    { enabled: isEnabled },
   );
 }
