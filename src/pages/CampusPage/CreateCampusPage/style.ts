@@ -65,6 +65,7 @@ export const FloorItem = styled.div`
 export const Notice = styled.div`
   font-size: 13px;
   color: #dc143c;
+  margin-bottom: 5px;
 `;
 
 export const ButtonSection = styled.div`

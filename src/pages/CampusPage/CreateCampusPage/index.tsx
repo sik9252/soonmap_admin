@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RightContainer from '../../../components/layout/RightContainer';
 import {
   SubTitle,
@@ -18,6 +19,8 @@ import toast from 'react-hot-toast';
 import { useCreateBuildingRequest, useCreateFloorImageRequest } from '../../../api/Building';
 
 function CreateCampusPage() {
+  const navigate = useNavigate();
+
   const {
     mutate: createBuildingRequest,
     data: createBuildingData,
@@ -124,9 +127,14 @@ function CreateCampusPage() {
     if (createFloorImageData) {
       toast.success(`${floorIndex}층 도면 등록이 완료되었습니다.`);
     } else if (createFloorImageError) {
-      toast.error((createFloorImageError as Error).message);
+      toast.error('건물 정보를 먼저 등록해주세요.');
     }
   }, [createFloorImageData, createFloorImageError]);
+
+  const handleBuildingAndFloorUpload = () => {
+    toast.success(`건물 정보 및 도면 업로드에 성공하였습니다.`);
+    navigate('/campus/manage');
+  };
 
   return (
     <RightContainer title={'건물 및 강의실 업로드'}>
@@ -134,6 +142,7 @@ function CreateCampusPage() {
         <LeftSection>
           <SubTitle>건물 정보 입력</SubTitle>
           <Notice>건물 정보를 먼저 등록한 후 도면을 업로드 해주세요.</Notice>
+          <Notice>도면을 모두 업로드 한 후 도면 업로드 완료하기 버튼을 누르면 최종 건물 등록이 완료됩니다.</Notice>
           <InputItem>
             <div>고유번호</div>
             <InputUI placeholder="건물의 고유번호를 입력해주세요." width="75%" onChange={handleBuildingNumber} />
@@ -170,6 +179,7 @@ function CreateCampusPage() {
             >
               건물 정보 등록하기
             </DefaultButton>
+            <DefaultButton onClick={() => handleBuildingAndFloorUpload()}>도면 업로드 완료하기</DefaultButton>
           </ButtonSection>
         </LeftSection>
         <RightSection>
