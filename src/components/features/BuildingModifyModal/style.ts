@@ -77,4 +77,14 @@ export const FloorItem = styled.div`
   & > div:nth-of-type(1) {
     width: 50px;
   }
+
+  & > button {
+    margin-left: 30px;
+  }
+`;
+
+export const Notice = styled.div`
+  font-size: 13px;
+  color: #dc143c;
+  margin-top: 8px;
 `;

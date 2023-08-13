@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError, AxiosError } from 'axios';
 
 interface MyAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 
+const SERVER_IP: string = import.meta.env.VITE_SERVER_IP;
+
 export const useAxios = axios.create({
-  baseURL: 'http://15.164.249.28:8080',
+  baseURL: `${SERVER_IP}`,
 });
 
 export async function httpClient<T>(config: AxiosRequestConfig, headers?: Record<string, string>) {

@@ -74,13 +74,13 @@ function CreateNoticePage() {
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContentInput} />
       <ButtonContainer>
-        <FileUploaderUI />
+        <div>{/* <FileUploaderUI /> */}</div>
         <DefaultButton
           isLoading={adminCreateNoticeLoading}
           loadingText="등록 중"
           onClick={() => clickCreateNoticeSubmit()}
         >
-          게시글 등록
+          공지사항 등록
         </DefaultButton>
       </ButtonContainer>
     </RightContainer>
