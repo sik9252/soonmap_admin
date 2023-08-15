@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGetMyArticleRequest } from '../../../api/Account';
+import { MyArticleDataType, useGetMyArticleRequest } from '../../../api/Mypage';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -8,13 +8,11 @@ import {
   PreviewMyArticle,
 } from './style';
 import { SimpleGrid } from '@chakra-ui/react';
-import RightContainer from '../../../components/layout/RightContainer';
 import CardUI from '../../../components/ui/CardUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
-import { MyArticleDataType } from '../../../api/Account';
 
 function Info() {
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
