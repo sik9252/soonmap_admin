@@ -39,6 +39,10 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
   const { refetch: getInfoRefetch } = useGetInfoRequest(
     {
       page: 0,
+      startDate: '',
+      endDate: '',
+      title: '',
+      typeName: '',
     },
     false,
   );
