@@ -9,7 +9,7 @@ function AccordionUI({ menuTitle, children }: MenuItemProps) {
   return (
     <AccordionItem>
       <AccordionButton>
-        <Box as="span" flex="1" textAlign="left">
+        <Box as="span" flex="1" textAlign="left" fontWeight={600}>
           {menuTitle}
         </Box>
         <AccordionIcon />

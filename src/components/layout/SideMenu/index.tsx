@@ -86,6 +86,14 @@ function SideMenu() {
             </Item>
           </AccordionUI>
         ) : null}
+        <AccordionUI menuTitle={'마이페이지'}>
+          <Item onClick={() => goToPage('/my/info')} $isSelected={location.pathname === '/my/info'}>
+            <span>{'-'}</span> 내 정보 관리
+          </Item>
+          <Item onClick={() => goToPage('/my/article')} $isSelected={location.pathname === '/my/article'}>
+            <span>{'-'}</span> 내가 작성한 글 관리
+          </Item>
+        </AccordionUI>
       </Accordion>
       <FooterSection>
         <div onClick={() => handleLogoutButton()}>
