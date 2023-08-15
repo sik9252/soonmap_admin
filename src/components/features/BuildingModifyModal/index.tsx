@@ -269,18 +269,28 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
                   <Notice>각 도면 옆의 수정하기 버튼을 눌러야 이미지 수정이 완료됩니다.</Notice>
                 </SubTitle>
                 <FloorInputSection>
-                  <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
-                  {Array.from({ length: selectedBuilding.floors || 0 }).map((_, index) => (
-                    <FloorItem key={index}>
-                      <div>{index + 1}층</div>
-                      <FloorImageUploaderUI index={index} imgPreview={imgPreview} onImageChange={handleImageChange} />
-                      <DefaultButton
-                        onClick={() => handleFloorImageUpdate(floorImages![index].id, updatedImgList![index])}
-                      >
-                        {index + 1}층 도면 수정하기
-                      </DefaultButton>
-                    </FloorItem>
-                  ))}
+                  {floorImages && floorImages.length > 0 ? (
+                    <>
+                      <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
+                      {Array.from({ length: selectedBuilding.floors || 0 }).map((_, index) => (
+                        <FloorItem key={index}>
+                          <div>{index + 1}층</div>
+                          <FloorImageUploaderUI
+                            index={index}
+                            imgPreview={imgPreview}
+                            onImageChange={handleImageChange}
+                          />
+                          <DefaultButton
+                            onClick={() => handleFloorImageUpdate(floorImages[index].id, updatedImgList![index])}
+                          >
+                            {index + 1}층 도면 수정하기
+                          </DefaultButton>
+                        </FloorItem>
+                      ))}
+                    </>
+                  ) : (
+                    <div>도면이 존재하지 않는 건물입니다.</div>
+                  )}
                 </FloorInputSection>
               </RightSection>
             </SubContainer>
