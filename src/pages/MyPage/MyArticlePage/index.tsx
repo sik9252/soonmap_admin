@@ -15,13 +15,20 @@ function MyArticlePage() {
     },
   ];
 
-  const ACCOUNT_SCREEN = [
+  const ACCOUNT_SCREEN_ADMIN = [
     {
       id: 1,
       screen: <Notice />,
     },
     {
       id: 2,
+      screen: <Info />,
+    },
+  ];
+
+  const ACCOUNT_SCREEN_DEFAULT = [
+    {
+      id: 1,
       screen: <Info />,
     },
   ];
@@ -34,11 +41,19 @@ function MyArticlePage() {
             <Tab key={menu.id}>{menu.tabName}</Tab>
           ))}
         </TabList>
-        <TabPanels>
-          {ACCOUNT_SCREEN.map((screen) => (
-            <TabPanel key={screen.id}>{screen.screen}</TabPanel>
-          ))}
-        </TabPanels>
+        {localStorage.getItem('auth') === 'one' ? (
+          <TabPanels>
+            {ACCOUNT_SCREEN_ADMIN.map((screen) => (
+              <TabPanel key={screen.id}>{screen.screen}</TabPanel>
+            ))}
+          </TabPanels>
+        ) : (
+          <TabPanels>
+            {ACCOUNT_SCREEN_DEFAULT.map((screen) => (
+              <TabPanel key={screen.id}>{screen.screen}</TabPanel>
+            ))}
+          </TabPanels>
+        )}
       </Tabs>
     </RightContainer>
   );

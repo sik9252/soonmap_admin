@@ -45,7 +45,7 @@ function SideMenu() {
     <SideMenuContainer>
       <ProfileSection>
         <Logo src={SoonMapWhiteLogo} alt="logo" onClick={() => goToPage('/home')} />
-        <Title>관리자 계정</Title>
+        <Title>{localStorage.getItem('user_name')}</Title>
       </ProfileSection>
       <Accordion allowToggle={true}>
         {isAdmin ? (
