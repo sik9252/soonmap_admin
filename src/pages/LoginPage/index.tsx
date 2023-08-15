@@ -42,7 +42,7 @@ function LoginPage() {
     if (adminLoginData) {
       setAuthToken(adminLoginData?.data.accessToken, adminLoginData?.data.refreshToken);
       setAuthHierarchy(adminLoginData?.data);
-      toast.success('관리자님 환영합니다.');
+      toast.success(`${localStorage.getItem('user_name')!}님 환영합니다.`);
       navigate('/home');
     } else if (adminLoginError) {
       toast.error((adminLoginError as Error).message);
