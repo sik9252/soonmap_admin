@@ -11,6 +11,8 @@ import CreateInfoPage from '../pages/InfoPage/CreateInfoPage';
 import InfoManagePage from '../pages/InfoPage/InfoManagePage';
 import InfoCategoryManage from '../pages/InfoPage/InfoCategoryManage';
 import AccountManagePage from '../pages/AccountManagePage';
+import MyArticlePage from '../pages/MyPage/MyArticlePage';
+import MyInfoPage from '../pages/MyPage/MyInfo';
 import NotFoundPage from '../pages/NotFoundPage';
 
 function Router() {
@@ -42,6 +44,11 @@ function Router() {
           <Route path="/account/*">
             <Route path="" element={<Navigate replace to="/account/manage" />} />
             <Route path="manage" element={<AccountManagePage />} />
+          </Route>
+          <Route path="/my/*">
+            <Route path="" element={<Navigate replace to="/my/info" />} />
+            <Route path="info" element={<MyInfoPage />} />
+            <Route path="article" element={<MyArticlePage />} />
           </Route>
         </Route>
       </Routes>

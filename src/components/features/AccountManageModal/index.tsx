@@ -11,8 +11,7 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import DefaultInfoSection from './DefaultInfoSection';
-import MyArticleSection from './MyArticleSection';
+import DefaultInfoSection from './DefaultInfo';
 import { useSelectedAccountAtom } from '../../../store/accountAtom';
 
 interface ModalProps {
@@ -28,20 +27,12 @@ function AccountManageModal({ isModalOpen, setIsModalOpen }: ModalProps) {
       id: 1,
       tabName: '기본 정보',
     },
-    {
-      id: 2,
-      tabName: '작성한 글',
-    },
   ];
 
   const ACCOUNT_SCREEN = [
     {
       id: 1,
       screen: <DefaultInfoSection selectedAccount={selectedAccount} setIsModalOpen={setIsModalOpen} />,
-    },
-    {
-      id: 2,
-      screen: <MyArticleSection />,
     },
   ];
 
