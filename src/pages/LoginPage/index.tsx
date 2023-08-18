@@ -68,15 +68,16 @@ function LoginPage() {
       </form>
       <ButtonSection>
         <Link to="/register">회원가입 하러가기</Link>
-        <DefaultButton
-          width={'120px'}
-          isLoading={adminLoginLoading}
-          loadingText={'로그인 중'}
-          onClick={() => clickLoginSubmit()}
-        >
-          로그인
-        </DefaultButton>
+        <Link to="/find-account">아이디/비밀번호 찾기</Link>
       </ButtonSection>
+      <DefaultButton
+        width={'100%'}
+        isLoading={adminLoginLoading}
+        loadingText={'로그인 중'}
+        onClick={() => clickLoginSubmit()}
+      >
+        로그인
+      </DefaultButton>
     </LoginPageContainer>
   );
 }

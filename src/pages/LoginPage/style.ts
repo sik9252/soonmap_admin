@@ -15,11 +15,11 @@ export const PageTitle = styled.div`
 `;
 
 export const ButtonSection = styled.div`
-  font-size: 15px;
+  font-size: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin: 15px 0 15px 0;
 
   & > a {
     color: #777777;
