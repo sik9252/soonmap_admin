@@ -5,6 +5,7 @@ import { DefaultButton } from '../../components/ui/ButtonUI';
 import toast from 'react-hot-toast';
 import { RegisterPageContainer, PageTitle, ButtonSection } from './style';
 import { useRegisterRequest } from '../../api/Auth';
+import { checkEmailValidate } from '../../utils/checkEmailValidate';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function RegisterPage() {
 
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [userPw, setUserPw] = useState('');
 
   const handleUserNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +24,10 @@ function RegisterPage() {
 
   const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
+  };
+
+  const handleUserEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(e.target.value);
   };
 
   const handleUserPwInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,13 +49,18 @@ function RegisterPage() {
     const data = {
       name: userName,
       userId: userId,
+      email: userEmail,
       userPw: userPw,
     };
 
-    if (!userId || !userPw) {
+    if (!userName || !userId || !userEmail || !userPw) {
       toast.error('모든 입력 칸을 채워주세요.');
     } else {
-      adminRegisterRequest({ ...data });
+      if (checkEmailValidate(userEmail)) {
+        adminRegisterRequest({ ...data });
+      } else {
+        toast.error('올바른 이메일 주소를 입력해주세요.');
+      }
     }
   };
 
@@ -68,6 +79,7 @@ function RegisterPage() {
       <form>
         <InputUI width={'100%'} placeholder={'이름(ex. OOO 학생회)'} onChange={handleUserNameInput} />
         <InputUI width={'100%'} placeholder={'아이디'} onChange={handleUserIdInput} />
+        <InputUI width={'100%'} placeholder={'이메일 ex) test123@sch.ac.kr'} onChange={handleUserEmailInput} />
         <PasswordInputUI
           width={'100%'}
           placeholder={'비밀번호'}

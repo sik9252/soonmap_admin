@@ -11,6 +11,9 @@ export const RegisterPageContainer = styled.div`
     & > input:nth-of-type(1) {
       margin-bottom: 10px;
     }
+    & > input:nth-of-type(2) {
+      margin-bottom: 10px;
+    }
   }
 `;
 
