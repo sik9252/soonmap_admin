@@ -7,4 +7,5 @@ export const removeAuthToken = () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('auth');
+  localStorage.removeItem('user_name');
 };

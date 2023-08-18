@@ -27,7 +27,7 @@ import { DefaultButton } from '../../../components/ui/ButtonUI';
 
 function InfoManagePage() {
   const [infoList, setInfoList] = useState<InfoDataType[] | null>([]);
-  const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
+  const { selectedArticle, setSelectedArticle, resetAtom } = useSelectedArticleAtom();
   const [options, setOptions] = useState<CategoryDataType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
@@ -36,6 +36,10 @@ function InfoManagePage() {
   const [keyword, setKeyword] = useState('');
   //const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  useEffect(() => {
+    resetAtom();
+  }, []);
 
   const handleSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
