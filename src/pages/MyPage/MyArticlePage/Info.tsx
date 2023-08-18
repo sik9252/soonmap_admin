@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MyArticleDataType, useGetMyArticleRequest } from '../../../api/Mypage';
+import { MyArticleDataType, useGetMyInfoRequest } from '../../../api/Mypage';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -24,12 +24,9 @@ function Info() {
     data: myArticleResult,
     isError: myArticleError,
     refetch: myArticleRefetch,
-  } = useGetMyArticleRequest(
-    {
-      page: currentPage - 1,
-    },
-    false,
-  );
+  } = useGetMyInfoRequest({
+    page: currentPage - 1,
+  });
 
   useEffect(() => {
     void myArticleRefetch();
