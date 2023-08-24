@@ -35,20 +35,27 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
   const [buildingNumber, setBuildingNumber] = useState<string | undefined>('');
   const [buildingName, setBuildingName] = useState<string | undefined>('');
   const [buildingDescription, setBuildingDescription] = useState<string | undefined>('');
-  const [buildingFloors, setBuildingNumberFloors] = useState<number | undefined>(0);
+  const [buildingUpFloorsCount, setBuildingUpFloorsCount] = useState<number | undefined>(0);
+  const [buildingDownFloorsCount, setBuildingDownFloorsCount] = useState<number | undefined>(0);
   const [buildingXpos, setBuildingXpos] = useState<number | undefined>(0);
   const [buildingYpos, setBuildingYpos] = useState<number | undefined>(0);
-  const [imgPreview, setImgPreview] = useState<string[]>(Array(selectedBuilding.floors).fill(''));
-  const [updatedImgList, setUpdatedImgList] = useState<Blob[] | null>(Array(selectedBuilding.floors).fill(null));
+  const [imgPreview, setImgPreview] = useState<string[]>(Array(0).fill(''));
+  const [updatedImgList, setUpdatedImgList] = useState<Blob[] | null>(Array(0).fill(null));
 
   useEffect(() => {
     setBuildingNumber(selectedBuilding.uniqueNumber);
     setBuildingName(selectedBuilding.name);
     setBuildingDescription(selectedBuilding.description);
-    setBuildingNumberFloors(selectedBuilding.floors);
+    setBuildingUpFloorsCount(selectedBuilding.floorsUp);
+    setBuildingDownFloorsCount(selectedBuilding.floorsDown);
     setBuildingXpos(selectedBuilding.latitude);
     setBuildingYpos(selectedBuilding.longitude);
   }, [selectedBuilding]);
+
+  useEffect(() => {
+    setImgPreview(Array((buildingUpFloorsCount || 0) + (buildingDownFloorsCount || 0)).fill(''));
+    setUpdatedImgList(Array((buildingUpFloorsCount || 0) + (buildingDownFloorsCount || 0)).fill(''));
+  }, [buildingUpFloorsCount, buildingDownFloorsCount]);
 
   const { refetch: getBuildingRefetch } = useGetBuildingRequest(
     {
@@ -122,8 +129,12 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     setBuildingDescription(e.target.value);
   };
 
-  const handleBuildingFloors = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingNumberFloors(Number(e.target.value));
+  const handleBuildingUpFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingUpFloorsCount(Number(e.target.value));
+  };
+
+  const handleBuildingDownFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildingDownFloorsCount(Number(e.target.value));
   };
 
   const handleBuildingXpos = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,6 +160,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
         ]);
       };
       reader.readAsDataURL(e.target.files[0]);
+
       updatedImageList[index] = e.target.files[0];
       setUpdatedImgList(updatedImageList);
     }
@@ -158,14 +170,23 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     const data = {
       id: selectedBuilding.id,
       name: buildingName,
-      floors: buildingFloors,
+      floorsUp: buildingUpFloorsCount,
+      floorsDown: buildingDownFloorsCount,
       description: buildingDescription,
       latitude: buildingXpos,
       longitude: buildingYpos,
       uniqueNumber: buildingNumber,
     };
 
-    if (!buildingName || !buildingFloors || !buildingDescription || !buildingXpos || !buildingYpos || !buildingNumber) {
+    if (
+      !buildingName ||
+      !buildingUpFloorsCount ||
+      !buildingDownFloorsCount ||
+      !buildingDescription ||
+      !buildingXpos ||
+      !buildingYpos ||
+      !buildingNumber
+    ) {
       toast.error('모든 항목은 필수값입니다.');
     } else {
       console.log(data);
@@ -238,10 +259,17 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
                 <InputItem>
                   <div>총 층수</div>
                   <InputUI
-                    placeholder="건물의 총 층수를 입력해주세요."
-                    width="75%"
-                    defaultValue={selectedBuilding.floors?.toString()}
-                    onChange={handleBuildingFloors}
+                    placeholder="지상 층수 (<= 20)"
+                    width="36.5%"
+                    defaultValue={selectedBuilding.floorsUp?.toString()}
+                    onChange={handleBuildingUpFloorsCount}
+                  />
+                  <div style={{ width: '1px' }}></div>
+                  <InputUI
+                    placeholder="지하 층수 (<= 10)"
+                    width="36.5%"
+                    defaultValue={selectedBuilding.floorsDown?.toString()}
+                    onChange={handleBuildingDownFloorsCount}
                   />
                 </InputItem>
                 <InputItem>
@@ -271,17 +299,36 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
                 <FloorInputSection>
                   {floorImages && floorImages.length > 0 ? (
                     <>
-                      <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
-                      {Array.from({ length: selectedBuilding.floors || 0 }).map((_, index) => (
+                      {Array.from({ length: selectedBuilding.floorsDown || 0 }).map((_, index) => (
                         <FloorItem key={index}>
-                          <div>{index + 1}층</div>
+                          <div style={{ color: '#48aaad' }}>{index - (selectedBuilding.floorsDown || 0)}층</div>
                           <FloorImageUploaderUI
                             index={index}
-                            imgPreview={imgPreview}
+                            imgPreview={imgPreview.slice(0, selectedBuilding.floorsDown)}
                             onImageChange={handleImageChange}
                           />
                           <DefaultButton
                             onClick={() => handleFloorImageUpdate(floorImages[index].id, updatedImgList![index])}
+                          >
+                            {index - (selectedBuilding.floorsDown || 0)}층 도면 수정하기
+                          </DefaultButton>
+                        </FloorItem>
+                      ))}
+                      {Array.from({ length: selectedBuilding.floorsUp || 0 }).map((_, index) => (
+                        <FloorItem key={index + (buildingDownFloorsCount || 0)}>
+                          <div>{index + 1}층</div>
+                          <FloorImageUploaderUI
+                            index={index + (buildingDownFloorsCount || 0)}
+                            imgPreview={imgPreview}
+                            onImageChange={handleImageChange}
+                          />
+                          <DefaultButton
+                            onClick={() =>
+                              handleFloorImageUpdate(
+                                floorImages[index + (buildingDownFloorsCount || 0)].id,
+                                updatedImgList![index + (buildingDownFloorsCount || 0)],
+                              )
+                            }
                           >
                             {index + 1}층 도면 수정하기
                           </DefaultButton>

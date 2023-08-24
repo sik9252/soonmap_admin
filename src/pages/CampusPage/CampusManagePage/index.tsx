@@ -77,7 +77,7 @@ function CampusManagePage() {
                   <Td width="5%">{building.uniqueNumber}</Td>
                   <Td width="20%">{building.name}</Td>
                   <Td width="45%">{building.description}</Td>
-                  <Td width="15%">{building.floors} 층</Td>
+                  <Td width="15%">{(building.floorsUp || 0) + (building.floorsDown || 0)} 층</Td>
                   <Td width="10%">
                     <EditIcon mr="10px" cursor={'pointer'} onClick={() => handleBuildingModifyModal(building)} />
                     <DeleteIcon cursor={'pointer'} onClick={() => handleAlertDialog(building)} />
