@@ -16,7 +16,7 @@ import { useSelectedArticleAtom } from '../../../store/articleAtom';
 
 function Notice() {
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-  const [myArticleList, setMyArticleList] = useState<MyNoticeDataType[] | null>([]);
+  const [myNoticeList, setMyNoticeList] = useState<MyNoticeDataType[] | null>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
 
@@ -34,10 +34,10 @@ function Notice() {
 
   useEffect(() => {
     if (myNoticeResult) {
-      setMyArticleList(myNoticeResult.data.noticeList);
+      setMyNoticeList(myNoticeResult.data.noticeList);
       setTotalPosts(myNoticeResult.data.totalPage);
     } else if (myNoticeError) {
-      toast.error('내 글 목록을 불러오는데 실패했습니다..');
+      toast.error('내 공지사항 목록을 불러오는데 실패했습니다..');
     }
   }, [myNoticeResult, myNoticeError]);
 
@@ -48,12 +48,12 @@ function Notice() {
   return (
     <MyArticleSection>
       <MyArticleListSection>
-        {myArticleList && myArticleList.length > 0 ? (
+        {myNoticeList && myNoticeList.length > 0 ? (
           <>
             <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-              {myArticleList &&
-                myArticleList.map((article) => (
-                  <CardUI key={article.id} infoData={article} onClick={() => handleInfoPreview(article)} />
+              {myNoticeList &&
+                myNoticeList.map((notice) => (
+                  <CardUI key={notice.id} noticeData={notice} onClick={() => handleInfoPreview(notice)} />
                 ))}
             </SimpleGrid>
             <Pagination

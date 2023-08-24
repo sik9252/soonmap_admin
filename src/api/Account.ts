@@ -35,3 +35,12 @@ export function useChangeBanStateRequest() {
     }),
   );
 }
+
+export function useGiveManagerAuthRequest() {
+  return useMutation((data: AccountDataType) =>
+    httpClient<AccountResponseType>({
+      method: 'PATCH',
+      url: `/admin/manage/manager?id=${data.id ? data.id : ''}`,
+    }),
+  );
+}

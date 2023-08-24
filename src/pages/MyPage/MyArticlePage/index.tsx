@@ -4,13 +4,23 @@ import Info from './Info';
 import Notice from './Notice';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useEffect } from 'react';
+import { useCurrentLocationAtom } from '../../../store/currentLocationAtom';
 
 function MyArticlePage() {
   const { resetAtom } = useSelectedArticleAtom();
+  const { setCurrentLocation } = useCurrentLocationAtom();
+
+  useEffect(() => {
+    setCurrentLocation('작성한 정보');
+  }, []);
 
   useEffect(() => {
     resetAtom();
   }, []);
+
+  const handleCurrentLocation = (location: string) => {
+    setCurrentLocation(location);
+  };
 
   const ACCOUNT_MENU_DEFAULT = [
     {
@@ -22,11 +32,11 @@ function MyArticlePage() {
   const ACCOUNT_MENU_ADMIN = [
     {
       id: 1,
-      tabName: '작성한 공지사항',
+      tabName: '작성한 정보',
     },
     {
       id: 2,
-      tabName: '작성한 정보',
+      tabName: '작성한 공지사항',
     },
   ];
 
@@ -40,11 +50,11 @@ function MyArticlePage() {
   const ACCOUNT_SCREEN_ADMIN = [
     {
       id: 1,
-      screen: <Notice />,
+      screen: <Info />,
     },
     {
       id: 2,
-      screen: <Info />,
+      screen: <Notice />,
     },
   ];
 
@@ -55,7 +65,9 @@ function MyArticlePage() {
           <>
             <TabList>
               {ACCOUNT_MENU_ADMIN.map((menu) => (
-                <Tab key={menu.id}>{menu.tabName}</Tab>
+                <Tab key={menu.id} onClick={() => handleCurrentLocation(menu.tabName)}>
+                  {menu.tabName}
+                </Tab>
               ))}
             </TabList>
             <TabPanels>
@@ -68,7 +80,9 @@ function MyArticlePage() {
           <>
             <TabList>
               {ACCOUNT_MENU_DEFAULT.map((menu) => (
-                <Tab key={menu.id}>{menu.tabName}</Tab>
+                <Tab key={menu.id} onClick={() => handleCurrentLocation(menu.tabName)}>
+                  {menu.tabName}
+                </Tab>
               ))}
             </TabList>
             <TabPanels>
