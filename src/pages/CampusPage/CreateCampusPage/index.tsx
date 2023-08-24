@@ -39,7 +39,8 @@ function CreateCampusPage() {
   const [buildingNumber, setBuildingNumber] = useState('');
   const [buildingName, setBuildingName] = useState('');
   const [buildingDescription, setBuildingDescription] = useState('');
-  const [buildingFloors, setBuildingNumberFloors] = useState(0);
+  const [buildingUpFloorsCount, setBuildingUpFloorsCount] = useState(0);
+  const [buildingDownFloorsCount, setBuildingDownFloorsCount] = useState(0);
   const [buildingXpos, setBuildingXpos] = useState(0);
   const [buildingYpos, setBuildingYpos] = useState(0);
   const [imgPreview, setImgPreview] = useState<string[]>(Array(0).fill(''));
@@ -58,19 +59,40 @@ function CreateCampusPage() {
     setBuildingDescription(e.target.value);
   };
 
-  const handleBuildingFloors = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingNumberFloors(Number(e.target.value));
+  const handleBuildingUpFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const onlyNumber = value.replace(/[^0-9]/g, '');
+    setBuildingUpFloorsCount(Number(onlyNumber));
+  };
+
+  const handleBuildingDownFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const onlyNumber = value.replace(/[^0-9]/g, '');
+    setBuildingDownFloorsCount(Number(onlyNumber));
   };
 
   const handleBuildingXpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingXpos(Number(e.target.value));
+    const { value } = e.target;
+    const onlyNumber = value.replace(/[^0-9]/g, '');
+    setBuildingXpos(Number(onlyNumber));
   };
 
   const handleBuildingYpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingYpos(Number(e.target.value));
+    const { value } = e.target;
+    const onlyNumber = value.replace(/[^0-9]/g, '');
+    setBuildingYpos(Number(onlyNumber));
   };
 
+  useEffect(() => {
+    setImgPreview(Array(buildingUpFloorsCount + buildingDownFloorsCount).fill(''));
+  }, [buildingUpFloorsCount, buildingDownFloorsCount]);
+
+  useEffect(() => {
+    console.log(imgPreview);
+  }, [imgPreview]);
+
   const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(index - 1);
     e.preventDefault();
 
     if (e.target.files && e.target.files.length > 0) {
@@ -87,12 +109,16 @@ function CreateCampusPage() {
       // 도면 삽입시 바로 api 요청
       createFloorImageRequest({
         buildingId: uploadedBuildingId,
-        floorValue: index + 1,
+        floorValue: index - 1 <= 0 ? index - buildingDownFloorsCount : index - 1,
         description: '',
         image: e.target.files[0],
       });
 
-      setFloorIndex(index + 1);
+      if (index - 1 <= 0) {
+        setFloorIndex(index - buildingDownFloorsCount);
+      } else {
+        setFloorIndex(index - 1);
+      }
     }
   };
 
@@ -100,14 +126,24 @@ function CreateCampusPage() {
     // 건물 정보 등록 요청 api
     const data = {
       name: buildingName,
-      floors: buildingFloors,
+      //floors: buildingUpFloorsCount,
+      floorsUp: buildingUpFloorsCount,
+      floorsDown: buildingDownFloorsCount,
       description: buildingDescription,
       latitude: buildingXpos,
       longitude: buildingYpos,
       uniqueNumber: buildingNumber,
     };
 
-    if (!buildingName || !buildingFloors || !buildingDescription || !buildingXpos || !buildingYpos || !buildingNumber) {
+    if (
+      !buildingName ||
+      !buildingUpFloorsCount ||
+      !buildingDownFloorsCount ||
+      !buildingDescription ||
+      !buildingXpos ||
+      !buildingYpos ||
+      !buildingNumber
+    ) {
       toast.error('모든 항목은 필수값입니다.');
     } else {
       createBuildingRequest({ ...data });
@@ -157,11 +193,9 @@ function CreateCampusPage() {
           </InputItem>
           <InputItem>
             <div>총 층수</div>
-            <InputUI
-              placeholder="건물의 총 층수를 입력해주세요.(20층 이하)"
-              width="75%"
-              onChange={handleBuildingFloors}
-            />
+            <InputUI placeholder="지상 층수 (<= 20)" width="36.5%" onChange={handleBuildingUpFloorsCount} />
+            <div style={{ width: '1px' }}></div>
+            <InputUI placeholder="지하 층수 (<= 10)" width="36.5%" onChange={handleBuildingDownFloorsCount} />
           </InputItem>
           <InputItem>
             <div>X 좌표</div>
@@ -186,12 +220,28 @@ function CreateCampusPage() {
           <SubTitle>층별 도면 업로드</SubTitle>
           <FloorInputSection>
             <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
-            {buildingFloors <= 20 ? (
+            {buildingDownFloorsCount <= 10 ? (
               <>
-                {Array.from({ length: buildingFloors }).map((_, index) => (
+                {Array.from({ length: buildingDownFloorsCount }).map((_, index) => (
                   <FloorItem key={index}>
-                    <div>{index + 1}층</div>
+                    <div style={{ color: '#48aaad' }}>{index - buildingDownFloorsCount}층</div>
                     <FloorImageUploaderUI index={index} imgPreview={imgPreview} onImageChange={handleImageChange} />
+                  </FloorItem>
+                ))}
+              </>
+            ) : (
+              ''
+            )}
+            {buildingUpFloorsCount <= 20 ? (
+              <>
+                {Array.from({ length: buildingUpFloorsCount }).map((_, index) => (
+                  <FloorItem key={index + buildingDownFloorsCount}>
+                    <div>{index + 1}층</div>
+                    <FloorImageUploaderUI
+                      index={index + buildingDownFloorsCount}
+                      imgPreview={imgPreview}
+                      onImageChange={handleImageChange}
+                    />
                   </FloorItem>
                 ))}
               </>

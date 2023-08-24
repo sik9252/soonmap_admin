@@ -9,9 +9,18 @@ interface InputProps {
   onClick?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  isDisabled?: boolean;
 }
 
-export default function InputUI({ width, placeholder, value, defaultValue, onChange, onKeyDown }: InputProps) {
+export default function InputUI({
+  width,
+  placeholder,
+  value,
+  defaultValue,
+  onChange,
+  onKeyDown,
+  isDisabled,
+}: InputProps) {
   return (
     <Input
       width={width ? width : '91%'}
@@ -29,6 +38,7 @@ export default function InputUI({ width, placeholder, value, defaultValue, onCha
       onChange={onChange}
       onKeyDown={onKeyDown}
       defaultValue={defaultValue}
+      isDisabled={isDisabled}
     />
   );
 }

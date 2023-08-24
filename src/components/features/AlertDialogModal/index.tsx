@@ -13,9 +13,11 @@ import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api/In
 import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api/Info';
 import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api/Notice';
 import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api/Building';
+import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api/Mypage';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
+import { useCurrentLocationAtom } from '../../../store/currentLocationAtom';
 
 interface AlertProps {
   location?: string;
@@ -28,6 +30,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
   const cancelRef = useRef(null);
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
   const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
+  const { currentLocation } = useCurrentLocationAtom();
 
   const { refetch: getCategoryRefetch } = useGetCategoryRequest(
     {
@@ -64,6 +67,14 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     false,
   );
 
+  const { refetch: myArticleRefetch } = useGetMyInfoRequest({
+    page: 0,
+  });
+
+  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest({
+    page: 0,
+  });
+
   const {
     mutate: categoryDeleteRequest,
     data: categoryDeleteData,
@@ -99,9 +110,9 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
   const handleDelete = () => {
     if (location === '카테고리') {
       categoryDeleteRequest({ id: selectedItemIndex });
-    } else if (location === '정보') {
+    } else if (location === '정보' || currentLocation === '작성한 정보') {
       infoDeleteRequest({ id: selectedArticle.id });
-    } else if (location === '공지') {
+    } else if (location === '공지' || currentLocation === '작성한 공지사항') {
       noticeDeleteRequest({ id: selectedArticle.id });
     } else if (location === '건물') {
       deleteBuildingRequest({ id: selectedBuilding.id });
@@ -122,6 +133,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     if (infoDeleteData) {
       toast.success('삭제되었습니다.');
       void getInfoRefetch();
+      void myArticleRefetch();
       resetAtom();
     } else if (infoDeleteError) {
       toast.error((infoDeleteError as Error).message);
@@ -133,6 +145,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     if (noticeDeleteData) {
       toast.success('삭제되었습니다.');
       void getNoticeRefetch();
+      void myNoticeRefetch();
       resetAtom();
     } else if (noticeDeleteError) {
       toast.error((noticeDeleteError as Error).message);

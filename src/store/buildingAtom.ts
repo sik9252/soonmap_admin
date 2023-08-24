@@ -4,7 +4,8 @@ import { atom, useAtom } from 'jotai';
 export const selectedBuildingAtom = atom<{
   id?: number;
   name?: string;
-  floors?: number;
+  floorsUp?: number;
+  floorsDown?: number;
   description?: string;
   latitude?: number;
   longitude?: number;

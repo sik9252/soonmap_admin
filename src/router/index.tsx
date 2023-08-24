@@ -13,6 +13,7 @@ import InfoCategoryManage from '../pages/InfoPage/InfoCategoryManage';
 import AccountManagePage from '../pages/AccountManagePage';
 import MyArticlePage from '../pages/MyPage/MyArticlePage';
 import MyInfoPage from '../pages/MyPage/MyInfo';
+import FindAccountPage from '../pages/FindAccountPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/" element={<Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/find-account" element={<FindAccountPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/campus/*">

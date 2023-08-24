@@ -56,7 +56,7 @@ function AccountManagePage() {
                 <Tr key={account.id}>
                   <Td>{account.name}</Td>
                   <Td>{account.email}</Td>
-                  <Td> {account.admin ? '관리자' : account.manager ? '매니저' : account.staff ? '일반' : ''}</Td>
+                  <Td> {account.admin ? 'Admin' : account.manager ? 'Manager' : account.staff ? 'Staff' : ''}</Td>
                   <Td>{account.createAt?.slice(0, 10)}</Td>
                   <Td>{account.ban ? <BanState>미승인</BanState> : <div>승인</div>}</Td>
                   <Td textAlign={'center'}>

@@ -4,7 +4,9 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 export interface BuildingDataType {
   id?: number;
   name?: string;
-  floors?: number;
+  //floors?: number;
+  floorsUp?: number;
+  floorsDown?: number;
   description?: string;
   latitude?: number;
   longitude?: number;
