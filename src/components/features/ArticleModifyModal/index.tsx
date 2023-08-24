@@ -8,13 +8,14 @@ import TextEditor from '../TextEditor';
 import InputUI from '../../ui/InputUI';
 import SelectUI from '../../ui/SelectUI';
 import CheckboxUI from '../../ui/CheckboxUI';
-import { FileUploaderUI } from '../../ui/FileUploaderUI';
 import { TitleInputSection, ButtonContainer } from './style';
 import { useUpdateInfoRequest, useGetInfoRequest } from '../../../api/Info';
 import { useUpdateNoticeRequest, useGetNoticeRequest } from '../../../api/Notice';
 import { useGetAllCategoryRequest } from '../../../api/InfoCategory';
+import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api/Mypage';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
+import { useCurrentLocationAtom } from '../../../store/currentLocationAtom';
 import { CategoryDataType } from '../../../api/InfoCategory';
 
 type EditorInstance = Editor | null;
@@ -28,6 +29,7 @@ interface ModalProps {
 function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProps) {
   const editorRef = useRef<EditorInstance>(null);
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
+  const { currentLocation } = useCurrentLocationAtom();
 
   const [options, setOptions] = useState<CategoryDataType[]>([]);
   const [category, setCategory] = useState<string | undefined>('');
@@ -55,6 +57,14 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
     },
     false,
   );
+
+  const { refetch: myArticleRefetch } = useGetMyInfoRequest({
+    page: 0,
+  });
+
+  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest({
+    page: 0,
+  });
 
   const {
     mutate: infoUpdateRequest,
@@ -107,7 +117,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
   };
 
   const handleUpdateButton = () => {
-    if (location === '정보') {
+    if (location === '정보' || currentLocation === '작성한 정보') {
       const data = {
         id: selectedArticle.id,
         title: title,
@@ -120,7 +130,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
       } else {
         infoUpdateRequest({ ...data });
       }
-    } else if (location === '공지') {
+    } else if (location === '공지' || currentLocation === '작성한 공지사항') {
       // 공지사항 수정
       const data = {
         id: selectedArticle.id,
@@ -142,6 +152,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
       toast.success('게시글 수정이 완료되었습니다.');
       setIsModalOpen(false);
       void getInfoRefetch();
+      void myArticleRefetch();
       resetAtom();
     } else if (infoUpdateError) {
       toast.error((infoUpdateError as Error).message);
@@ -153,6 +164,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
       toast.success('게시글 수정이 완료되었습니다.');
       setIsModalOpen(false);
       void getNoticeRefetch();
+      void myNoticeRefetch();
       resetAtom();
     } else if (noticeUpdateError) {
       toast.error((noticeUpdateError as Error).message);
@@ -166,7 +178,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
         <ModalContent>
           <ModalHeader>게시글 수정하기</ModalHeader>
           <ModalCloseButton />
-          {location === '정보' ? (
+          {location === '정보' || currentLocation === '작성한 정보' ? (
             <TitleInputSection>
               <SelectUI
                 options={options}

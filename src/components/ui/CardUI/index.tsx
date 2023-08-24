@@ -14,6 +14,7 @@ interface CardProps {
   noticeData?: NoticeDataType;
   onClick?: () => void;
   setPreviewInfo?: React.Dispatch<React.SetStateAction<InfoDataType | null>>;
+  currentLocation?: string;
 }
 
 function CardUI({ infoData, noticeData, onClick }: CardProps) {
