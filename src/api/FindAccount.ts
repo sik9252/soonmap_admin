@@ -29,3 +29,23 @@ export function useFindIdCertificateConfirmRequest() {
     }),
   );
 }
+
+export function useFindPasswordValidateRequest() {
+  return useMutation((data: FindAccountDataType) =>
+    httpClient({
+      method: 'POST',
+      url: `/admin/find/pw`,
+      data,
+    }),
+  );
+}
+
+export function useFindPasswordCertificateConfirmRequest() {
+  return useMutation((data: FindAccountDataType) =>
+    httpClient<CertificateConfirmResponse>({
+      method: 'POST',
+      url: `/admin/find/pw/confirm`,
+      data,
+    }),
+  );
+}

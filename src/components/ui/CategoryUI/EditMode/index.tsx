@@ -66,6 +66,7 @@ function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
           width="100%"
           onChange={handleCategoryName}
           defaultValue={category.typeName}
+          maxLength={20}
         />
       </Td>
       <Td>
@@ -74,6 +75,7 @@ function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
           width="100%"
           onChange={handleCategoryDescription}
           defaultValue={category.description}
+          maxLength={50}
         />
       </Td>
       <Td>

@@ -80,7 +80,7 @@ function CreateInfoPage() {
     <RightContainer title={'정보 글 업로드'}>
       <TitleInputSection>
         <SelectUI options={options} handleCategory={handleCategory} />
-        <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitle} />
+        <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitle} maxLength={100} />
       </TitleInputSection>
       <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContent} />
       <ButtonContainer>

@@ -10,6 +10,7 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   isDisabled?: boolean;
+  maxLength?: number;
 }
 
 export default function InputUI({
@@ -20,6 +21,7 @@ export default function InputUI({
   onChange,
   onKeyDown,
   isDisabled,
+  maxLength,
 }: InputProps) {
   return (
     <Input
@@ -39,6 +41,7 @@ export default function InputUI({
       onKeyDown={onKeyDown}
       defaultValue={defaultValue}
       isDisabled={isDisabled}
+      maxLength={maxLength}
     />
   );
 }

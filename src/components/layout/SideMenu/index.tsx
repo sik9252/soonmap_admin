@@ -7,10 +7,13 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 import toast from 'react-hot-toast';
 import AccordionUI from '../../ui/AccordionUI';
 import { Accordion } from '@chakra-ui/react';
+import { useLogoutRequest } from '../../../api/Auth';
 
 function SideMenu() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { mutate: logoutRequest, data: logoutData, error: logoutError, isLoading: logoutLoading } = useLogoutRequest();
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
@@ -36,10 +39,18 @@ function SideMenu() {
   };
 
   const handleLogoutButton = () => {
-    removeAuthToken();
-    toast.success('로그아웃 되었습니다.');
-    navigate('/login');
+    logoutRequest();
   };
+
+  useEffect(() => {
+    if (logoutData) {
+      removeAuthToken();
+      toast.success('로그아웃 되었습니다.');
+      navigate('/login');
+    } else if (logoutError) {
+      toast.error((logoutError as Error).message);
+    }
+  }, [logoutData, logoutError]);
 
   return (
     <SideMenuContainer>

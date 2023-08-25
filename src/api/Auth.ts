@@ -36,14 +36,11 @@ export function useRegisterRequest() {
   );
 }
 
-export function useLogoutRequest(isEnabled?: boolean) {
-  return useQuery(
-    [`/admin/logout`],
-    () =>
-      httpClient({
-        method: 'GET',
-        url: `/admin/logout`,
-      }),
-    { enabled: isEnabled },
+export function useLogoutRequest() {
+  return useMutation(() =>
+    httpClient({
+      method: 'POST',
+      url: '/admin/logout',
+    }),
   );
 }
