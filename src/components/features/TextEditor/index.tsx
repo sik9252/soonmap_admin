@@ -52,13 +52,13 @@ function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
         previewStyle="vertical"
         hideModeSwitch="true"
         height="600px"
-        initialEditType="markdown"
+        initialEditType="wysiwyg"
         toolbarItems={[
           ['heading', 'bold', 'italic', 'strike'],
           ['hr', 'quote'],
           ['ul', 'ol', 'task'],
           ['table', 'image', 'link'],
-          ['code', 'codeblock'],
+          ['codeblock'],
         ]}
         plugins={[colorSyntax]}
         useCommandShortcut={true}
