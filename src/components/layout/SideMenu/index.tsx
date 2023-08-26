@@ -92,8 +92,14 @@ function SideMenu() {
         </AccordionUI>
         {isAdmin || isManager ? (
           <AccordionUI menuTitle={'관리자 계정 관리'}>
-            <Item onClick={() => goToPage('/account/manage')} $isSelected={location.pathname === '/account/manage'}>
-              <span>{'-'}</span> 계정 관리
+            <Item
+              onClick={() => goToPage('/account/admin-manage')}
+              $isSelected={location.pathname === '/account/manage'}
+            >
+              <span>{'-'}</span> 관리자 계정 관리
+            </Item>
+            <Item onClick={() => goToPage('/account/user-manage')} $isSelected={location.pathname === '/info/category'}>
+              <span>{'-'}</span> 유저 계정 관리
             </Item>
           </AccordionUI>
         ) : null}

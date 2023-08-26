@@ -11,6 +11,7 @@ interface InputProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   isDisabled?: boolean;
   maxLength?: number;
+  type?: string;
 }
 
 export default function InputUI({
@@ -22,9 +23,11 @@ export default function InputUI({
   onKeyDown,
   isDisabled,
   maxLength,
+  type,
 }: InputProps) {
   return (
     <Input
+      type={type ? type : 'text'}
       width={width ? width : '91%'}
       placeholder={placeholder}
       value={value}
@@ -46,7 +49,7 @@ export default function InputUI({
   );
 }
 
-export const PasswordInputUI = ({ width, placeholder, show, onClick, onChange }: InputProps) => {
+export const PasswordInputUI = ({ width, placeholder, show, onClick, onChange, onKeyDown }: InputProps) => {
   return (
     <InputGroup size="md">
       <Input
@@ -65,6 +68,7 @@ export const PasswordInputUI = ({ width, placeholder, show, onClick, onChange }:
         mt="10px"
         onChange={onChange}
         autoComplete="off"
+        onKeyDown={onKeyDown}
       />
       <InputRightElement width="4.5rem">
         <Button mt="1.75rem" h="1.75rem" size="sm" onClick={onClick}>

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Table, Thead, Tbody, Tr, Td, Th, TableContainer } from '@chakra-ui/react';
 import { SettingsIcon } from '@chakra-ui/icons';
-import { BanState } from './style';
-import RightContainer from '../../components/layout/RightContainer';
-import { BanAlertDialogModal } from '../../components/features/AlertDialogModal';
-import AccountManageModal from '../../components/features/AccountManageModal';
+import { BanState } from '../style';
+import RightContainer from '../../../components/layout/RightContainer';
+import { BanAlertDialogModal } from '../../../components/features/AlertDialogModal';
+import AccountManageModal from '../../../components/features/AccountManageModal';
 import toast from 'react-hot-toast';
-import { useGetAccountRequest } from '../../api/Account';
-import { AccountDataType } from '../../api/Account';
-import { useSelectedAccountAtom } from '../../store/accountAtom';
+import { useGetAdminAccountRequest } from '../../../api/Account';
+import { AccountDataType } from '../../../api/Account';
+import { useSelectedAccountAtom } from '../../../store/accountAtom';
 
-function AccountManagePage() {
+function AdminAccountPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -18,7 +18,7 @@ function AccountManagePage() {
   const [totalCount, setTotalCount] = useState(0);
   const { setSelectedAccount } = useSelectedAccountAtom();
 
-  const { data: accountResult, isError: accountError, refetch: accountRefetch } = useGetAccountRequest();
+  const { data: accountResult, isError: accountError, refetch: accountRefetch } = useGetAdminAccountRequest();
 
   useEffect(() => {
     if (accountResult) {
@@ -71,4 +71,4 @@ function AccountManagePage() {
   );
 }
 
-export default AccountManagePage;
+export default AdminAccountPage;

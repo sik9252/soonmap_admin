@@ -4,10 +4,12 @@ import { useMutation } from '@tanstack/react-query';
 export interface FindAccountDataType {
   code?: string;
   receiver?: string;
+  token?: string;
 }
 
 export interface CertificateConfirmResponse {
   id?: string;
+  confirmToken?: string;
 }
 
 export function useFindIdEmailValidateRequest() {
@@ -45,6 +47,16 @@ export function useFindPasswordCertificateConfirmRequest() {
     httpClient<CertificateConfirmResponse>({
       method: 'POST',
       url: `/admin/find/pw/confirm`,
+      data,
+    }),
+  );
+}
+
+export function useChangePasswordRequest() {
+  return useMutation((data: FindAccountDataType) =>
+    httpClient<CertificateConfirmResponse>({
+      method: 'POST',
+      url: `/admin/change/pw`,
       data,
     }),
   );

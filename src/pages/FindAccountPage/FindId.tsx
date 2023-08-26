@@ -105,7 +105,7 @@ function FindId() {
             <Box w="60px">이메일</Box>
             <InputUI
               width="460px"
-              placeholder={'이메일을 입력하세요. ex) test123@sch.ac.kr'}
+              placeholder={'가입하신 이메일을 입력하세요. ex) test123@sch.ac.kr'}
               onChange={handleUserEmailInput}
             />
             <DefaultButton
