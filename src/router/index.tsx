@@ -10,7 +10,8 @@ import NoticeManagePage from '../pages/NoticePage/NoticeManagePage';
 import CreateInfoPage from '../pages/InfoPage/CreateInfoPage';
 import InfoManagePage from '../pages/InfoPage/InfoManagePage';
 import InfoCategoryManage from '../pages/InfoPage/InfoCategoryManage';
-import AccountManagePage from '../pages/AccountManagePage';
+import AdminAccountPage from '../pages/AccountManagePage/AdminAccountPage';
+import UserAccountPage from '../pages/AccountManagePage/UserAccountPage';
 import MyArticlePage from '../pages/MyPage/MyArticlePage';
 import MyInfoPage from '../pages/MyPage/MyInfo';
 import FindAccountPage from '../pages/FindAccountPage';
@@ -44,8 +45,9 @@ function Router() {
             <Route path="category" element={<InfoCategoryManage />} />
           </Route>
           <Route path="/account/*">
-            <Route path="" element={<Navigate replace to="/account/manage" />} />
-            <Route path="manage" element={<AccountManagePage />} />
+            <Route path="" element={<Navigate replace to="/account/admin-manage" />} />
+            <Route path="admin-manage" element={<AdminAccountPage />} />
+            <Route path="user-manage" element={<UserAccountPage />} />
           </Route>
           <Route path="/my/*">
             <Route path="" element={<Navigate replace to="/my/info" />} />

@@ -185,11 +185,11 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
                 defaultValue={selectedArticle.articleTypeName}
                 handleCategory={handleCategory}
               />
-              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} />
+              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} maxLength={100} />
             </TitleInputSection>
           ) : (
             <TitleInputSection>
-              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} />
+              <InputUI defaultValue={selectedArticle.title} onChange={handleTitle} maxLength={100} />
               <CheckboxUI isChecked={isTopChecked} onChange={() => clickSelectTopNotice()}>
                 주요 공지
               </CheckboxUI>

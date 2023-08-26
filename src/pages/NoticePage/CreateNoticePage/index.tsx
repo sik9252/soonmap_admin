@@ -67,7 +67,7 @@ function CreateNoticePage() {
   return (
     <RightContainer title={'공지사항 글 업로드'}>
       <TitleInputSection>
-        <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitleInput} />
+        <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitleInput} maxLength={100} />
         <CheckboxUI isChecked={isTopChecked} onChange={() => clickSelectTopNotice()}>
           주요 공지
         </CheckboxUI>
