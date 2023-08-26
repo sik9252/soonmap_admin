@@ -12,9 +12,18 @@ export interface AccountDataType {
   createAt?: string;
 }
 
+export interface AccountRequestType {
+  page: number;
+}
+
 export interface AccountResponseType {
   accountCount: number;
   memberList: AccountDataType[];
+}
+
+export interface totalAccountCountResponseType {
+  adminCount: number;
+  userCount: number;
 }
 
 export interface MyInfoResponseType {
@@ -33,23 +42,29 @@ export interface MyEmailChangeRequest {
   code?: string;
 }
 
-export function useGetAdminAccountRequest() {
-  return useQuery([`/admin/account/admin`], () =>
-    httpClient<AccountResponseType>({
-      method: 'GET',
-      url: `/admin/account/admin`,
-    }),
+export function useGetAdminAccountRequest(params: AccountRequestType, isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/account/admin?page=${params.page}`, params],
+    () =>
+      httpClient<AccountResponseType>({
+        method: 'GET',
+        url: `/admin/account/admin?page=${params.page}`,
+      }),
+    { enabled: isEnabled },
   );
 }
 
-// export function useGetUserAccountRequest() {
-//   return useQuery([`/admin/account/user`], () =>
-//     httpClient<AccountResponseType>({
-//       method: 'GET',
-//       url: `/admin/account/user`,
-//     }),
-//   );
-// }
+export function useGetUserAccountRequest(params: AccountRequestType, isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/account/user?page=${params.page}`, params],
+    () =>
+      httpClient<AccountResponseType>({
+        method: 'GET',
+        url: `/admin/account/user?page=${params.page}`,
+      }),
+    { enabled: isEnabled },
+  );
+}
 
 export function useChangeBanStateRequest() {
   return useMutation((data: AccountDataType) =>
@@ -98,5 +113,18 @@ export function useMyEmailChangeValidateRequest() {
       url: `/admin/change/email/confirm`,
       data,
     }),
+  );
+}
+
+// 내 정보 가져오기
+export function useGetTotalAccountCountRequest(isEnabled?: boolean) {
+  return useQuery(
+    [`/admin/account/count`],
+    () =>
+      httpClient<totalAccountCountResponseType>({
+        method: 'GET',
+        url: `/admin/account/count`,
+      }),
+    { enabled: isEnabled },
   );
 }

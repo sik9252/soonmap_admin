@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { AccountDataType } from '../../../api/Account';
 import { Button } from '@chakra-ui/react';
 import toast from 'react-hot-toast';
-import { useChangeBanStateRequest, useGetAdminAccountRequest, useGiveManagerAuthRequest } from '../../../api/Account';
+import {
+  useChangeBanStateRequest,
+  useGetAdminAccountRequest,
+  useGiveManagerAuthRequest,
+  useGetUserAccountRequest,
+} from '../../../api/Account';
 import { DefaultButton } from '../../ui/ButtonUI';
 import { AccountInfoText, FooterSection } from './style';
 
@@ -12,7 +18,10 @@ export interface SelectedAccountProps {
 }
 
 function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) {
-  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest();
+  const location = useLocation();
+
+  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest({ page: 0 });
+  const { refetch: getUserAccountRefetch } = useGetUserAccountRequest({ page: 0 });
 
   const {
     mutate: accountBanStateRequest,
@@ -38,6 +47,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
         });
       }
       void getAdminAccountRefetch();
+      void getUserAccountRefetch();
       setIsModalOpen(false);
     } else if (accountBanStateError) {
       toast.error((accountBanStateError as Error).message);
@@ -86,44 +96,85 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
       <AccountInfoText>계정 이메일: {selectedAccount.email || '이메일이 없습니다.'}</AccountInfoText>
       <AccountInfoText>
         계정 권한:{' '}
-        {selectedAccount.admin ? 'Admin' : selectedAccount.manager ? 'Manager' : selectedAccount.staff ? 'Staff' : ''}
+        {location.pathname === '/account/admin-manage' ? (
+          <>
+            {' '}
+            {selectedAccount.admin
+              ? 'Admin'
+              : selectedAccount.manager
+              ? 'Manager'
+              : selectedAccount.staff
+              ? 'Staff'
+              : ''}
+          </>
+        ) : (
+          '일반 사용자'
+        )}
       </AccountInfoText>
       <AccountInfoText>계정 생성일: {selectedAccount.createAt?.slice(0, 10)}</AccountInfoText>
       <AccountInfoText>
         계정 활성화 상태: {selectedAccount.ban ? '비활성화된 계정입니다.' : '활성화된 계정입니다.'}
       </AccountInfoText>
 
-      <FooterSection>
-        <>
-          {localStorage.getItem('auth') === 'one' && !selectedAccount.admin ? (
-            <Button onClick={() => handleGiveManagerAuth()} mr="10px">
-              매니저 권한 부여하기
+      {location.pathname === '/account/admin-manage' ? (
+        <FooterSection>
+          <>
+            {localStorage.getItem('auth') === 'one' && !selectedAccount.admin ? (
+              <Button
+                onClick={() => handleGiveManagerAuth()}
+                mr="10px"
+                isLoading={giveManagerAuthStateLoading}
+                loadingText="권한 부여중"
+              >
+                매니저 권한 부여하기
+              </Button>
+            ) : (
+              ''
+            )}
+            {selectedAccount.admin && selectedAccount.manager && selectedAccount.staff ? (
+              ''
+            ) : (
+              <>
+                {selectedAccount.ban ? (
+                  <DefaultButton onClick={() => handleChangeBanState()}>계정 활성화하기</DefaultButton>
+                ) : (
+                  <Button
+                    bgColor="#dc143c"
+                    color="#ffffff"
+                    _hover={{
+                      bg: '#CE2029',
+                    }}
+                    onClick={() => handleChangeBanState()}
+                    isLoading={accountBanStateLoading}
+                    loadingText="비활성화중"
+                  >
+                    계정 비활성화하기
+                  </Button>
+                )}
+              </>
+            )}
+          </>
+        </FooterSection>
+      ) : (
+        <FooterSection>
+          {selectedAccount.ban ? (
+            <DefaultButton onClick={() => handleChangeBanState()}>계정 활성화하기</DefaultButton>
+          ) : (
+            <Button
+              bgColor="#dc143c"
+              color="#ffffff"
+              _hover={{
+                bg: '#CE2029',
+              }}
+              onClick={() => handleChangeBanState()}
+              isLoading={accountBanStateLoading}
+              loadingText="비활성화중"
+            >
+              계정 비활성화하기
             </Button>
-          ) : (
-            ''
           )}
-          {selectedAccount.admin && selectedAccount.manager && selectedAccount.staff ? (
-            ''
-          ) : (
-            <>
-              {selectedAccount.ban ? (
-                <DefaultButton onClick={() => handleChangeBanState()}>계정 활성화하기</DefaultButton>
-              ) : (
-                <Button
-                  bgColor="#dc143c"
-                  color="#ffffff"
-                  _hover={{
-                    bg: '#CE2029',
-                  }}
-                  onClick={() => handleChangeBanState()}
-                >
-                  계정 비활성화하기
-                </Button>
-              )}
-            </>
-          )}
-        </>
-      </FooterSection>
+        </FooterSection>
+      )}
     </div>
   );
 }
