@@ -34,8 +34,7 @@ function InfoManagePage() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [keyword, setKeyword] = useState('');
-  //const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
 
   useEffect(() => {
     resetAtom();
@@ -57,7 +56,7 @@ function InfoManagePage() {
       startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
       endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
       title: keyword ? encodeURIComponent(keyword) : '',
-      typeName: selectedCategory ? encodeURIComponent(selectedCategory) : '',
+      typeName: selectedCategory === '전체' ? '' : selectedCategory ? encodeURIComponent(selectedCategory) : '',
     },
     false,
   );
@@ -98,12 +97,7 @@ function InfoManagePage() {
   };
 
   const handleFilteredCategory = (typeName: string) => {
-    //setSelectedCategory([...selectedCategory, typeName]);
-    if (selectedCategory === typeName) {
-      setSelectedCategory('');
-    } else {
-      setSelectedCategory(typeName);
-    }
+    setSelectedCategory(typeName);
   };
 
   useEffect(() => {
@@ -132,6 +126,9 @@ function InfoManagePage() {
             <RepeatIcon w={6} h={6} ml="5px" cursor={'pointer'} onClick={() => handleSearchRefreshButton()} />
           </SearchSection>
           <CategoryFilterSection>
+            <BadgeUI key={0} isSelected={'전체' === selectedCategory} onClick={() => handleFilteredCategory('전체')}>
+              전체
+            </BadgeUI>
             {options &&
               options.map((option) => (
                 <BadgeUI
