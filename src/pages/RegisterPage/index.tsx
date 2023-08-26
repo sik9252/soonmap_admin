@@ -77,7 +77,7 @@ function RegisterPage() {
     <RegisterPageContainer>
       <PageTitle>관리자 회원가입</PageTitle>
       <form>
-        <InputUI width={'100%'} placeholder={'이름(ex. OOO 학생회)'} onChange={handleUserNameInput} />
+        <InputUI width={'100%'} placeholder={'이름(ex. OOO 학생회)'} onChange={handleUserNameInput} maxLength={20} />
         <InputUI width={'100%'} placeholder={'아이디'} onChange={handleUserIdInput} />
         <InputUI width={'100%'} placeholder={'이메일 ex) test123@sch.ac.kr'} onChange={handleUserEmailInput} />
         <PasswordInputUI

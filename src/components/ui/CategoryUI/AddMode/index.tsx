@@ -53,10 +53,20 @@ function AddMode({ setIsAddClick }: AddModeProps) {
   return (
     <Tr>
       <Td>
-        <InputUI placeholder="추가할 카테고리 명을 작성해주세요." width="100%" onChange={handleCategoryName} />
+        <InputUI
+          placeholder="추가할 카테고리 명을 작성해주세요."
+          width="100%"
+          onChange={handleCategoryName}
+          maxLength={20}
+        />
       </Td>
       <Td>
-        <InputUI placeholder="추가할 카테고리 설명을 작성해주세요." width="100%" onChange={handleCategoryDescription} />
+        <InputUI
+          placeholder="추가할 카테고리 설명을 작성해주세요."
+          width="100%"
+          onChange={handleCategoryDescription}
+          maxLength={50}
+        />
       </Td>
       <Td>
         <DefaultButton onClick={() => handleCategoryAdd()} mr="5px">

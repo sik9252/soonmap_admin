@@ -38,6 +38,12 @@ function LoginPage() {
     }
   };
 
+  const handleEnterKeyLogin = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      adminLoginRequest({ userId, userPw });
+    }
+  };
+
   useEffect(() => {
     if (adminLoginData) {
       setAuthToken(adminLoginData?.data.accessToken, adminLoginData?.data.refreshToken);
@@ -57,13 +63,14 @@ function LoginPage() {
     <LoginPageContainer>
       <PageTitle>관리자 로그인</PageTitle>
       <form>
-        <InputUI width={'100%'} placeholder={'아이디'} onChange={handleUserIdInput} />
+        <InputUI width={'100%'} placeholder={'아이디'} onChange={handleUserIdInput} onKeyDown={handleEnterKeyLogin} />
         <PasswordInputUI
           width={'100%'}
           placeholder={'비밀번호'}
           show={show}
           onClick={() => clickShowPassword()}
           onChange={handleUserPwInput}
+          onKeyDown={handleEnterKeyLogin}
         />
       </form>
       <ButtonSection>

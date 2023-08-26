@@ -17,14 +17,39 @@ export interface AccountResponseType {
   memberList: AccountDataType[];
 }
 
-export function useGetAccountRequest() {
-  return useQuery([`/admin/account/all`], () =>
+export interface MyInfoResponseType {
+  id?: number;
+  admin?: boolean;
+  manager?: boolean;
+  staff?: boolean;
+  ban?: boolean;
+  name?: string;
+  createAt?: string;
+  email?: string;
+}
+
+export interface MyEmailChangeRequest {
+  newEmail?: string;
+  code?: string;
+}
+
+export function useGetAdminAccountRequest() {
+  return useQuery([`/admin/account/admin`], () =>
     httpClient<AccountResponseType>({
       method: 'GET',
-      url: `/admin/account/all`,
+      url: `/admin/account/admin`,
     }),
   );
 }
+
+// export function useGetUserAccountRequest() {
+//   return useQuery([`/admin/account/user`], () =>
+//     httpClient<AccountResponseType>({
+//       method: 'GET',
+//       url: `/admin/account/user`,
+//     }),
+//   );
+// }
 
 export function useChangeBanStateRequest() {
   return useMutation((data: AccountDataType) =>
@@ -41,6 +66,37 @@ export function useGiveManagerAuthRequest() {
     httpClient<AccountResponseType>({
       method: 'PATCH',
       url: `/admin/manage/manager?id=${data.id ? data.id : ''}`,
+    }),
+  );
+}
+
+// 내 정보 가져오기
+export function useGetMyInfoRequest() {
+  return useQuery([`/admin/me`], () =>
+    httpClient<MyInfoResponseType>({
+      method: 'GET',
+      url: `/admin/me`,
+    }),
+  );
+}
+
+// 이메일 변경
+export function useMyEmailChangeRequest() {
+  return useMutation((data: MyEmailChangeRequest) =>
+    httpClient<MyEmailChangeRequest>({
+      method: 'POST',
+      url: `/admin/change/email`,
+      data,
+    }),
+  );
+}
+
+export function useMyEmailChangeValidateRequest() {
+  return useMutation((data: MyEmailChangeRequest) =>
+    httpClient<MyInfoResponseType>({
+      method: 'POST',
+      url: `/admin/change/email/confirm`,
+      data,
     }),
   );
 }

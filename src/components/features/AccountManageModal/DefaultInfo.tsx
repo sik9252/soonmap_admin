@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { AccountDataType } from '../../../api/Account';
 import { Button } from '@chakra-ui/react';
 import toast from 'react-hot-toast';
-import { useChangeBanStateRequest, useGetAccountRequest, useGiveManagerAuthRequest } from '../../../api/Account';
+import { useChangeBanStateRequest, useGetAdminAccountRequest, useGiveManagerAuthRequest } from '../../../api/Account';
 import { DefaultButton } from '../../ui/ButtonUI';
 import { AccountInfoText, FooterSection } from './style';
 
@@ -12,7 +12,7 @@ export interface SelectedAccountProps {
 }
 
 function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) {
-  const { refetch: getAccountRefetch } = useGetAccountRequest();
+  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest();
 
   const {
     mutate: accountBanStateRequest,
@@ -37,7 +37,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
           icon: '⚠️',
         });
       }
-      void getAccountRefetch();
+      void getAdminAccountRefetch();
       setIsModalOpen(false);
     } else if (accountBanStateError) {
       toast.error((accountBanStateError as Error).message);
@@ -53,7 +53,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
           icon: '⚠️',
         });
       }
-      void getAccountRefetch();
+      void getAdminAccountRefetch();
       setIsModalOpen(false);
     } else if (giveManagerAuthStateError) {
       toast.error((giveManagerAuthStateError as Error).message);
