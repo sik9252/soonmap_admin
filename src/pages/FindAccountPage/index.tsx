@@ -1,11 +1,16 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import FindId from './FindId';
 import FindPassword from './FindPassword';
 import { Container } from './style';
+import { Link } from 'react-router-dom';
 
 function FindAccountPage() {
   return (
     <Container>
+      <Box mb="10px" color="#777" textAlign="right">
+        <Link to="/login">로그인 페이지로 돌아가기</Link>
+      </Box>
+
       <Tabs isManual variant="enclosed">
         <TabList>
           <Tab>아이디 찾기</Tab>
