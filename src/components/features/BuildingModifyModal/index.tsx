@@ -147,7 +147,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
     setBuildingYpos(Number(e.target.value));
   };
 
-  const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (defaultIndex: number, index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     const updatedImageList: Blob[] = [];
@@ -156,14 +156,14 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
       const reader = new FileReader();
       reader.onloadend = () => {
         setImgPreview((prevImgPreview) => [
-          ...prevImgPreview.slice(0, index),
+          ...prevImgPreview.slice(0, defaultIndex),
           reader.result as string,
-          ...prevImgPreview.slice(index + 1),
+          ...prevImgPreview.slice(defaultIndex + 1),
         ]);
       };
       reader.readAsDataURL(e.target.files[0]);
 
-      updatedImageList[index] = e.target.files[0];
+      updatedImageList[defaultIndex] = e.target.files[0];
       setUpdatedImgList(updatedImageList);
     }
   };
@@ -301,7 +301,37 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
                 <FloorInputSection>
                   {floorImages && floorImages.length > 0 ? (
                     <>
-                      {Array.from({ length: selectedBuilding.floorsDown || 0 }).map((_, index) => (
+                      {Array.from({ length: selectedBuilding.floorsUp || 0 + (selectedBuilding.floorsDown || 0) }).map(
+                        (_, index) => (
+                          <FloorItem key={index + (selectedBuilding.floorsDown || 0)}>
+                            <div>
+                              {index - (selectedBuilding.floorsDown || 0) >= 0
+                                ? index - (selectedBuilding.floorsDown || 0) + 1
+                                : index - (selectedBuilding.floorsDown || 0)}
+                              층
+                            </div>
+                            <FloorImageUploaderUI
+                              defaultIndex={index}
+                              index={
+                                index - (selectedBuilding.floorsDown || 0) >= 0
+                                  ? index - (selectedBuilding.floorsDown || 0) + 1
+                                  : index - (selectedBuilding.floorsDown || 0)
+                              }
+                              imgPreview={imgPreview}
+                              onImageChange={handleImageChange}
+                            />
+                            <DefaultButton
+                              onClick={() => handleFloorImageUpdate(floorImages[index].id, updatedImgList![index])}
+                            >
+                              {index - (selectedBuilding.floorsDown || 0) >= 0
+                                ? index - (selectedBuilding.floorsDown || 0) + 1
+                                : index - (selectedBuilding.floorsDown || 0)}
+                              층 도면 수정하기
+                            </DefaultButton>
+                          </FloorItem>
+                        ),
+                      )}
+                      {/* {Array.from({ length: selectedBuilding.floorsDown || 0 }).map((_, index) => (
                         <FloorItem key={index}>
                           <div style={{ color: '#48aaad' }}>{index - (selectedBuilding.floorsDown || 0)}층</div>
                           <FloorImageUploaderUI
@@ -335,7 +365,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
                             {index + 1}층 도면 수정하기
                           </DefaultButton>
                         </FloorItem>
-                      ))}
+                      ))} */}
                     </>
                   ) : (
                     <div>도면이 존재하지 않는 건물입니다.</div>
