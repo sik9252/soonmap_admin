@@ -18,11 +18,13 @@ import FindAccountPage from '../pages/FindAccountPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 function Router() {
+  const token = localStorage.getItem('accessToken');
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/" element={<Navigate replace to="/login" />} />
+        <Route path="/" element={token ? <Navigate replace to="/home" /> : <Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/find-account" element={<FindAccountPage />} />
