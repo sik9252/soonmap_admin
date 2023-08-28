@@ -9,11 +9,13 @@ import toast from 'react-hot-toast';
 type TodoItemEditorProps = {
   category: CategoryItem;
   onChangeViewMode: () => void;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
+function EditMode({ category, onChangeViewMode, currentPage, setCurrentPage }: TodoItemEditorProps) {
   const { refetch: getCategoryRefetch } = useGetCategoryRequest({
-    page: 0,
+    page: currentPage - 1,
   });
 
   const {
@@ -52,6 +54,7 @@ function EditMode({ category, onChangeViewMode }: TodoItemEditorProps) {
     if (categoryUpdateData) {
       toast.success('수정되었습니다.');
       void getCategoryRefetch();
+      setCurrentPage(1);
       onChangeViewMode();
     } else if (categoryUpdateError) {
       toast.error((categoryUpdateError as Error).message);

@@ -54,6 +54,8 @@ function InfoCategoryManage() {
         selectedItemIndex={selectedItemIndex}
         isAlertOpen={isAlertOpen}
         setIsAlertOpen={setIsAlertOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
       <TableContainer>
         <Table variant="simple">
@@ -74,6 +76,8 @@ function InfoCategoryManage() {
                   key={category.id}
                   category={category}
                   handleAlertDialog={() => handleAlertDialog(category.id)}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
                 />
               ))}
             {isAddClick ? <AddMode setIsAddClick={setIsAddClick} /> : null}

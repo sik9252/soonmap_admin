@@ -7,7 +7,7 @@ import {
   PreviewTitle,
   PreviewMyArticle,
 } from './style';
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, Image, Flex } from '@chakra-ui/react';
 import CardUI from '../../../components/ui/CardUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
@@ -24,9 +24,12 @@ function Info() {
     data: myArticleResult,
     isError: myArticleError,
     refetch: myArticleRefetch,
-  } = useGetMyInfoRequest({
-    page: currentPage - 1,
-  });
+  } = useGetMyInfoRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
   useEffect(() => {
     void myArticleRefetch();
@@ -53,7 +56,13 @@ function Info() {
             <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
               {myArticleList &&
                 myArticleList.map((article) => (
-                  <CardUI key={article.id} infoData={article} onClick={() => handleInfoPreview(article)} />
+                  <CardUI
+                    key={article.id}
+                    infoData={article}
+                    onClick={() => handleInfoPreview(article)}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
                 ))}
             </SimpleGrid>
             <Pagination
@@ -71,7 +80,16 @@ function Info() {
         {selectedArticle.title ? (
           <>
             <PreviewTitle>
-              [{selectedArticle.articleTypeName}] {selectedArticle.title}
+              {selectedArticle.thumbnail ? (
+                <Flex alignItems="center">
+                  <Image src={selectedArticle.thumbnail} alt="" w="50px" mr="10px" />[{selectedArticle.articleTypeName}]{' '}
+                  {selectedArticle.title}
+                </Flex>
+              ) : (
+                <>
+                  [{selectedArticle.articleTypeName}] {selectedArticle.title}
+                </>
+              )}
             </PreviewTitle>
             <PreviewMyArticle>
               <span>작성자: {selectedArticle.writer}</span>

@@ -24,9 +24,18 @@ interface AlertProps {
   selectedItemIndex?: number;
   isAlertOpen: boolean;
   setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlertOpen }: AlertProps) {
+function AlertDialogModal({
+  location,
+  selectedItemIndex,
+  isAlertOpen,
+  setIsAlertOpen,
+  currentPage,
+  setCurrentPage,
+}: AlertProps) {
   const cancelRef = useRef(null);
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
   const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
@@ -34,14 +43,14 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
 
   const { refetch: getCategoryRefetch } = useGetCategoryRequest(
     {
-      page: 0,
+      page: currentPage - 1,
     },
     false,
   );
 
   const { refetch: getInfoRefetch } = useGetInfoRequest(
     {
-      page: 0,
+      page: currentPage - 1,
       startDate: '',
       endDate: '',
       title: '',
@@ -52,7 +61,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
 
   const { refetch: getNoticeRefetch } = useGetNoticeRequest(
     {
-      page: 0,
+      page: currentPage - 1,
       startDate: '',
       endDate: '',
       title: '',
@@ -62,18 +71,24 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
 
   const { refetch: getBuildingRefetch } = useGetBuildingRequest(
     {
-      page: 0,
+      page: currentPage - 1,
     },
     false,
   );
 
-  const { refetch: myArticleRefetch } = useGetMyInfoRequest({
-    page: 0,
-  });
+  const { refetch: myArticleRefetch } = useGetMyInfoRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
-  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest({
-    page: 0,
-  });
+  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
   const {
     mutate: categoryDeleteRequest,
@@ -123,6 +138,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     if (categoryDeleteData) {
       toast.success('삭제되었습니다.');
       void getCategoryRefetch();
+      setCurrentPage(1);
     } else if (categoryDeleteError) {
       toast.error((categoryDeleteError as Error).message);
     }
@@ -134,6 +150,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
       toast.success('삭제되었습니다.');
       void getInfoRefetch();
       void myArticleRefetch();
+      setCurrentPage(1);
       resetAtom();
     } else if (infoDeleteError) {
       toast.error((infoDeleteError as Error).message);
@@ -146,6 +163,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
       toast.success('삭제되었습니다.');
       void getNoticeRefetch();
       void myNoticeRefetch();
+      setCurrentPage(1);
       resetAtom();
     } else if (noticeDeleteError) {
       toast.error((noticeDeleteError as Error).message);
@@ -157,6 +175,7 @@ function AlertDialogModal({ location, selectedItemIndex, isAlertOpen, setIsAlert
     if (deleteBuildingData) {
       toast.success('삭제되었습니다.');
       void getBuildingRefetch();
+      setCurrentPage(1);
       resetBuildingAtom();
     } else if (deleteBuildingError) {
       toast.error((deleteBuildingError as Error).message);

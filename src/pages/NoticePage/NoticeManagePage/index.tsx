@@ -102,7 +102,13 @@ function NoticeManagePage() {
               <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
                 {noticeList &&
                   noticeList.map((notice) => (
-                    <CardUI key={notice.id} noticeData={notice} onClick={() => handleNoticePreview(notice)} />
+                    <CardUI
+                      key={notice.id}
+                      noticeData={notice}
+                      onClick={() => handleNoticePreview(notice)}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                    />
                   ))}
               </SimpleGrid>
               <Pagination

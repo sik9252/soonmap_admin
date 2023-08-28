@@ -27,9 +27,11 @@ import { DefaultButton } from '../../ui/ButtonUI';
 interface ModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
+function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurrentPage }: ModalProps) {
   const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
   const [floorImages, setFloorImages] = useState<FloorQueryResponseType[] | null>([]);
   const [buildingNumber, setBuildingNumber] = useState<string | undefined>('');
@@ -59,7 +61,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
 
   const { refetch: getBuildingRefetch } = useGetBuildingRequest(
     {
-      page: 0,
+      page: currentPage - 1,
     },
     false,
   );
@@ -181,7 +183,6 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     if (
       !buildingName ||
       !buildingUpFloorsCount ||
-      !buildingDownFloorsCount ||
       !buildingDescription ||
       !buildingXpos ||
       !buildingYpos ||
@@ -189,7 +190,6 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     ) {
       toast.error('모든 항목은 필수값입니다.');
     } else {
-      console.log(data);
       updateBuildingInfoRequest({ ...data });
     }
   };
@@ -198,6 +198,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     if (updateBuildingInfoData) {
       toast.success('건물 정보 수정이 완료되었습니다.');
       void getBuildingRefetch();
+      setCurrentPage(1);
     } else if (updateBuildingInfoError) {
       toast.error((updateBuildingInfoError as Error).message);
     }
@@ -213,6 +214,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen }: ModalProps) {
   useEffect(() => {
     if (updateFloorImageData) {
       toast.success('도면 수정이 완료되었습니다.');
+      setCurrentPage(1);
     } else if (updateFloorImageError) {
       toast.error('수정할 이미지가 등록되지 않았습니다.');
     }

@@ -14,8 +14,14 @@ function ViewMode({ category, onChangeEditMode, handleAlertDialog }: TodoItemVie
       <Td width="30%">{category.typeName}</Td>
       <Td width="50%">{category.description}</Td>
       <Td width="20%">
-        <EditIcon mr="10px" cursor={'pointer'} onClick={onChangeEditMode} />
-        <DeleteIcon cursor={'pointer'} onClick={handleAlertDialog} />
+        {category.id === 1 ? (
+          ''
+        ) : (
+          <>
+            <EditIcon mr="10px" cursor={'pointer'} onClick={onChangeEditMode} />
+            <DeleteIcon cursor={'pointer'} onClick={handleAlertDialog} />
+          </>
+        )}
       </Td>
     </Tr>
   );

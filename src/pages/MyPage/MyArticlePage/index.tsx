@@ -20,6 +20,7 @@ function MyArticlePage() {
 
   const handleCurrentLocation = (location: string) => {
     setCurrentLocation(location);
+    resetAtom();
   };
 
   const ACCOUNT_MENU_DEFAULT = [

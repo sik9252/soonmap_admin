@@ -11,9 +11,11 @@ export interface CategoryItem {
 export interface CategoryItemProps {
   category: CategoryItem;
   handleAlertDialog: () => void;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function CategoryInput({ category, handleAlertDialog }: CategoryItemProps) {
+function CategoryInput({ category, handleAlertDialog, currentPage, setCurrentPage }: CategoryItemProps) {
   const [viewMode, setViewMode] = useState(true);
 
   return (
@@ -25,7 +27,12 @@ function CategoryInput({ category, handleAlertDialog }: CategoryItemProps) {
           handleAlertDialog={handleAlertDialog}
         />
       ) : (
-        <EditMode category={category} onChangeViewMode={() => setViewMode(true)} />
+        <EditMode
+          category={category}
+          onChangeViewMode={() => setViewMode(true)}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </>
   );

@@ -7,10 +7,12 @@ import { TitleInputSection, ButtonContainer } from './style';
 import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
-import { FileUploaderUI } from '../../../components/ui/FileUploaderUI';
+import { ThumbnailUploadUI } from '../../../components/ui/ThumbnailUploadUI';
 import { CategoryDataType, useGetAllCategoryRequest } from '../../../api/InfoCategory';
 import { useCreateInfoRequest } from '../../../api/Info';
 import toast from 'react-hot-toast';
+import { Flex } from '@chakra-ui/react';
+import { useUploadImageRequest } from '../../../api/TextEditor';
 
 type EditorInstance = Editor | null;
 
@@ -22,6 +24,11 @@ function CreateInfoPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
+  const [thumbnail, setThumbnail] = useState<string | undefined>('');
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>('');
+
+  const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
+  const { mutate: uploadThumbnailRequest, data: thumbnailData, error: uploadThumbnailError } = useUploadImageRequest();
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
@@ -36,7 +43,29 @@ function CreateInfoPage() {
     setContent(editorRef.current?.getInstance().getHTML());
   };
 
-  const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    if (e.target.files) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnail(reader.result as string);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+
+      uploadThumbnailRequest({
+        image: e.target.files[0],
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (thumbnailData) {
+      setThumbnailUrl(thumbnailData.data);
+    } else if (uploadThumbnailError) {
+      toast.error('썸네일 등록에 실패했습니다.');
+    }
+  }, [thumbnailData, uploadThumbnailError]);
 
   const {
     mutate: createInfoRequest,
@@ -58,10 +87,11 @@ function CreateInfoPage() {
       title: title,
       content: content,
       articleTypeName: category,
+      thumbnail: thumbnail && thumbnailUrl ? thumbnailUrl : '',
     };
 
-    if (!title || !content) {
-      toast.error('제목과 내용은 필수 항목 입니다.');
+    if (!title || !content || !category) {
+      toast.error('제목, 내용, 카테고리는 필수 항목 입니다.');
     } else {
       createInfoRequest({ ...data });
     }
@@ -82,7 +112,17 @@ function CreateInfoPage() {
         <SelectUI options={options} handleCategory={handleCategory} />
         <InputUI placeholder={'제목을 입력해주세요.'} onChange={handleTitle} maxLength={100} />
       </TitleInputSection>
-      <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContent} />
+      <Flex>
+        <TextEditor editorRef={editorRef} content={'여기에 내용을 입력해주세요.'} onChange={handleContent} />
+        <Flex m="0 auto">
+          <ThumbnailUploadUI
+            ThumbnailImage={thumbnail}
+            handleThumbnailChange={handleThumbnailChange}
+            setThumbnail={setThumbnail}
+            setThumbnailUrl={setThumbnailUrl}
+          />
+        </Flex>
+      </Flex>
       <ButtonContainer>
         <div>{/* <FileUploaderUI /> */}</div>
         <DefaultButton isLoading={createInfoLoading} loadingText="등록 중" onClick={() => clickSubmitting()}>
