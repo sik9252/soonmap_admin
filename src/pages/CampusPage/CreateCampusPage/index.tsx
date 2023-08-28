@@ -87,16 +87,16 @@ function CreateCampusPage() {
     setImgPreview(Array(buildingUpFloorsCount + buildingDownFloorsCount).fill(''));
   }, [buildingUpFloorsCount, buildingDownFloorsCount]);
 
-  const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (defaultIndex: number, index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImgPreview((prevImgPreview) => [
-          ...prevImgPreview.slice(0, index),
+          ...prevImgPreview.slice(0, defaultIndex),
           reader.result as string,
-          ...prevImgPreview.slice(index + 1),
+          ...prevImgPreview.slice(defaultIndex + 1),
         ]);
       };
       reader.readAsDataURL(e.target.files[0]);
@@ -104,16 +104,13 @@ function CreateCampusPage() {
       // 도면 삽입시 바로 api 요청
       createFloorImageRequest({
         buildingId: uploadedBuildingId,
-        floorValue: index - 1 <= 0 ? index - buildingDownFloorsCount : index - 1,
+        floorValue: index,
         description: '',
         image: e.target.files[0],
       });
 
-      if (index - 1 <= 0) {
-        setFloorIndex(index - buildingDownFloorsCount);
-      } else {
-        setFloorIndex(index - 1);
-      }
+      console.log(index);
+      setFloorIndex(index);
     }
   };
 
@@ -121,7 +118,6 @@ function CreateCampusPage() {
     // 건물 정보 등록 요청 api
     const data = {
       name: buildingName,
-      //floors: buildingUpFloorsCount,
       floorsUp: buildingUpFloorsCount,
       floorsDown: buildingDownFloorsCount,
       description: buildingDescription,
@@ -214,34 +210,26 @@ function CreateCampusPage() {
           <SubTitle>층별 도면 업로드</SubTitle>
           <FloorInputSection>
             <div>설정한 층 수가 보이지 않는다면 아래로 스크롤해주세요.</div>
-            {buildingDownFloorsCount <= 10 ? (
-              <>
-                {Array.from({ length: buildingDownFloorsCount }).map((_, index) => (
-                  <FloorItem key={index}>
-                    <div style={{ color: '#48aaad' }}>{index - buildingDownFloorsCount}층</div>
-                    <FloorImageUploaderUI index={index} imgPreview={imgPreview} onImageChange={handleImageChange} />
-                  </FloorItem>
-                ))}
-              </>
-            ) : (
-              ''
-            )}
-            {buildingUpFloorsCount <= 20 ? (
-              <>
-                {Array.from({ length: buildingUpFloorsCount }).map((_, index) => (
-                  <FloorItem key={index + buildingDownFloorsCount}>
-                    <div>{index + 1}층</div>
-                    <FloorImageUploaderUI
-                      index={index + buildingDownFloorsCount}
-                      imgPreview={imgPreview}
-                      onImageChange={handleImageChange}
-                    />
-                  </FloorItem>
-                ))}
-              </>
-            ) : (
-              ''
-            )}
+            {Array.from({ length: buildingUpFloorsCount + buildingDownFloorsCount }).map((_, index) => (
+              <FloorItem key={index + buildingDownFloorsCount}>
+                <div>
+                  {index - buildingDownFloorsCount >= 0
+                    ? index - buildingDownFloorsCount + 1
+                    : index - buildingDownFloorsCount}
+                  층
+                </div>
+                <FloorImageUploaderUI
+                  defaultIndex={index}
+                  index={
+                    index - buildingDownFloorsCount >= 0
+                      ? index - buildingDownFloorsCount + 1
+                      : index - buildingDownFloorsCount
+                  }
+                  imgPreview={imgPreview}
+                  onImageChange={handleImageChange}
+                />
+              </FloorItem>
+            ))}
           </FloorInputSection>
         </RightSection>
       </SubContainer>
