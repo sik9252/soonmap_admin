@@ -5,6 +5,12 @@ interface MyAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 
+interface MyAxiosError extends AxiosError {
+  response?: AxiosResponse<{
+    message?: string;
+  }>;
+}
+
 const SERVER_IP: string = import.meta.env.VITE_SERVER_IP;
 
 export const useAxios = axios.create({
@@ -45,10 +51,15 @@ useAxios.interceptors.response.use(
     return response;
   },
 
-  async (error: AxiosError) => {
+  async (error: MyAxiosError) => {
     const originalRequest = error.config as MyAxiosRequestConfig;
+    console.log(originalRequest);
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      error?.response?.data?.message === '잘못된 접근입니다.' &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       const refreshToken = localStorage.getItem('refreshToken');
