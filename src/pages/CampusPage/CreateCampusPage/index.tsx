@@ -133,7 +133,6 @@ function CreateCampusPage() {
     if (
       !buildingName ||
       !buildingUpFloorsCount ||
-      !buildingDownFloorsCount ||
       !buildingDescription ||
       !buildingXpos ||
       !buildingYpos ||
