@@ -15,13 +15,15 @@ import { AccountInfoText, FooterSection } from './style';
 export interface SelectedAccountProps {
   selectedAccount: AccountDataType;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) {
+function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentPage }: SelectedAccountProps) {
   const location = useLocation();
 
-  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest({ page: 0 });
-  const { refetch: getUserAccountRefetch } = useGetUserAccountRequest({ page: 0 });
+  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage - 1 });
+  const { refetch: getUserAccountRefetch } = useGetUserAccountRequest({ page: currentPage - 1 });
 
   const {
     mutate: accountBanStateRequest,
@@ -41,6 +43,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
     if (accountBanStateData) {
       if (selectedAccount.ban) {
         toast.success('계정이 활성화되었습니다.');
+        setCurrentPage(1);
       } else if (!selectedAccount.ban) {
         toast('계정이 비활성화되었습니다.', {
           icon: '⚠️',
@@ -58,6 +61,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
     if (giveManagerAuthStateData) {
       if (!selectedAccount.manager) {
         toast.success('해당 계정에 매니저 권한이 부여되었습니다.');
+        setCurrentPage(1);
       } else if (selectedAccount.manager) {
         toast('해당 계정의 매니저 권한이 제거되었습니다.', {
           icon: '⚠️',
@@ -120,14 +124,25 @@ function DefaultInfo({ selectedAccount, setIsModalOpen }: SelectedAccountProps) 
         <FooterSection>
           <>
             {localStorage.getItem('auth') === 'one' && !selectedAccount.admin ? (
-              <Button
-                onClick={() => handleGiveManagerAuth()}
-                mr="10px"
-                isLoading={giveManagerAuthStateLoading}
-                loadingText="권한 부여중"
-              >
-                매니저 권한 부여하기
-              </Button>
+              selectedAccount.manager ? (
+                <Button
+                  onClick={() => handleGiveManagerAuth()}
+                  mr="10px"
+                  isLoading={giveManagerAuthStateLoading}
+                  loadingText="권한 부여중"
+                >
+                  매니저 권한 해제하기
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => handleGiveManagerAuth()}
+                  mr="10px"
+                  isLoading={giveManagerAuthStateLoading}
+                  loadingText="권한 부여중"
+                >
+                  매니저 권한 부여하기
+                </Button>
+              )
             ) : (
               ''
             )}

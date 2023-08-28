@@ -53,7 +53,13 @@ function Info() {
             <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
               {myArticleList &&
                 myArticleList.map((article) => (
-                  <CardUI key={article.id} infoData={article} onClick={() => handleInfoPreview(article)} />
+                  <CardUI
+                    key={article.id}
+                    infoData={article}
+                    onClick={() => handleInfoPreview(article)}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
                 ))}
             </SimpleGrid>
             <Pagination

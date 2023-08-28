@@ -52,12 +52,19 @@ function CampusManagePage() {
 
   return (
     <RightContainer title={'건물 및 강의실 관리'}>
-      <BuildingModifyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <BuildingModifyModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <AlertDialogModal
         location={location}
         selectedItemIndex={selectedBuilding.id}
         isAlertOpen={isAlertOpen}
         setIsAlertOpen={setIsAlertOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
       <TableContainer>
         <Table variant="simple">

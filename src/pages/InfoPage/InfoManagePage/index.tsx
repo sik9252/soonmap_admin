@@ -145,7 +145,13 @@ function InfoManagePage() {
               <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
                 {infoList &&
                   infoList.map((info) => (
-                    <CardUI key={info.id} infoData={info} onClick={() => handleInfoPreview(info)} />
+                    <CardUI
+                      key={info.id}
+                      infoData={info}
+                      onClick={() => handleInfoPreview(info)}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                    />
                   ))}
               </SimpleGrid>
               <Pagination

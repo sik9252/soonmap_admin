@@ -53,7 +53,13 @@ function Notice() {
             <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
               {myNoticeList &&
                 myNoticeList.map((notice) => (
-                  <CardUI key={notice.id} noticeData={notice} onClick={() => handleInfoPreview(notice)} />
+                  <CardUI
+                    key={notice.id}
+                    noticeData={notice}
+                    onClick={() => handleInfoPreview(notice)}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
                 ))}
             </SimpleGrid>
             <Pagination
@@ -70,9 +76,7 @@ function Notice() {
       <MyArticlePreviewSection>
         {selectedArticle.title ? (
           <>
-            <PreviewTitle>
-              [{selectedArticle.articleTypeName}] {selectedArticle.title}
-            </PreviewTitle>
+            <PreviewTitle>{selectedArticle.title}</PreviewTitle>
             <PreviewMyArticle>
               <span>작성자: {selectedArticle.writer}</span>
               <span>작성일: {selectedArticle.createAt?.slice(0, 10)}</span>

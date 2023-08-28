@@ -24,9 +24,11 @@ interface ModalProps {
   location: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProps) {
+function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage, setCurrentPage }: ModalProps) {
   const editorRef = useRef<EditorInstance>(null);
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
   const { currentLocation } = useCurrentLocationAtom();
@@ -44,13 +46,13 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
   const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
   const { refetch: getInfoRefetch } = useGetInfoRequest(
     {
-      page: 0,
+      page: currentPage - 1,
     },
     false,
   );
   const { refetch: getNoticeRefetch } = useGetNoticeRequest(
     {
-      page: 0,
+      page: currentPage - 1,
       startDate: '',
       endDate: '',
       title: '',
@@ -59,11 +61,11 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
   );
 
   const { refetch: myArticleRefetch } = useGetMyInfoRequest({
-    page: 0,
+    page: currentPage - 1,
   });
 
   const { refetch: myNoticeRefetch } = useGetMyNoticeRequest({
-    page: 0,
+    page: currentPage - 1,
   });
 
   const {
@@ -153,6 +155,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
       setIsModalOpen(false);
       void getInfoRefetch();
       void myArticleRefetch();
+      setCurrentPage(1);
       resetAtom();
     } else if (infoUpdateError) {
       toast.error((infoUpdateError as Error).message);
@@ -165,6 +168,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen }: ModalProp
       setIsModalOpen(false);
       void getNoticeRefetch();
       void myNoticeRefetch();
+      setCurrentPage(1);
       resetAtom();
     } else if (noticeUpdateError) {
       toast.error((noticeUpdateError as Error).message);

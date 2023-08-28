@@ -15,9 +15,11 @@ interface CardProps {
   onClick?: () => void;
   setPreviewInfo?: React.Dispatch<React.SetStateAction<InfoDataType | null>>;
   currentLocation?: string;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function CardUI({ infoData, noticeData, onClick }: CardProps) {
+function CardUI({ infoData, noticeData, onClick, currentPage, setCurrentPage }: CardProps) {
   const path = useLocation();
   const [location, setLocation] = useState('');
   const { setSelectedArticle } = useSelectedArticleAtom();
@@ -54,8 +56,16 @@ function CardUI({ infoData, noticeData, onClick }: CardProps) {
         selectedItemIndex={infoData?.id || noticeData?.id}
         isAlertOpen={isAlertOpen}
         setIsAlertOpen={setIsAlertOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
-      <ArticleModifyModal location={location} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ArticleModifyModal
+        location={location}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <Card
         height="180px"
         cursor={'pointer'}

@@ -17,9 +17,11 @@ import { useSelectedAccountAtom } from '../../../store/accountAtom';
 interface ModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function AccountManageModal({ isModalOpen, setIsModalOpen }: ModalProps) {
+function AccountManageModal({ isModalOpen, setIsModalOpen, currentPage, setCurrentPage }: ModalProps) {
   const { selectedAccount } = useSelectedAccountAtom();
 
   const ACCOUNT_MENU = [
@@ -32,7 +34,14 @@ function AccountManageModal({ isModalOpen, setIsModalOpen }: ModalProps) {
   const ACCOUNT_SCREEN = [
     {
       id: 1,
-      screen: <DefaultInfoSection selectedAccount={selectedAccount} setIsModalOpen={setIsModalOpen} />,
+      screen: (
+        <DefaultInfoSection
+          selectedAccount={selectedAccount}
+          setIsModalOpen={setIsModalOpen}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      ),
     },
   ];
 

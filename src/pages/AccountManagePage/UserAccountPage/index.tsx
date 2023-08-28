@@ -65,8 +65,18 @@ function UserAccountPage() {
 
   return (
     <RightContainer title={'계정 관리'}>
-      <BanAlertDialogModal isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} />
-      <AccountManageModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <BanAlertDialogModal
+        isAlertOpen={isAlertOpen}
+        setIsAlertOpen={setIsAlertOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
+      <AccountManageModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <Box mb="10px" fontWeight="600" color="#25549c">
         유저 계정 관리 (총 계정 수: {userCount})
       </Box>
