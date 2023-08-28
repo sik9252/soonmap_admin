@@ -72,15 +72,11 @@ function CreateCampusPage() {
   };
 
   const handleBuildingXpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const onlyNumber = value.replace(/[^0-9]/g, '');
-    setBuildingXpos(Number(onlyNumber));
+    setBuildingXpos(Number(e.target.value));
   };
 
   const handleBuildingYpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const onlyNumber = value.replace(/[^0-9]/g, '');
-    setBuildingYpos(Number(onlyNumber));
+    setBuildingYpos(Number(e.target.value));
   };
 
   useEffect(() => {
