@@ -76,13 +76,19 @@ function AlertDialogModal({
     false,
   );
 
-  const { refetch: myArticleRefetch } = useGetMyInfoRequest({
-    page: currentPage - 1,
-  });
+  const { refetch: myArticleRefetch } = useGetMyInfoRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
-  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest({
-    page: currentPage - 1,
-  });
+  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
   const {
     mutate: categoryDeleteRequest,

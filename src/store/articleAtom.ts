@@ -10,6 +10,7 @@ export const selectedArticleAtom = atom<{
   articleTypeName?: string;
   top?: boolean;
   view?: number;
+  thumbnail?: string;
 }>({});
 
 export function useSelectedArticleAtom() {

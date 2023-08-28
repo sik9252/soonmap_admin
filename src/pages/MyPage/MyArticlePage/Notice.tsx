@@ -24,9 +24,12 @@ function Notice() {
     data: myNoticeResult,
     isError: myNoticeError,
     refetch: myNoticeRefetch,
-  } = useGetMyNoticeRequest({
-    page: currentPage - 1,
-  });
+  } = useGetMyNoticeRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
 
   useEffect(() => {
     void myNoticeRefetch();

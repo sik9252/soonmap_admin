@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter, Heading, Text, Image, Flex } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { TopNotice } from './style';
 import AlertDialogModal from '../../features/AlertDialogModal';
@@ -75,12 +75,28 @@ function CardUI({ infoData, noticeData, onClick, currentPage, setCurrentPage }: 
         onClick={onClick}
       >
         <CardHeader pt="20px" pb="15px">
-          <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
-            {noticeData?.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
-            {infoData?.title || noticeData?.title}
-          </Heading>
+          {infoData && infoData.thumbnail ? (
+            <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
+              <Flex alignItems="center">
+                <Image src={infoData?.thumbnail} w="30px" h="30px" mr="10px" />
+                {infoData?.title}
+              </Flex>
+            </Heading>
+          ) : (
+            <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
+              {infoData?.title}
+            </Heading>
+          )}
+          {noticeData ? (
+            <Heading size="sm" noOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
+              {noticeData?.top ? <TopNotice>[주요 공지]</TopNotice> : ''}
+              {noticeData?.title}
+            </Heading>
+          ) : (
+            ''
+          )}
         </CardHeader>
-        <CardBody pt="5px" pb="5px">
+        <CardBody pt="5px" pb="5px" h="auto">
           <Text fontSize={13} mb="3px">
             작성자: {infoData?.writer || noticeData?.writer}
           </Text>
@@ -89,7 +105,7 @@ function CardUI({ infoData, noticeData, onClick, currentPage, setCurrentPage }: 
           </Text>
           {infoData ? <Text fontSize={13}>카테고리: {infoData.articleTypeName}</Text> : ''}
         </CardBody>
-        <CardFooter>
+        <CardFooter p="3px 20px 15px 20px">
           <EditIcon cursor={'pointer'} mr={'10px'} onClick={() => handleArticleModifyModal(infoData! || noticeData!)} />
           <DeleteIcon cursor={'pointer'} onClick={() => handleAlertDialog(infoData! || noticeData!)} />
         </CardFooter>

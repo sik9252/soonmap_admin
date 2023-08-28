@@ -87,12 +87,7 @@ function CreateCampusPage() {
     setImgPreview(Array(buildingUpFloorsCount + buildingDownFloorsCount).fill(''));
   }, [buildingUpFloorsCount, buildingDownFloorsCount]);
 
-  useEffect(() => {
-    console.log(imgPreview);
-  }, [imgPreview]);
-
   const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(index - 1);
     e.preventDefault();
 
     if (e.target.files && e.target.files.length > 0) {

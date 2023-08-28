@@ -180,8 +180,6 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
       uniqueNumber: buildingNumber,
     };
 
-    console.log(data);
-
     if (
       !buildingName ||
       !buildingUpFloorsCount ||

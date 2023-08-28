@@ -9,6 +9,7 @@ export interface InfoDataType {
   writer?: string;
   articleTypeName?: string;
   view?: number;
+  thumbnail?: string;
 }
 
 export interface InfoResponseType extends InfoDataType {

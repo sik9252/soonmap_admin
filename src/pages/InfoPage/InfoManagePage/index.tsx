@@ -15,7 +15,7 @@ import { DatePickerUI } from '../../../components/ui/DatePickerUI';
 import BadgeUI from '../../../components/ui/BadgeUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, Image, Flex } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
 import { useGetInfoRequest } from '../../../api/Info';
 import { CategoryDataType, useGetAllCategoryRequest } from '../../../api/InfoCategory';
@@ -169,7 +169,16 @@ function InfoManagePage() {
           {selectedArticle.title ? (
             <>
               <PreviewTitle>
-                [{selectedArticle.articleTypeName}] {selectedArticle.title}
+                {selectedArticle.thumbnail ? (
+                  <Flex alignItems="center">
+                    <Image src={selectedArticle.thumbnail} alt="" w="50px" mr="10px" />[
+                    {selectedArticle.articleTypeName}] {selectedArticle.title}
+                  </Flex>
+                ) : (
+                  <>
+                    [{selectedArticle.articleTypeName}] {selectedArticle.title}
+                  </>
+                )}
               </PreviewTitle>
               <PreviewInfo>
                 <span>작성자: {selectedArticle.writer}</span>
