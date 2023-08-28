@@ -148,6 +148,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
   };
 
   const handleImageChange = (defaultIndex: number, index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(index);
     e.preventDefault();
 
     const updatedImageList: Blob[] = [];
