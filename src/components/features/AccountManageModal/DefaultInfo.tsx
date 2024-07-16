@@ -22,7 +22,7 @@ export interface SelectedAccountProps {
 function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentPage }: SelectedAccountProps) {
   const location = useLocation();
 
-  const { refetch: getAdminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage - 1 });
+  const { adminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage - 1 });
   const { refetch: getUserAccountRefetch } = useGetUserAccountRequest({ page: currentPage - 1 });
 
   const {
@@ -49,7 +49,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentP
           icon: '⚠️',
         });
       }
-      void getAdminAccountRefetch();
+      void adminAccountRefetch();
       void getUserAccountRefetch();
       setIsModalOpen(false);
     } else if (accountBanStateError) {
@@ -67,7 +67,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentP
           icon: '⚠️',
         });
       }
-      void getAdminAccountRefetch();
+      void adminAccountRefetch();
       setIsModalOpen(false);
     } else if (giveManagerAuthStateError) {
       toast.error((giveManagerAuthStateError as Error).message);

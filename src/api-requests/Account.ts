@@ -10,9 +10,18 @@ import {
   IMyInfoResponse,
   ITotalAccountCountResponse,
 } from '../@types/Account';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export function useGetAdminAccountRequest(params: IAccountRequest, isEnabled?: boolean) {
-  return useQuery(
+  const [accountList, setAccountList] = useState<IAccountData[] | null>([]);
+  const [totalPosts, setTotalPosts] = useState(1);
+
+  const {
+    data,
+    error,
+    refetch: adminAccountRefetch,
+  } = useQuery(
     [`/admin/account/admin?page=${params.page}`, params],
     () =>
       httpClient<IAccountResponse>({
@@ -21,6 +30,17 @@ export function useGetAdminAccountRequest(params: IAccountRequest, isEnabled?: b
       }),
     { enabled: isEnabled },
   );
+
+  useEffect(() => {
+    if (data) {
+      setAccountList(data?.data.memberList);
+      setTotalPosts(data?.data.accountCount);
+    } else if (error) {
+      toast.error('회원 계정 목록을 불러오는데 실패했습니다.');
+    }
+  }, [data, error]);
+
+  return { accountList, totalPosts, adminAccountRefetch };
 }
 
 export function useGetUserAccountRequest(params: IAccountRequest, isEnabled?: boolean) {
@@ -87,7 +107,13 @@ export function useMyEmailChangeValidateRequest() {
 
 // 내 정보 가져오기
 export function useGetTotalAccountCountRequest(isEnabled?: boolean) {
-  return useQuery(
+  const [adminCount, setAdminCount] = useState(0);
+
+  const {
+    data,
+    error,
+    refetch: totalAccountCountRefetch,
+  } = useQuery(
     [`/admin/account/count`],
     () =>
       httpClient<ITotalAccountCountResponse>({
@@ -96,6 +122,16 @@ export function useGetTotalAccountCountRequest(isEnabled?: boolean) {
       }),
     { enabled: isEnabled },
   );
+
+  useEffect(() => {
+    if (data) {
+      setAdminCount(data?.data.adminCount);
+    } else if (error) {
+      toast.error('총 계정 수를 불러오는데 실패했습니다.');
+    }
+  }, [data, error]);
+
+  return { adminCount, totalAccountCountRefetch };
 }
 
 // 계정 찾기

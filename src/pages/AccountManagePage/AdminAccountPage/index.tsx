@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Table, Thead, Tbody, Tr, Td, Th, TableContainer, Box } from '@chakra-ui/react';
 import { SettingsIcon } from '@chakra-ui/icons';
 import { BanState } from '../style';
@@ -6,62 +5,21 @@ import RightContainer from '../../../components/layout/RightContainer';
 import { BanAlertDialogModal } from '../../../components/features/AlertDialogModal';
 import AccountManageModal from '../../../components/features/AccountManageModal';
 import Pagination from '../../../components/features/Pagination';
-import toast from 'react-hot-toast';
-import { useGetAdminAccountRequest, useGetTotalAccountCountRequest } from '../../../api-requests/Account';
-import { useSelectedAccountAtom } from '../../../store/accountAtom';
-import { IAccountData } from '../../../@types/Account';
+import { useAdminAccount } from './useAdminAccount';
 
 function AdminAccountPage() {
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(1);
-  const [accountList, setAccountList] = useState<IAccountData[] | null>([]);
-  const [adminCount, setAdminCount] = useState(0);
-  const { setSelectedAccount } = useSelectedAccountAtom();
-
   const {
-    data: accountResult,
-    isError: accountError,
-    refetch: accountRefetch,
-  } = useGetAdminAccountRequest({ page: currentPage - 1 }, false);
-
-  const {
-    data: totalAccountCountResult,
-    isError: totalAccountCountError,
-    refetch: totalAccountCountRefetch,
-  } = useGetTotalAccountCountRequest(false);
-
-  useEffect(() => {
-    void accountRefetch();
-  }, [currentPage]);
-
-  useEffect(() => {
-    void totalAccountCountRefetch();
-  }, []);
-
-  useEffect(() => {
-    if (accountResult) {
-      setAccountList(accountResult?.data.memberList);
-      setTotalPosts(accountResult?.data.accountCount);
-    } else if (accountError) {
-      toast.error('회원 계정 목록을 불러오는데 실패했습니다.');
-    }
-  }, [accountResult, accountError]);
-
-  useEffect(() => {
-    if (totalAccountCountResult) {
-      setAdminCount(totalAccountCountResult?.data.adminCount);
-    } else if (totalAccountCountError) {
-      toast.error('총 계정 수를 불러오는데 실패했습니다.');
-    }
-  }, [totalAccountCountResult, totalAccountCountError]);
-
-  const handleAccountManageModal = (account: IAccountData) => {
-    setSelectedAccount(account);
-    setIsModalOpen(true);
-  };
+    isAlertOpen,
+    setIsAlertOpen,
+    isModalOpen,
+    setIsModalOpen,
+    currentPage,
+    setCurrentPage,
+    accountList,
+    totalPosts,
+    adminCount,
+    handleAccountManageModal,
+  } = useAdminAccount();
 
   return (
     <RightContainer title={'계정 관리'}>

@@ -27,11 +27,7 @@ function UserAccountPage() {
     refetch: accountRefetch,
   } = useGetUserAccountRequest({ page: currentPage - 1 }, false);
 
-  const {
-    data: totalAccountCountResult,
-    isError: totalAccountCountError,
-    refetch: totalAccountCountRefetch,
-  } = useGetTotalAccountCountRequest(false);
+  const { totalAccountCountRefetch } = useGetTotalAccountCountRequest(false);
 
   useEffect(() => {
     void accountRefetch();
@@ -49,14 +45,6 @@ function UserAccountPage() {
       toast.error('유저 계정 목록을 불러오는데 실패했습니다.');
     }
   }, [accountResult, accountError]);
-
-  useEffect(() => {
-    if (totalAccountCountResult) {
-      setUserCount(totalAccountCountResult?.data.userCount);
-    } else if (totalAccountCountError) {
-      toast.error('총 계정 수를 불러오는데 실패했습니다.');
-    }
-  }, [totalAccountCountResult, totalAccountCountError]);
 
   const handleAccountManageModal = (account: IAccountData) => {
     setSelectedAccount(account);
