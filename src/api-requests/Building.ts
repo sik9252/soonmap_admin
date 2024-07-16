@@ -51,20 +51,45 @@ export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boole
 }
 
 export function useCreateBuildingRequest() {
-  return useMutation((data: IBuildingData) =>
+  const [uploadedBuildingId, setUploadedBuildingId] = useState<number>(0);
+
+  const {
+    mutate: createBuildingRequest,
+    data,
+    error,
+    isLoading: isCreateBuildingLoading,
+  } = useMutation((data: IBuildingData) =>
     httpClient<IEditBuildingResponse>({
       method: 'POST',
       url: '/admin/building',
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('건물 등록이 완료되었습니다.');
+      setUploadedBuildingId(data.data.id!);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    createBuildingRequest,
+    isCreateBuildingLoading,
+    uploadedBuildingId,
+  };
 }
 
-export function useCreateFloorImageRequest() {
-  return useMutation((data: IFloorImage) => {
+export function useCreateFloorImageRequest(floorIndex: number) {
+  const {
+    mutate: createFloorImageRequest,
+    data,
+    error,
+  } = useMutation((data: IFloorImage) => {
     const formData = new FormData();
     formData.append('image', data.image ? data.image : '');
-
     return httpClient<string>(
       {
         method: 'POST',
@@ -78,6 +103,16 @@ export function useCreateFloorImageRequest() {
       },
     );
   });
+
+  useEffect(() => {
+    if (data) {
+      toast.success(`${floorIndex}층 도면 등록이 완료되었습니다.`);
+    } else if (error) {
+      toast.error('건물 정보를 먼저 등록해주세요.');
+    }
+  }, [data, error]);
+
+  return { createFloorImageRequest };
 }
 
 export function useUpdateBuildingRequest() {
