@@ -7,9 +7,9 @@ import { BanAlertDialogModal } from '../../../components/features/AlertDialogMod
 import AccountManageModal from '../../../components/features/AccountManageModal';
 import Pagination from '../../../components/features/Pagination';
 import toast from 'react-hot-toast';
-import { useGetAdminAccountRequest, useGetTotalAccountCountRequest } from '../../../api/Account';
-import { AccountDataType } from '../../../api/Account';
+import { useGetAdminAccountRequest, useGetTotalAccountCountRequest } from '../../../api-requests/Account';
 import { useSelectedAccountAtom } from '../../../store/accountAtom';
+import { IAccountData } from '../../../@types/Account';
 
 function AdminAccountPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -17,7 +17,7 @@ function AdminAccountPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
-  const [accountList, setAccountList] = useState<AccountDataType[] | null>([]);
+  const [accountList, setAccountList] = useState<IAccountData[] | null>([]);
   const [adminCount, setAdminCount] = useState(0);
   const { setSelectedAccount } = useSelectedAccountAtom();
 
@@ -58,7 +58,7 @@ function AdminAccountPage() {
     }
   }, [totalAccountCountResult, totalAccountCountError]);
 
-  const handleAccountManageModal = (account: AccountDataType) => {
+  const handleAccountManageModal = (account: IAccountData) => {
     setSelectedAccount(account);
     setIsModalOpen(true);
   };

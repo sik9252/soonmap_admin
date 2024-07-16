@@ -3,9 +3,9 @@ import InputUI from '../../components/ui/InputUI';
 import { Container, Box, Flex } from '@chakra-ui/react';
 import { checkEmailValidate } from '../../utils/checkEmailValidate';
 import { DefaultButton } from '../../components/ui/ButtonUI';
-import { useFindIdEmailValidateRequest, useFindIdCertificateConfirmRequest } from '../../api/FindAccount';
 import toast from 'react-hot-toast';
 import Timer from '../../utils/timer';
+import { useFindIdCertificateConfirmRequest, useFindIdEmailValidateRequest } from '../../api-requests/Account';
 
 function FindId() {
   const {

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { MyArticleDataType, useGetMyInfoRequest } from '../../../api/Mypage';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -13,10 +12,12 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
+import { IMyArticleData } from '../../../@types/MyPage';
+import { useGetMyInfoRequest } from '../../../api-requests/MyPage';
 
 function Info() {
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-  const [myArticleList, setMyArticleList] = useState<MyArticleDataType[] | null>([]);
+  const [myArticleList, setMyArticleList] = useState<IMyArticleData[] | null>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
 
@@ -44,7 +45,7 @@ function Info() {
     }
   }, [myArticleResult, myArticleError]);
 
-  const handleInfoPreview = (article: MyArticleDataType) => {
+  const handleInfoPreview = (article: IMyArticleData) => {
     setSelectedArticle(article);
   };
 

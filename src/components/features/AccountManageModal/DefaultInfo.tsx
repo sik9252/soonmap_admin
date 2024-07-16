@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AccountDataType } from '../../../api/Account';
 import { Button } from '@chakra-ui/react';
 import toast from 'react-hot-toast';
 import {
@@ -8,12 +7,13 @@ import {
   useGetAdminAccountRequest,
   useGiveManagerAuthRequest,
   useGetUserAccountRequest,
-} from '../../../api/Account';
+} from '../../../api-requests/Account';
 import { DefaultButton } from '../../ui/ButtonUI';
 import { AccountInfoText, FooterSection } from './style';
+import { IAccountData } from '../../../@types/Account';
 
 export interface SelectedAccountProps {
-  selectedAccount: AccountDataType;
+  selectedAccount: IAccountData;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;

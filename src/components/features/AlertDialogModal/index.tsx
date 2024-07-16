@@ -9,11 +9,11 @@ import {
   AlertDialogCloseButton,
   Button,
 } from '@chakra-ui/react';
-import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api/InfoCategory';
-import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api/Info';
-import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api/Notice';
-import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api/Building';
-import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api/Mypage';
+import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api-requests/InfoCategory';
+import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api-requests/Info';
+import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api-requests/Notice';
+import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api-requests/Building';
+import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api-requests/MyPage';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';

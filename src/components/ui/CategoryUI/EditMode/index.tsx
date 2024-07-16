@@ -3,7 +3,7 @@ import { Tr, Td } from '@chakra-ui/react';
 import { CategoryItem } from '../CategoryInput';
 import InputUI from '../../InputUI';
 import { DefaultButton, CancelButton } from '../../ButtonUI';
-import { useGetCategoryRequest, useUpdateCategoryRequest } from '../../../../api/InfoCategory';
+import { useGetCategoryRequest, useUpdateCategoryRequest } from '../../../../api-requests/InfoCategory';
 import toast from 'react-hot-toast';
 
 type TodoItemEditorProps = {

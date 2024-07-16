@@ -1,35 +1,8 @@
 import { httpClient } from '.';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { IInfoData, IInfoQueryRequest, IInfoQueryResponse, IInfoResponse } from '../@types/Info';
 
-export interface InfoDataType {
-  id?: number;
-  title?: string;
-  content?: string;
-  createAt?: string;
-  writer?: string;
-  articleTypeName?: string;
-  view?: number;
-  thumbnail?: string;
-}
-
-export interface InfoResponseType extends InfoDataType {
-  success: boolean;
-}
-
-export interface InfoQueryRequestType {
-  page: number;
-  startDate?: string | null;
-  endDate?: string | null;
-  title?: string | null;
-  typeName?: string | null;
-}
-
-export interface InfoQueryResponseType {
-  totalPage: number;
-  articleList: [];
-}
-
-export function useGetInfoRequest(params: InfoQueryRequestType, isEnabled?: boolean) {
+export function useGetInfoRequest(params: IInfoQueryRequest, isEnabled?: boolean) {
   return useQuery(
     [
       `/admin/article/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
@@ -38,7 +11,7 @@ export function useGetInfoRequest(params: InfoQueryRequestType, isEnabled?: bool
       params,
     ],
     () =>
-      httpClient<InfoQueryResponseType>({
+      httpClient<IInfoQueryResponse>({
         method: 'GET',
         url: `/admin/article/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
           params.endDate || ''
@@ -49,8 +22,8 @@ export function useGetInfoRequest(params: InfoQueryRequestType, isEnabled?: bool
 }
 
 export function useCreateInfoRequest() {
-  return useMutation((data: InfoDataType) =>
-    httpClient<InfoResponseType>({
+  return useMutation((data: IInfoData) =>
+    httpClient<IInfoResponse>({
       method: 'POST',
       url: '/admin/article',
       data,
@@ -59,8 +32,8 @@ export function useCreateInfoRequest() {
 }
 
 export function useUpdateInfoRequest() {
-  return useMutation((data: InfoDataType) =>
-    httpClient<InfoResponseType>({
+  return useMutation((data: IInfoData) =>
+    httpClient<IInfoResponse>({
       method: 'PATCH',
       url: `/admin/article/${data.id ? data.id : ''}`,
       data,
@@ -69,8 +42,8 @@ export function useUpdateInfoRequest() {
 }
 
 export function useDeleteInfoRequest() {
-  return useMutation((data: InfoDataType) =>
-    httpClient<InfoResponseType>({
+  return useMutation((data: IInfoData) =>
+    httpClient<IInfoResponse>({
       method: 'DELETE',
       url: `/admin/article/${data.id ? data.id : ''}`,
     }),

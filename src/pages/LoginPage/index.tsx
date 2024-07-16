@@ -4,9 +4,10 @@ import InputUI, { PasswordInputUI } from '../../components/ui/InputUI';
 import { DefaultButton } from '../../components/ui/ButtonUI';
 import toast from 'react-hot-toast';
 import { LoginPageContainer, PageTitle, ButtonSection } from './style';
-import { useLoginRequest } from '../../api/Auth';
+
 import { setAuthToken } from '../../utils/setAuthToken';
 import { setAuthHierarchy } from '../../utils/setAuthHierarchy';
+import { useLoginRequest } from '../../api-requests/Auth';
 
 function LoginPage() {
   const navigate = useNavigate();

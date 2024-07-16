@@ -1,15 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  MyInfoResponseType,
   useGetMyInfoRequest,
   useMyEmailChangeRequest,
   useMyEmailChangeValidateRequest,
-} from '../../../api/Account';
+} from '../../../api-requests/Account';
 import { checkEmailValidate } from '../../../utils/checkEmailValidate';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import RightContainer from '../../../components/layout/RightContainer';
 import { toast } from 'react-hot-toast';
 import Timer from '../../../utils/timer';
+import { IMyInfoResponse } from '../../../@types/Account';
 
 function MyInfoPage() {
   const { data: myInfoData, error: myInfoError, refetch: myInfoRefetch } = useGetMyInfoRequest();
@@ -28,7 +28,7 @@ function MyInfoPage() {
     isLoading: myEmailChangeValidateLoading,
   } = useMyEmailChangeValidateRequest();
 
-  const [myInfo, setMyInfo] = useState<MyInfoResponseType>({});
+  const [myInfo, setMyInfo] = useState<IMyInfoResponse>({});
   const [emailChangeBtnClicked, setEmailChangeBtnClicked] = useState(false);
   const [isEmailCheckSuccess, setIsEmailCheckSuccess] = useState(false);
   const [newEmail, setNewEmail] = useState('');

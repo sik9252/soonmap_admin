@@ -4,14 +4,13 @@ import InputUI, { PasswordInputUI } from '../../components/ui/InputUI';
 import { DefaultButton } from '../../components/ui/ButtonUI';
 import toast from 'react-hot-toast';
 import { RegisterPageContainer, PageTitle, ButtonSection } from './style';
-import { useRegisterRequest } from '../../api/Auth';
+import { useRegisterRequest } from '../../api-requests/Auth';
 import { checkEmailValidate } from '../../utils/checkEmailValidate';
 
 function RegisterPage() {
   const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');

@@ -1,12 +1,9 @@
 import { httpClient } from '.';
 import { useMutation } from '@tanstack/react-query';
-
-interface ImageUploadRequestProps {
-  image: Blob;
-}
+import { IImageUploadRequestProps } from '../@types/ImageUpload';
 
 export function useUploadImageRequest() {
-  return useMutation(({ image }: ImageUploadRequestProps) => {
+  return useMutation(({ image }: IImageUploadRequestProps) => {
     const formData = new FormData();
     formData.append('image', image);
 

@@ -17,18 +17,19 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid, Image, Flex } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
-import { useGetInfoRequest } from '../../../api/Info';
-import { CategoryDataType, useGetAllCategoryRequest } from '../../../api/InfoCategory';
+import { useGetInfoRequest } from '../../../api-requests/Info';
+import { useGetAllCategoryRequest } from '../../../api-requests/InfoCategory';
 import toast from 'react-hot-toast';
 import { changeDateFormat } from '../../../utils/changeDateFormat';
-import { InfoDataType } from '../../../api/Info';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
+import { ICategoryData } from '../../../@types/InfoCategory';
+import { IInfoData } from '../../../@types/Info';
 
 function InfoManagePage() {
-  const [infoList, setInfoList] = useState<InfoDataType[] | null>([]);
+  const [infoList, setInfoList] = useState<IInfoData[] | null>([]);
   const { selectedArticle, setSelectedArticle, resetAtom } = useSelectedArticleAtom();
-  const [options, setOptions] = useState<CategoryDataType[]>([]);
+  const [options, setOptions] = useState<ICategoryData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
@@ -92,7 +93,7 @@ function InfoManagePage() {
     }
   }, [infoResult, infoError]);
 
-  const handleInfoPreview = (info: InfoDataType) => {
+  const handleInfoPreview = (info: IInfoData) => {
     setSelectedArticle(info);
   };
 

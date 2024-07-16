@@ -16,7 +16,7 @@ import InputUI from '../../../components/ui/InputUI';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
 import { FloorImageUploaderUI } from '../../../components/ui/FloorImageUploaderUI';
 import toast from 'react-hot-toast';
-import { useCreateBuildingRequest, useCreateFloorImageRequest } from '../../../api/Building';
+import { useCreateBuildingRequest, useCreateFloorImageRequest } from '../../../api-requests/Building';
 
 function CreateCampusPage() {
   const navigate = useNavigate();

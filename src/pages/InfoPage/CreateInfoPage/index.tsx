@@ -8,11 +8,12 @@ import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
 import { ThumbnailUploadUI } from '../../../components/ui/ThumbnailUploadUI';
-import { CategoryDataType, useGetAllCategoryRequest } from '../../../api/InfoCategory';
-import { useCreateInfoRequest } from '../../../api/Info';
+import { useGetAllCategoryRequest } from '../../../api-requests/InfoCategory';
+import { useCreateInfoRequest } from '../../../api-requests/Info';
 import toast from 'react-hot-toast';
 import { Flex } from '@chakra-ui/react';
-import { useUploadImageRequest } from '../../../api/TextEditor';
+import { useUploadImageRequest } from '../../../api-requests/ImageUpload';
+import { ICategoryData } from '../../../@types/InfoCategory';
 
 type EditorInstance = Editor | null;
 
@@ -20,7 +21,7 @@ function CreateInfoPage() {
   const navigate = useNavigate();
   const editorRef = useRef<EditorInstance>(null);
 
-  const [options, setOptions] = useState<CategoryDataType[]>([]);
+  const [options, setOptions] = useState<ICategoryData[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');

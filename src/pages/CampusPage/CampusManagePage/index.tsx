@@ -8,14 +8,15 @@ import BuildingModifyModal from '../../../components/features/BuildingModifyModa
 import Pagination from '../../../components/features/Pagination';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
 import toast from 'react-hot-toast';
-import { BuildingDataType, useGetBuildingRequest } from '../../../api/Building';
+import { useGetBuildingRequest } from '../../../api-requests/Building';
+import { IBuildingData } from '../../../@types/Building';
 
 function CampusManagePage() {
   const path = useLocation();
   const [location, setLocation] = useState('');
   const { selectedBuilding, setSelectedBuilding } = useSelectedBuildingAtom();
 
-  const [buildingList, setBuildingList] = useState<BuildingDataType[] | null>([]);
+  const [buildingList, setBuildingList] = useState<IBuildingData[] | null>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -32,7 +33,7 @@ function CampusManagePage() {
     }
   }, [getBuildingResult, getBuildingError]);
 
-  const handleAlertDialog = (building: BuildingDataType) => {
+  const handleAlertDialog = (building: IBuildingData) => {
     if (path.pathname === '/campus/manage') {
       setLocation('건물');
     }
@@ -41,7 +42,7 @@ function CampusManagePage() {
     setIsAlertOpen(true);
   };
 
-  const handleBuildingModifyModal = (building: BuildingDataType) => {
+  const handleBuildingModifyModal = (building: IBuildingData) => {
     if (path.pathname === '/campus/manage') {
       setLocation('건물');
     }

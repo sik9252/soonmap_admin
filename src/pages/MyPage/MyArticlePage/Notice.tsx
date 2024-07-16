@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MyNoticeDataType, useGetMyNoticeRequest } from '../../../api/Mypage';
+import { useGetMyNoticeRequest } from '../../../api-requests/MyPage';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -13,10 +13,11 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
+import { IMyNoticeData } from '../../../@types/MyPage';
 
 function Notice() {
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-  const [myNoticeList, setMyNoticeList] = useState<MyNoticeDataType[] | null>([]);
+  const [myNoticeList, setMyNoticeList] = useState<IMyNoticeData[] | null>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
 
@@ -44,7 +45,7 @@ function Notice() {
     }
   }, [myNoticeResult, myNoticeError]);
 
-  const handleInfoPreview = (article: MyNoticeDataType) => {
+  const handleInfoPreview = (article: IMyNoticeData) => {
     setSelectedArticle(article);
   };
 

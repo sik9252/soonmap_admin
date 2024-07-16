@@ -16,15 +16,15 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
-import { useGetNoticeRequest } from '../../../api/Notice';
+import { useGetNoticeRequest } from '../../../api-requests/Notice';
 import toast from 'react-hot-toast';
-import { NoticeDataType } from '../../../api/Notice';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { changeDateFormat } from '../../../utils/changeDateFormat';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
+import { INoticeData } from '../../../@types/Notice';
 
 function NoticeManagePage() {
-  const [noticeList, setNoticeList] = useState<NoticeDataType[] | null>([]);
+  const [noticeList, setNoticeList] = useState<INoticeData[] | null>([]);
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(1);
@@ -73,7 +73,7 @@ function NoticeManagePage() {
     }
   }, [noticeResult, noticeError]);
 
-  const handleNoticePreview = (notice: NoticeDataType) => {
+  const handleNoticePreview = (notice: INoticeData) => {
     setSelectedArticle(notice);
   };
 

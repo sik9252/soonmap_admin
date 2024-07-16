@@ -19,10 +19,10 @@ import {
   useGetFloorRequest,
   useUpdateBuildingRequest,
   useUpdateFloorImageRequest,
-  FloorQueryResponseType,
-} from '../../../api/Building';
+} from '../../../api-requests/Building';
 import toast from 'react-hot-toast';
 import { DefaultButton } from '../../ui/ButtonUI';
+import { IFloorQueryResponse } from '../../../@types/Building';
 
 interface ModalProps {
   isModalOpen: boolean;
@@ -32,8 +32,8 @@ interface ModalProps {
 }
 
 function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurrentPage }: ModalProps) {
-  const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
-  const [floorImages, setFloorImages] = useState<FloorQueryResponseType[] | null>([]);
+  const { selectedBuilding } = useSelectedBuildingAtom();
+  const [floorImages, setFloorImages] = useState<IFloorQueryResponse[] | null>([]);
   const [buildingNumber, setBuildingNumber] = useState<string | undefined>('');
   const [buildingName, setBuildingName] = useState<string | undefined>('');
   const [buildingDescription, setBuildingDescription] = useState<string | undefined>('');
@@ -97,7 +97,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
 
   useEffect(() => {
     if (getFloorResult) {
-      setFloorImages(getFloorResult?.data as FloorQueryResponseType[] | null);
+      setFloorImages(getFloorResult?.data as IFloorQueryResponse[] | null);
     } else if (getFloorError) {
       toast.error('건물 목록을 불러오는데 실패했습니다.');
     }

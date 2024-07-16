@@ -1,61 +1,20 @@
 import { httpClient } from '.';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  IBuildingData,
+  IBuildingListRequest,
+  IBuildingListResponse,
+  IEditBuildingResponse,
+  IFloorImage,
+  IFloorQueryRequest,
+  IFloorQueryResponse,
+} from '../@types/Building';
 
-export interface BuildingDataType {
-  id?: number;
-  name?: string;
-  //floors?: number;
-  floorsUp?: number;
-  floorsDown?: number;
-  description?: string;
-  latitude?: number;
-  longitude?: number;
-  uniqueNumber?: string;
-}
-
-export interface BuildingResponseType extends BuildingDataType {
-  success: boolean;
-}
-
-export interface FloorImageType {
-  buildingId?: number;
-  description?: string;
-  floorValue?: number;
-  image?: Blob;
-  floorId?: number;
-}
-
-export interface FloorImageResponseType extends FloorImageType {
-  dir: string;
-  uniqueNumber: string;
-}
-
-export interface BuildingQueryRequestType {
-  page: number;
-}
-
-export interface BuildingQueryResponseType {
-  totalPage: number;
-  buildingResponseDtoList: [];
-}
-
-export interface FloorQueryRequestType {
-  buildingId: number;
-}
-
-export interface FloorQueryResponseType {
-  id?: number;
-  description?: string;
-  dir?: string;
-  floorValue?: number;
-  uniqueNumber?: string;
-}
-
-export function useGetBuildingRequest(params: BuildingQueryRequestType, isEnabled?: boolean) {
+export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: boolean) {
   return useQuery(
     [`/admin/building?page=${params.page}`, params],
     () =>
-      httpClient<BuildingQueryResponseType>({
+      httpClient<IBuildingListResponse>({
         method: 'GET',
         url: `/admin/building?page=${params.page}`,
       }),
@@ -63,11 +22,11 @@ export function useGetBuildingRequest(params: BuildingQueryRequestType, isEnable
   );
 }
 
-export function useGetFloorRequest(params: FloorQueryRequestType, isEnabled?: boolean) {
+export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boolean) {
   return useQuery(
     [`/admin/floor?buildingId=${params.buildingId}`, params.buildingId],
     () =>
-      httpClient<FloorQueryResponseType>({
+      httpClient<IFloorQueryResponse>({
         method: 'GET',
         url: `/admin/floor?buildingId=${params.buildingId}`,
       }),
@@ -76,8 +35,8 @@ export function useGetFloorRequest(params: FloorQueryRequestType, isEnabled?: bo
 }
 
 export function useCreateBuildingRequest() {
-  return useMutation((data: BuildingDataType) =>
-    httpClient<BuildingResponseType>({
+  return useMutation((data: IBuildingData) =>
+    httpClient<IEditBuildingResponse>({
       method: 'POST',
       url: '/admin/building',
       data,
@@ -86,7 +45,7 @@ export function useCreateBuildingRequest() {
 }
 
 export function useCreateFloorImageRequest() {
-  return useMutation((data: FloorImageType) => {
+  return useMutation((data: IFloorImage) => {
     const formData = new FormData();
     formData.append('image', data.image ? data.image : '');
 
@@ -99,15 +58,15 @@ export function useCreateFloorImageRequest() {
         data: formData,
       },
       {
-        'content-type': 'multipart/form-data',
+        'content-': 'multipart/form-data',
       },
     );
   });
 }
 
 export function useUpdateBuildingRequest() {
-  return useMutation((data: BuildingDataType) =>
-    httpClient<BuildingResponseType>({
+  return useMutation((data: IBuildingData) =>
+    httpClient<IEditBuildingResponse>({
       method: 'PATCH',
       url: `/admin/building/${data.id ? data.id : ''}`,
       data,
@@ -116,7 +75,7 @@ export function useUpdateBuildingRequest() {
 }
 
 export function useUpdateFloorImageRequest() {
-  return useMutation((data: FloorImageType) => {
+  return useMutation((data: IFloorImage) => {
     const formData = new FormData();
     formData.append('image', data.image ? data.image : '');
 
@@ -127,15 +86,15 @@ export function useUpdateFloorImageRequest() {
         data: formData,
       },
       {
-        'content-type': 'multipart/form-data',
+        'content-': 'multipart/form-data',
       },
     );
   });
 }
 
 export function useDeleteBuildingRequest() {
-  return useMutation((data: BuildingDataType) =>
-    httpClient<BuildingResponseType>({
+  return useMutation((data: IBuildingData) =>
+    httpClient<IEditBuildingResponse>({
       method: 'DELETE',
       url: `/admin/building/${data.id ? data.id : ''}`,
     }),

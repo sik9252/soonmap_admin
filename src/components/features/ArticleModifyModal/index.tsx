@@ -9,17 +9,17 @@ import InputUI from '../../ui/InputUI';
 import SelectUI from '../../ui/SelectUI';
 import CheckboxUI from '../../ui/CheckboxUI';
 import { TitleInputSection, ButtonContainer } from './style';
-import { useUpdateInfoRequest, useGetInfoRequest } from '../../../api/Info';
-import { useUpdateNoticeRequest, useGetNoticeRequest } from '../../../api/Notice';
-import { useGetAllCategoryRequest } from '../../../api/InfoCategory';
-import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api/Mypage';
-import { useUploadImageRequest } from '../../../api/TextEditor';
+import { useUpdateInfoRequest, useGetInfoRequest } from '../../../api-requests/Info';
+import { useUpdateNoticeRequest, useGetNoticeRequest } from '../../../api-requests/Notice';
+import { useGetAllCategoryRequest } from '../../../api-requests/InfoCategory';
+import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api-requests/MyPage';
+import { useUploadImageRequest } from '../../../api-requests/ImageUpload';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useCurrentLocationAtom } from '../../../store/currentLocationAtom';
-import { CategoryDataType } from '../../../api/InfoCategory';
 import { Flex } from '@chakra-ui/react';
 import { ThumbnailUploadUI } from '../../ui/ThumbnailUploadUI';
+import { ICategoryData } from '../../../@types/InfoCategory';
 
 type EditorInstance = Editor | null;
 
@@ -36,7 +36,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
   const { currentLocation } = useCurrentLocationAtom();
 
-  const [options, setOptions] = useState<CategoryDataType[]>([]);
+  const [options, setOptions] = useState<ICategoryData[]>([]);
   const [category, setCategory] = useState<string | undefined>('');
   const [title, setTitle] = useState<string | undefined>('');
   const [content, setContent] = useState<string | undefined>('');

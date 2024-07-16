@@ -1,33 +1,8 @@
 import { httpClient } from '.';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { INoticeData, INoticeQueryRequest, INoticeQueryResponse, INoticeResponse } from '../@types/Notice';
 
-export interface NoticeDataType {
-  id?: number;
-  title?: string;
-  content?: string;
-  createAt?: string;
-  writer?: string;
-  top?: boolean;
-  view?: number;
-}
-
-export interface NoticeResponseType extends NoticeDataType {
-  success: boolean;
-}
-
-export interface NoticeQueryRequestType {
-  page: number;
-  startDate?: string | null;
-  endDate?: string | null;
-  title?: string | null;
-}
-
-export interface NoticeQueryResponseType {
-  totalPage: number;
-  noticeList: [];
-}
-
-export function useGetNoticeRequest(params: NoticeQueryRequestType, isEnabled?: boolean) {
+export function useGetNoticeRequest(params: INoticeQueryRequest, isEnabled?: boolean) {
   return useQuery(
     [
       `/admin/notice/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
@@ -36,7 +11,7 @@ export function useGetNoticeRequest(params: NoticeQueryRequestType, isEnabled?: 
       params,
     ],
     () =>
-      httpClient<NoticeQueryResponseType>({
+      httpClient<INoticeQueryResponse>({
         method: 'GET',
         url: `/admin/notice/search?page=${params.page}&startDate=${params.startDate || ''}&endDate=${
           params.endDate || ''
@@ -47,8 +22,8 @@ export function useGetNoticeRequest(params: NoticeQueryRequestType, isEnabled?: 
 }
 
 export function useCreateNoticeRequest() {
-  return useMutation((data: NoticeDataType) =>
-    httpClient<NoticeResponseType>({
+  return useMutation((data: INoticeData) =>
+    httpClient<INoticeResponse>({
       method: 'POST',
       url: '/admin/notice',
       data,
@@ -57,8 +32,8 @@ export function useCreateNoticeRequest() {
 }
 
 export function useUpdateNoticeRequest() {
-  return useMutation((data: NoticeDataType) =>
-    httpClient<NoticeResponseType>({
+  return useMutation((data: INoticeData) =>
+    httpClient<INoticeResponse>({
       method: 'PATCH',
       url: `/admin/notice/${data.id ? data.id : ''}`,
       data,
@@ -67,8 +42,8 @@ export function useUpdateNoticeRequest() {
 }
 
 export function useDeleteNoticeRequest() {
-  return useMutation((data: NoticeDataType) =>
-    httpClient<NoticeResponseType>({
+  return useMutation((data: INoticeData) =>
+    httpClient<INoticeResponse>({
       method: 'DELETE',
       url: `/admin/notice/${data.id ? data.id : ''}`,
     }),

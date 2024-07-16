@@ -8,7 +8,7 @@ import {
   useFindPasswordValidateRequest,
   useFindPasswordCertificateConfirmRequest,
   useChangePasswordRequest,
-} from '../../api/FindAccount';
+} from '../../api-requests/Account';
 import toast from 'react-hot-toast';
 import Timer from '../../utils/timer';
 
