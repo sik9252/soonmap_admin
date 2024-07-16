@@ -44,7 +44,14 @@ export function useGetAdminAccountRequest(params: IAccountRequest, isEnabled?: b
 }
 
 export function useGetUserAccountRequest(params: IAccountRequest, isEnabled?: boolean) {
-  return useQuery(
+  const [accountList, setAccountList] = useState<IAccountData[] | null>([]);
+  const [totalPosts, setTotalPosts] = useState(1);
+
+  const {
+    data,
+    error,
+    refetch: accountRefetch,
+  } = useQuery(
     [`/admin/account/user?page=${params.page}`, params],
     () =>
       httpClient<IAccountResponse>({
@@ -53,6 +60,17 @@ export function useGetUserAccountRequest(params: IAccountRequest, isEnabled?: bo
       }),
     { enabled: isEnabled },
   );
+
+  useEffect(() => {
+    if (data) {
+      setAccountList(data?.data.memberList);
+      setTotalPosts(data?.data.accountCount);
+    } else if (error) {
+      toast.error('유저 계정 목록을 불러오는데 실패했습니다.');
+    }
+  }, [data, error]);
+
+  return { accountList, totalPosts, accountRefetch };
 }
 
 export function useChangeBanStateRequest() {
