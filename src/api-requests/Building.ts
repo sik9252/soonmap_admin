@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { httpClient } from '.';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -9,9 +10,13 @@ import {
   IFloorQueryRequest,
   IFloorQueryResponse,
 } from '../@types/Building';
+import toast from 'react-hot-toast';
 
 export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: boolean) {
-  return useQuery(
+  const [buildingList, setBuildingList] = useState<IBuildingData[] | null>([]);
+  const [totalPosts, setTotalPosts] = useState(1);
+
+  const { data, error } = useQuery(
     [`/admin/building?page=${params.page}`, params],
     () =>
       httpClient<IBuildingListResponse>({
@@ -20,6 +25,17 @@ export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: 
       }),
     { enabled: isEnabled },
   );
+
+  useEffect(() => {
+    if (data) {
+      setBuildingList(data?.data.buildingResponseDtoList);
+      setTotalPosts(data?.data.totalPage);
+    } else if (error) {
+      toast.error('건물 목록을 불러오는데 실패했습니다.');
+    }
+  }, [data, error]);
+
+  return { buildingList, totalPosts };
 }
 
 export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boolean) {
