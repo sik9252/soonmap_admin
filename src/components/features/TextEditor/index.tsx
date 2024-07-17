@@ -17,7 +17,7 @@ interface TextEditorProps {
 }
 
 function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
-  const { mutateAsync: uploadImageRequest, error: uploadImageError } = useUploadImageRequest();
+  const { uploadImageRequest } = useUploadImageRequest();
 
   useEffect(() => {
     const editorInstance = editorRef.current?.getInstance();
@@ -30,7 +30,7 @@ function TextEditor({ editorRef, content, onChange }: TextEditorProps) {
               if (res) callback(res.data, '');
             });
           } catch (error) {
-            toast.error((uploadImageError as Error).message);
+            toast.error('이미지 업로드에 실패했습니다');
           }
         })();
 

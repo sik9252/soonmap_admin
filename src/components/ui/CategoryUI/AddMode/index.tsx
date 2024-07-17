@@ -10,7 +10,7 @@ interface AddModeProps {
 }
 
 function AddMode({ setIsAddClick }: AddModeProps) {
-  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
+  const { getCategoryRefetch } = useGetCategoryRequest({
     page: 0,
   });
 

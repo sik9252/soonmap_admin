@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import RightContainer from '../../../components/layout/RightContainer';
 import {
   InfoSection,
@@ -17,99 +16,29 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid, Image, Flex } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
-import { useGetInfoRequest } from '../../../api-hooks/Info';
-import { useGetAllCategoryRequest } from '../../../api-hooks/InfoCategory';
-import toast from 'react-hot-toast';
-import { changeDateFormat } from '../../../utils/changeDateFormat';
-import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
-import { ICategoryData } from '../../../@types/InfoCategory';
-import { IInfoData } from '../../../@types/Info';
+import useInfoManage from './useInfoManage';
 
 function InfoManagePage() {
-  const [infoList, setInfoList] = useState<IInfoData[] | null>([]);
-  const { selectedArticle, setSelectedArticle, resetAtom } = useSelectedArticleAtom();
-  const [options, setOptions] = useState<ICategoryData[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(1);
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-  const [startDate, endDate] = dateRange;
-  const [keyword, setKeyword] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('전체');
-
-  useEffect(() => {
-    resetAtom();
-  }, []);
-
-  const handleSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
-
-  const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
-
   const {
-    data: infoResult,
-    isError: infoError,
-    refetch: infoRefetch,
-  } = useGetInfoRequest(
-    {
-      page: currentPage - 1,
-      startDate: startDate ? changeDateFormat(startDate, 'YYYY-MM-DDT00:00:00') : '',
-      endDate: endDate ? changeDateFormat(endDate, 'YYYY-MM-DDT23:59:59') : '',
-      title: keyword ? encodeURIComponent(keyword) : '',
-      typeName: selectedCategory === '전체' ? '' : selectedCategory ? encodeURIComponent(selectedCategory) : '',
-    },
-    false,
-  );
-
-  useEffect(() => {
-    void infoRefetch();
-  }, [currentPage]);
-
-  const handleDateSearchButton = () => {
-    void infoRefetch();
-  };
-
-  const handleOnEnterKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      void infoRefetch();
-    }
-  };
-
-  useEffect(() => {
-    if (categoryGetAllResult) {
-      setOptions(categoryGetAllResult.data);
-    } else if (categoryGetAllError) {
-      toast.error('카테고리 목록을 불러오는데 실패했습니다.');
-    }
-  }, [categoryGetAllResult, categoryGetAllError]);
-
-  useEffect(() => {
-    if (infoResult) {
-      setInfoList(infoResult?.data.articleList);
-      setTotalPosts(infoResult?.data.totalPage);
-    } else if (infoError) {
-      toast.error('정보 글 목록을 불러오는데 실패했습니다.');
-    }
-  }, [infoResult, infoError]);
-
-  const handleInfoPreview = (info: IInfoData) => {
-    setSelectedArticle(info);
-  };
-
-  const handleFilteredCategory = (typeName: string) => {
-    setSelectedCategory(typeName);
-  };
-
-  useEffect(() => {
-    if (selectedCategory) void infoRefetch();
-  }, [selectedCategory]);
-
-  const handleSearchRefreshButton = () => {
-    setDateRange([null, null]);
-    setKeyword('');
-    setSelectedCategory('');
-  };
+    selectedArticle,
+    currentPage,
+    setCurrentPage,
+    startDate,
+    endDate,
+    setDateRange,
+    keyword,
+    selectedCategory,
+    handleSearchKeyword,
+    options,
+    infoList,
+    totalPosts,
+    handleDateSearchButton,
+    handleOnEnterKeyDown,
+    handleInfoPreview,
+    handleFilteredCategory,
+    handleSearchRefreshButton,
+  } = useInfoManage();
 
   return (
     <RightContainer title={'정보 게시판 글 관리'}>

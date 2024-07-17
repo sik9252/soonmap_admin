@@ -36,20 +36,18 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
   const { selectedArticle, resetAtom } = useSelectedArticleAtom();
   const { currentLocation } = useCurrentLocationAtom();
 
-  const [options, setOptions] = useState<ICategoryData[]>([]);
   const [category, setCategory] = useState<string | undefined>('');
   const [title, setTitle] = useState<string | undefined>('');
   const [content, setContent] = useState<string | undefined>('');
   const [isTopChecked, setIsTopChecked] = useState<boolean | undefined>(false);
   const [thumbnail, setThumbnail] = useState<string | undefined>('');
-  const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>('');
 
   useEffect(() => {
     setIsTopChecked(selectedArticle.top);
   }, [selectedArticle]);
 
-  const { data: categoryGetAllResult, isError: categoryGetAllError } = useGetAllCategoryRequest();
-  const { refetch: getInfoRefetch } = useGetInfoRequest(
+  const { options } = useGetAllCategoryRequest();
+  const { infoRefetch } = useGetInfoRequest(
     {
       page: currentPage - 1,
       startDate: '',
@@ -97,15 +95,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
     isLoading: noticeUpdateLoading,
   } = useUpdateNoticeRequest();
 
-  const { mutate: uploadThumbnailRequest, data: thumbnailData, error: uploadThumbnailError } = useUploadImageRequest();
-
-  useEffect(() => {
-    if (categoryGetAllResult) {
-      setOptions(categoryGetAllResult.data);
-    } else if (categoryGetAllError) {
-      toast.error('카테고리 목록을 불러오는데 실패했습니다.');
-    }
-  }, [categoryGetAllResult, categoryGetAllError]);
+  const { uploadThumbnailRequest, thumbnailUrl, setThumbnailUrl } = useUploadImageRequest('수정');
 
   useEffect(() => {
     setCategory(selectedArticle.articleTypeName);
@@ -148,14 +138,6 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
     }
   };
 
-  useEffect(() => {
-    if (thumbnailData) {
-      setThumbnailUrl(thumbnailData.data);
-    } else if (uploadThumbnailError) {
-      toast.error('썸네일 수정에 실패했습니다.');
-    }
-  }, [thumbnailData, uploadThumbnailError]);
-
   // 공지사항 글 수정 관련
   const clickSelectTopNotice = () => {
     setIsTopChecked((prevState) => !prevState);
@@ -197,7 +179,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
     if (infoUpdateData) {
       toast.success('게시글 수정이 완료되었습니다.');
       setIsModalOpen(false);
-      void getInfoRefetch();
+      void infoRefetch();
       void myArticleRefetch();
       setCurrentPage(1);
       resetAtom();

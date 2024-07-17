@@ -41,14 +41,14 @@ function AlertDialogModal({
   const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
   const { currentLocation } = useCurrentLocationAtom();
 
-  const { refetch: getCategoryRefetch } = useGetCategoryRequest(
+  const { getCategoryRefetch } = useGetCategoryRequest(
     {
       page: currentPage - 1,
     },
     false,
   );
 
-  const { refetch: getInfoRefetch } = useGetInfoRequest(
+  const { infoRefetch } = useGetInfoRequest(
     {
       page: currentPage - 1,
       startDate: '',
@@ -148,7 +148,7 @@ function AlertDialogModal({
   useEffect(() => {
     if (infoDeleteData) {
       toast.success('삭제되었습니다.');
-      void getInfoRefetch();
+      void infoRefetch();
       void myArticleRefetch();
       setCurrentPage(1);
       resetAtom();

@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import ViewMode from '../ViewMode';
 import EditMode from '../EditMode';
-
-export interface CategoryItem {
-  id: number;
-  typeName: string;
-  description: string;
-}
+import { ICategoryData } from '../../../../@types/InfoCategory';
 
 export interface CategoryItemProps {
-  category: CategoryItem;
+  category: ICategoryData;
   handleAlertDialog: () => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;

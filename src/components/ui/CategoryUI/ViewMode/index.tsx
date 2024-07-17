@@ -1,9 +1,9 @@
 import { Tr, Td } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import { CategoryItem } from '../CategoryInput';
+import { ICategoryData } from '../../../../@types/InfoCategory';
 
 type TodoItemViewerProps = {
-  category: CategoryItem;
+  category: ICategoryData;
   onChangeEditMode: () => void;
   handleAlertDialog: () => void;
 };
