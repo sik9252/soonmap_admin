@@ -38,13 +38,31 @@ export function useLoginRequest() {
 }
 
 export function useRegisterRequest() {
-  return useMutation((data: IAuthRequestProps) =>
+  const navigate = useNavigate();
+
+  const {
+    mutate: adminRegisterRequest,
+    data,
+    error,
+    isLoading: adminRegisterLoading,
+  } = useMutation((data: IAuthRequestProps) =>
     httpClient<IAuthResponse>({
       method: 'POST',
       url: '/admin/register',
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('회원가입이 완료되었습니다.');
+      navigate('/login');
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return { adminRegisterRequest, adminRegisterLoading };
 }
 
 export function useLogoutRequest() {
