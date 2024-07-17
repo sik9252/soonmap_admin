@@ -13,7 +13,7 @@ import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api-ho
 import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api-hooks/Info';
 import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api-hooks/Notice';
 import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api-hooks/Building';
-import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api-hooks/MyPage';
+import { useGetMyArticleRequest, useGetMyNoticeRequest } from '../../../api-hooks/MyPage';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
@@ -76,14 +76,14 @@ function AlertDialogModal({
     false,
   );
 
-  const { refetch: myArticleRefetch } = useGetMyInfoRequest(
+  const { myArticleRefetch } = useGetMyArticleRequest(
     {
       page: currentPage - 1,
     },
     false,
   );
 
-  const { refetch: myNoticeRefetch } = useGetMyNoticeRequest(
+  const { myNoticeRefetch } = useGetMyNoticeRequest(
     {
       page: currentPage - 1,
     },

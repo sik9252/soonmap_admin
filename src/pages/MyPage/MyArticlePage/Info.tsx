@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -10,44 +9,10 @@ import { SimpleGrid, Image, Flex } from '@chakra-ui/react';
 import CardUI from '../../../components/ui/CardUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
-import toast from 'react-hot-toast';
-import { useSelectedArticleAtom } from '../../../store/articleAtom';
-import { IMyArticleData } from '../../../@types/MyPage';
-import { useGetMyInfoRequest } from '../../../api-hooks/MyPage';
+import useInfo from './useInfo';
 
 function Info() {
-  const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-  const [myArticleList, setMyArticleList] = useState<IMyArticleData[] | null>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(1);
-
-  const {
-    data: myArticleResult,
-    isError: myArticleError,
-    refetch: myArticleRefetch,
-  } = useGetMyInfoRequest(
-    {
-      page: currentPage - 1,
-    },
-    false,
-  );
-
-  useEffect(() => {
-    void myArticleRefetch();
-  }, []);
-
-  useEffect(() => {
-    if (myArticleResult) {
-      setMyArticleList(myArticleResult.data.articleList);
-      setTotalPosts(myArticleResult.data.totalPage);
-    } else if (myArticleError) {
-      toast.error('내 글 목록을 불러오는데 실패했습니다..');
-    }
-  }, [myArticleResult, myArticleError]);
-
-  const handleInfoPreview = (article: IMyArticleData) => {
-    setSelectedArticle(article);
-  };
+  const { selectedArticle, currentPage, setCurrentPage, myArticleList, totalPosts, handleInfoPreview } = useInfo();
 
   return (
     <MyArticleSection>

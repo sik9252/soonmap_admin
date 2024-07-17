@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { useGetMyNoticeRequest } from '../../../api-hooks/MyPage';
 import {
   MyArticleSection,
   MyArticleListSection,
@@ -11,43 +9,10 @@ import { SimpleGrid } from '@chakra-ui/react';
 import CardUI from '../../../components/ui/CardUI';
 import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
-import toast from 'react-hot-toast';
-import { useSelectedArticleAtom } from '../../../store/articleAtom';
-import { IMyNoticeData } from '../../../@types/MyPage';
+import useNotice from './useNotice';
 
 function Notice() {
-  const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();
-  const [myNoticeList, setMyNoticeList] = useState<IMyNoticeData[] | null>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(1);
-
-  const {
-    data: myNoticeResult,
-    isError: myNoticeError,
-    refetch: myNoticeRefetch,
-  } = useGetMyNoticeRequest(
-    {
-      page: currentPage - 1,
-    },
-    false,
-  );
-
-  useEffect(() => {
-    void myNoticeRefetch();
-  }, []);
-
-  useEffect(() => {
-    if (myNoticeResult) {
-      setMyNoticeList(myNoticeResult.data.noticeList);
-      setTotalPosts(myNoticeResult.data.totalPage);
-    } else if (myNoticeError) {
-      toast.error('내 공지사항 목록을 불러오는데 실패했습니다..');
-    }
-  }, [myNoticeResult, myNoticeError]);
-
-  const handleInfoPreview = (article: IMyNoticeData) => {
-    setSelectedArticle(article);
-  };
+  const { selectedArticle, currentPage, setCurrentPage, myNoticeList, totalPosts, handleInfoPreview } = useNotice();
 
   return (
     <MyArticleSection>

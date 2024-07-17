@@ -96,33 +96,101 @@ export function useGiveManagerAuthRequest() {
 
 // 내 정보 가져오기
 export function useGetMyInfoRequest() {
-  return useQuery([`/admin/me`], () =>
+  const [myInfo, setMyInfo] = useState<IMyInfoResponse>({});
+
+  const {
+    data,
+    error,
+    refetch: myInfoRefetch,
+  } = useQuery([`/admin/me`], () =>
     httpClient<IMyInfoResponse>({
       method: 'GET',
       url: `/admin/me`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      setMyInfo(data.data);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    myInfo,
+    myInfoRefetch,
+  };
 }
 
 // 이메일 변경
 export function useMyEmailChangeRequest() {
-  return useMutation((data: IMyEmailChangeRequest) =>
+  const [isEmailCheckSuccess, setIsEmailCheckSuccess] = useState(false);
+
+  const {
+    mutate: myEmailChangeRequest,
+    data: myEmailChangeData,
+    error,
+    isLoading: myEmailChangeLoading,
+  } = useMutation((data: IMyEmailChangeRequest) =>
     httpClient<IMyEmailChangeRequest>({
       method: 'POST',
       url: `/admin/change/email`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (myEmailChangeData) {
+      toast.success('인증번호가 전송되었습니다.');
+      setIsEmailCheckSuccess(true);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [myEmailChangeData, error]);
+
+  return {
+    myEmailChangeRequest,
+    myEmailChangeData,
+    myEmailChangeLoading,
+    isEmailCheckSuccess,
+    setIsEmailCheckSuccess,
+  };
 }
 
 export function useMyEmailChangeValidateRequest() {
-  return useMutation((data: IMyEmailChangeRequest) =>
+  const { myInfoRefetch } = useGetMyInfoRequest();
+  const [emailChangeBtnClicked, setEmailChangeBtnClicked] = useState(false);
+
+  const {
+    mutate: myEmailChangeValidateRequest,
+    data,
+    error,
+    isLoading: myEmailChangeValidateLoading,
+  } = useMutation((data: IMyEmailChangeRequest) =>
     httpClient<IMyInfoResponse>({
       method: 'POST',
       url: `/admin/change/email/confirm`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('이메일 변경이 완료되었습니다.');
+      setEmailChangeBtnClicked(false);
+      void myInfoRefetch();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    myEmailChangeValidateRequest,
+    myEmailChangeValidateLoading,
+    emailChangeBtnClicked,
+    setEmailChangeBtnClicked,
+  };
 }
 
 // 내 정보 가져오기
