@@ -4,6 +4,8 @@ import { INoticeData, INoticeQueryRequest, INoticeQueryResponse, INoticeResponse
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useGetMyNoticeRequest } from './MyPage';
+import { useSelectedArticleAtom } from '../store/articleAtom';
 
 export function useGetNoticeRequest(params: INoticeQueryRequest, isEnabled?: boolean) {
   const [noticeList, setNoticeList] = useState<INoticeData[] | null>([]);
@@ -77,21 +79,109 @@ export function useCreateNoticeRequest() {
   };
 }
 
-export function useUpdateNoticeRequest() {
-  return useMutation((data: INoticeData) =>
+export function useUpdateNoticeRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { resetAtom } = useSelectedArticleAtom();
+  const { noticeRefetch } = useGetNoticeRequest(
+    {
+      page: currentPage - 1,
+      startDate: '',
+      endDate: '',
+      title: '',
+    },
+    false,
+  );
+
+  const { myNoticeRefetch } = useGetMyNoticeRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+
+  const {
+    mutate: noticeUpdateRequest,
+    data,
+    error,
+    isLoading: noticeUpdateLoading,
+  } = useMutation((data: INoticeData) =>
     httpClient<INoticeResponse>({
       method: 'PATCH',
       url: `/admin/notice/${data.id ? data.id : ''}`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('게시글 수정이 완료되었습니다.');
+      setIsModalOpen(false);
+      void noticeRefetch();
+      void myNoticeRefetch();
+      setCurrentPage(1);
+      resetAtom();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    noticeUpdateRequest,
+    noticeUpdateLoading,
+  };
 }
 
-export function useDeleteNoticeRequest() {
-  return useMutation((data: INoticeData) =>
+export function useDeleteNoticeRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { resetAtom } = useSelectedArticleAtom();
+  const { noticeRefetch } = useGetNoticeRequest(
+    {
+      page: currentPage - 1,
+      startDate: '',
+      endDate: '',
+      title: '',
+    },
+    false,
+  );
+
+  const { myNoticeRefetch } = useGetMyNoticeRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+
+  const {
+    mutate: noticeDeleteRequest,
+    data,
+    error,
+  } = useMutation((data: INoticeData) =>
     httpClient<INoticeResponse>({
       method: 'DELETE',
       url: `/admin/notice/${data.id ? data.id : ''}`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('공지사항이 삭제되었습니다.');
+      void noticeRefetch();
+      void myNoticeRefetch();
+      setCurrentPage(1);
+      resetAtom();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+    setIsAlertOpen(false);
+  }, [data, error]);
+
+  return {
+    noticeDeleteRequest,
+  };
 }

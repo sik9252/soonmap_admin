@@ -11,6 +11,7 @@ import {
   IFloorQueryResponse,
 } from '../@types/Building';
 import toast from 'react-hot-toast';
+import { useSelectedBuildingAtom } from '../store/buildingAtom';
 
 export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: boolean) {
   const [buildingList, setBuildingList] = useState<IBuildingData[] | null>([]);
@@ -43,7 +44,13 @@ export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: 
 }
 
 export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boolean) {
-  return useQuery(
+  const [floorImages, setFloorImages] = useState<IFloorQueryResponse[] | null>([]);
+
+  const {
+    data,
+    error,
+    refetch: getFloorRefetch,
+  } = useQuery(
     [`/admin/floor?buildingId=${params.buildingId}`, params.buildingId],
     () =>
       httpClient<IFloorQueryResponse>({
@@ -52,6 +59,19 @@ export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boole
       }),
     { enabled: isEnabled },
   );
+
+  useEffect(() => {
+    if (data) {
+      setFloorImages(data?.data as IFloorQueryResponse[] | null);
+    } else if (error) {
+      toast.error('건물 목록을 불러오는데 실패했습니다.');
+    }
+  }, [data, error]);
+
+  return {
+    floorImages,
+    getFloorRefetch,
+  };
 }
 
 export function useCreateBuildingRequest() {
@@ -119,18 +139,52 @@ export function useCreateFloorImageRequest(floorIndex: number) {
   return { createFloorImageRequest };
 }
 
-export function useUpdateBuildingRequest() {
-  return useMutation((data: IBuildingData) =>
+export function useUpdateBuildingRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+) {
+  const { getBuildingRefetch } = useGetBuildingRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+
+  const {
+    mutate: updateBuildingInfoRequest,
+    data,
+    error,
+    isLoading: updateBuildingInfoLoading,
+  } = useMutation((data: IBuildingData) =>
     httpClient<IEditBuildingResponse>({
       method: 'PATCH',
       url: `/admin/building/${data.id ? data.id : ''}`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('건물 정보 수정이 완료되었습니다.');
+      void getBuildingRefetch();
+      setCurrentPage(1);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    updateBuildingInfoRequest,
+    updateBuildingInfoLoading,
+  };
 }
 
-export function useUpdateFloorImageRequest() {
-  return useMutation((data: IFloorImage) => {
+export function useUpdateFloorImageRequest(setCurrentPage: React.Dispatch<React.SetStateAction<number>>) {
+  const {
+    mutate: updateFloorImageRequest,
+    data,
+    error,
+  } = useMutation((data: IFloorImage) => {
     const formData = new FormData();
     formData.append('image', data.image ? data.image : '');
 
@@ -145,13 +199,58 @@ export function useUpdateFloorImageRequest() {
       },
     );
   });
+
+  useEffect(() => {
+    if (data) {
+      toast.success('도면 수정이 완료되었습니다.');
+      setCurrentPage(1);
+    } else if (error) {
+      toast.error('수정할 이미지가 등록되지 않았습니다.');
+    }
+  }, [data, error]);
+
+  return {
+    updateFloorImageRequest,
+  };
 }
 
-export function useDeleteBuildingRequest() {
-  return useMutation((data: IBuildingData) =>
+export function useDeleteBuildingRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { resetBuildingAtom } = useSelectedBuildingAtom();
+  const { getBuildingRefetch } = useGetBuildingRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+
+  const {
+    mutate: deleteBuildingRequest,
+    data,
+    error,
+  } = useMutation((data: IBuildingData) =>
     httpClient<IEditBuildingResponse>({
       method: 'DELETE',
       url: `/admin/building/${data.id ? data.id : ''}`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('건물이 삭제되었습니다.');
+      void getBuildingRefetch();
+      setCurrentPage(1);
+      resetBuildingAtom();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+    setIsAlertOpen(false);
+  }, [data, error]);
+
+  return {
+    deleteBuildingRequest,
+  };
 }

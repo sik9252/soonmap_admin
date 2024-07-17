@@ -10,8 +10,7 @@ interface PaginationProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPosts, postPerPages, currentPage, setCurrentPage }) => {
-  // const [currentPage, setCurrentPage] = useState<number>(1);
+const Pagination = ({ totalPosts, postPerPages, currentPage, setCurrentPage }: PaginationProps) => {
   const [isFirstPage, setIsFirstPage] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
   const [pageNumbers, setPageNumbers] = useState<number[]>([]);

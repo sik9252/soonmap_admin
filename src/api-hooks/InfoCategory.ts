@@ -107,11 +107,41 @@ export function useUpdateCategoryRequest(
   };
 }
 
-export function useDeleteCategoryRequest() {
-  return useMutation((data: ICategoryData) =>
+export function useDeleteCategoryRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { getCategoryRefetch } = useGetCategoryRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+
+  const {
+    mutate: categoryDeleteRequest,
+    data,
+    error,
+  } = useMutation((data: ICategoryData) =>
     httpClient<ICategoryResponse>({
       method: 'DELETE',
       url: `/admin/article/category/${data.id ? data.id : ''}`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('카테고리가 삭제되었습니다.');
+      void getCategoryRefetch();
+      setCurrentPage(1);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+    setIsAlertOpen(false);
+  }, [data, error]);
+
+  return {
+    categoryDeleteRequest,
+  };
 }

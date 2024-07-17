@@ -51,6 +51,13 @@ interface ICertificateConfirmResponse {
   confirmToken?: string;
 }
 
+interface SelectedAccountProps {
+  selectedAccount: IAccountData;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPage?: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
 export type {
   IAccountData,
   IAccountRequest,
@@ -60,4 +67,5 @@ export type {
   IMyEmailChangeRequest,
   IFindAccountData,
   ICertificateConfirmResponse,
+  SelectedAccountProps,
 };

@@ -10,6 +10,7 @@ import {
   IMyEmailChangeRequest,
   IMyInfoResponse,
   ITotalAccountCountResponse,
+  SelectedAccountProps,
 } from '../@types/Account';
 import { useEffect, useState } from 'react';
 
@@ -75,23 +76,87 @@ export function useGetUserAccountRequest(params: IAccountRequest, isEnabled?: bo
   return { accountList, totalPosts, accountRefetch };
 }
 
-export function useChangeBanStateRequest() {
-  return useMutation((data: IAccountData) =>
+export function useChangeBanStateRequest({
+  setIsModalOpen,
+  selectedAccount,
+  currentPage,
+  setCurrentPage,
+}: SelectedAccountProps) {
+  const { adminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage! - 1 });
+  const { accountRefetch } = useGetUserAccountRequest({ page: currentPage! - 1 });
+
+  const {
+    mutate: accountBanStateRequest,
+    data,
+    error,
+    isLoading: accountBanStateLoading,
+  } = useMutation((data: IAccountData) =>
     httpClient<IAccountResponse>({
       method: 'PATCH',
       url: `/admin/manage/ban?id=${data.id ? data.id : ''}`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      if (selectedAccount.ban) {
+        toast.success('계정이 활성화되었습니다.');
+        setCurrentPage(1);
+      } else if (!selectedAccount.ban) {
+        toast('계정이 비활성화되었습니다.', {
+          icon: '⚠️',
+        });
+      }
+      void adminAccountRefetch();
+      void accountRefetch();
+      setIsModalOpen(false);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return { accountBanStateRequest, accountBanStateLoading };
 }
 
-export function useGiveManagerAuthRequest() {
-  return useMutation((data: IAccountData) =>
+export function useGiveManagerAuthRequest({
+  selectedAccount,
+  setIsModalOpen,
+  currentPage,
+  setCurrentPage,
+}: SelectedAccountProps) {
+  const { adminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage! - 1 });
+
+  const {
+    mutate: giveManagerAuthRequest,
+    data,
+    error,
+    isLoading: giveManagerAuthStateLoading,
+  } = useMutation((data: IAccountData) =>
     httpClient<IAccountResponse>({
       method: 'PATCH',
       url: `/admin/manage/manager?id=${data.id ? data.id : ''}`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      if (!selectedAccount.manager) {
+        toast.success('해당 계정에 매니저 권한이 부여되었습니다.');
+        setCurrentPage(1);
+      } else if (selectedAccount.manager) {
+        toast('해당 계정의 매니저 권한이 제거되었습니다.', {
+          icon: '⚠️',
+        });
+      }
+      void adminAccountRefetch();
+      setIsModalOpen(false);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return { giveManagerAuthRequest, giveManagerAuthStateLoading };
 }
 
 // 내 정보 가져오기

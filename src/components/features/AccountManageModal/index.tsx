@@ -11,7 +11,7 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import DefaultInfoSection from './DefaultInfo';
+import DefaultInfoSection from './DefaultInfoModal';
 import { useSelectedAccountAtom } from '../../../store/accountAtom';
 
 interface ModalProps {
@@ -45,12 +45,8 @@ function AccountManageModal({ isModalOpen, setIsModalOpen, currentPage, setCurre
     },
   ];
 
-  const handleAccountManageModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <Modal onClose={() => handleAccountManageModal()} isOpen={isModalOpen} isCentered size="full">
+    <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} isCentered size="full">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>계정 상세정보</ModalHeader>

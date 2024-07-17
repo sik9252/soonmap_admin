@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { IInfoData, IInfoQueryRequest, IInfoQueryResponse, IInfoResponse } from '../@types/Info';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useGetMyArticleRequest } from './MyPage';
+import { useSelectedArticleAtom } from '../store/articleAtom';
 
 export function useGetInfoRequest(params: IInfoQueryRequest, isEnabled?: boolean) {
   const [infoList, setInfoList] = useState<IInfoData[] | null>([]);
@@ -70,21 +72,107 @@ export function useCreateInfoRequest() {
   return { createInfoRequest, createInfoLoading };
 }
 
-export function useUpdateInfoRequest() {
-  return useMutation((data: IInfoData) =>
+export function useUpdateInfoRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { resetAtom } = useSelectedArticleAtom();
+  const { myArticleRefetch } = useGetMyArticleRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+  const { infoRefetch } = useGetInfoRequest(
+    {
+      page: currentPage - 1,
+      startDate: '',
+      endDate: '',
+      title: '',
+      typeName: '',
+    },
+    false,
+  );
+
+  const {
+    mutate: infoUpdateRequest,
+    data,
+    error,
+    isLoading: infoUpdateLoading,
+  } = useMutation((data: IInfoData) =>
     httpClient<IInfoResponse>({
       method: 'PATCH',
       url: `/admin/article/${data.id ? data.id : ''}`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('게시글 수정이 완료되었습니다.');
+      setIsModalOpen(false);
+      void infoRefetch();
+      void myArticleRefetch();
+      setCurrentPage(1);
+      resetAtom();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    infoUpdateRequest,
+    infoUpdateLoading,
+  };
 }
 
-export function useDeleteInfoRequest() {
-  return useMutation((data: IInfoData) =>
+export function useDeleteArticleRequest(
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const { resetAtom } = useSelectedArticleAtom();
+  const { myArticleRefetch } = useGetMyArticleRequest(
+    {
+      page: currentPage - 1,
+    },
+    false,
+  );
+  const { infoRefetch } = useGetInfoRequest(
+    {
+      page: currentPage - 1,
+      startDate: '',
+      endDate: '',
+      title: '',
+      typeName: '',
+    },
+    false,
+  );
+
+  const {
+    mutate: infoDeleteRequest,
+    data,
+    error,
+  } = useMutation((data: IInfoData) =>
     httpClient<IInfoResponse>({
       method: 'DELETE',
       url: `/admin/article/${data.id ? data.id : ''}`,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('게시글이 삭제되었습니다.');
+      void infoRefetch();
+      void myArticleRefetch();
+      setCurrentPage(1);
+      resetAtom();
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+    setIsAlertOpen(false);
+  }, [data, error]);
+
+  return { infoDeleteRequest };
 }
