@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useEffect } from 'react';
-import { Editor } from '@toast-ui/react-editor';
+import { lazy, useEffect } from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import { useUploadImageRequest } from '../../../api-hooks/ImageUpload';
 import toast from 'react-hot-toast';
+import { EditorInstance } from '../../../@types/Editor';
+
+const Editor = lazy(() => import('@toast-ui/react-editor').then((module) => ({ default: module.Editor })));
 
 interface TextEditorProps {
-  editorRef: React.MutableRefObject<Editor | null>;
+  editorRef: React.MutableRefObject<EditorInstance | null>;
   content?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

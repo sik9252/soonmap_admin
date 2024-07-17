@@ -1,5 +1,7 @@
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
-import { Viewer } from '@toast-ui/react-editor';
+import { lazy } from 'react';
+
+const Viewer = lazy(() => import('@toast-ui/react-editor').then((module) => ({ default: module.Viewer })));
 
 interface TextViewerProps {
   content: string | undefined;

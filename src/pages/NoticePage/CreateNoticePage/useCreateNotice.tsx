@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useCreateNoticeRequest } from '../../../api-hooks/Notice';
 import toast from 'react-hot-toast';
-import { Editor } from '@toast-ui/react-editor';
+import { EditorInstance } from '../../../@types/Editor';
 
 const useCreateNotice = () => {
-  type EditorInstance = Editor | null;
   const editorRef = useRef<EditorInstance>(null);
 
   const [title, setTitle] = useState('');

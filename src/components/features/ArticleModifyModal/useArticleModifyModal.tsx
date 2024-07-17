@@ -9,11 +9,10 @@ import { useUpdateNoticeRequest } from '../../../api-hooks/Notice';
 import { useUploadImageRequest } from '../../../api-hooks/ImageUpload';
 import { useGetAllCategoryRequest } from '../../../api-hooks/InfoCategory';
 import { ArticleModalProps } from '.';
-import { Editor } from '@toast-ui/react-editor';
 import toast from 'react-hot-toast';
+import { EditorInstance } from '../../../@types/Editor';
 
 const useArticleModifyModal = ({ location, setIsModalOpen, currentPage, setCurrentPage }: ArticleModalProps) => {
-  type EditorInstance = Editor | null;
   const editorRef = useRef<EditorInstance>(null);
 
   const { selectedArticle } = useSelectedArticleAtom();

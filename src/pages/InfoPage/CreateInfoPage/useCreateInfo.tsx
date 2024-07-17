@@ -3,9 +3,7 @@ import { useGetAllCategoryRequest } from '../../../api-hooks/InfoCategory';
 import { useUploadImageRequest } from '../../../api-hooks/ImageUpload';
 import { useCreateInfoRequest } from '../../../api-hooks/Info';
 import toast from 'react-hot-toast';
-import { Editor } from '@toast-ui/react-editor';
-
-type EditorInstance = Editor | null;
+import { EditorInstance } from '../../../@types/Editor';
 
 const useCreateInfo = () => {
   const editorRef = useRef<EditorInstance>(null);
