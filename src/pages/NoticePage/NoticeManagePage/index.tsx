@@ -16,7 +16,7 @@ import TextViewer from '../../../components/features/TextViewer';
 import Pagination from '../../../components/features/Pagination';
 import { SimpleGrid } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
-import { useGetNoticeRequest } from '../../../api-requests/Notice';
+import { useGetNoticeRequest } from '../../../api-hooks/Notice';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { changeDateFormat } from '../../../utils/changeDateFormat';

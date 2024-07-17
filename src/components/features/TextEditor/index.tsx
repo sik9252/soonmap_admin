@@ -7,7 +7,7 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import { useUploadImageRequest } from '../../../api-requests/ImageUpload';
+import { useUploadImageRequest } from '../../../api-hooks/ImageUpload';
 import toast from 'react-hot-toast';
 
 interface TextEditorProps {

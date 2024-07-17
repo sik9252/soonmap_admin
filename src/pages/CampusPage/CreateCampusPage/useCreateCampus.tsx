@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateBuildingRequest, useCreateFloorImageRequest } from '../../../api-requests/Building';
+import { useCreateBuildingRequest, useCreateFloorImageRequest } from '../../../api-hooks/Building';
 import toast from 'react-hot-toast';
 
 const useCreateCampus = () => {

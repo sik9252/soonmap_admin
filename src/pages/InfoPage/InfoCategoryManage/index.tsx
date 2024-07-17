@@ -6,7 +6,7 @@ import AlertDialogModal from '../../../components/features/AlertDialogModal';
 import CategoryInput from '../../../components/ui/CategoryUI/CategoryInput';
 import Pagination from '../../../components/features/Pagination';
 import AddMode from '../../../components/ui/CategoryUI/AddMode';
-import { useGetCategoryRequest } from '../../../api-requests/InfoCategory';
+import { useGetCategoryRequest } from '../../../api-hooks/InfoCategory';
 import toast from 'react-hot-toast';
 
 interface CategoryType {

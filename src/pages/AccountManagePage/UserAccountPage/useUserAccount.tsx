@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelectedAccountAtom } from '../../../store/accountAtom';
-import { useGetTotalAccountCountRequest, useGetUserAccountRequest } from '../../../api-requests/Account';
+import { useGetTotalAccountCountRequest, useGetUserAccountRequest } from '../../../api-hooks/Account';
 import { IAccountData } from '../../../@types/Account';
 
 const useUserAccount = () => {

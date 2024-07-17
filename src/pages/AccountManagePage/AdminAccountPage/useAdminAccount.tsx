@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelectedAccountAtom } from '../../../store/accountAtom';
-import { useGetAdminAccountRequest, useGetTotalAccountCountRequest } from '../../../api-requests/Account';
+import { useGetAdminAccountRequest, useGetTotalAccountCountRequest } from '../../../api-hooks/Account';
 import { IAccountData } from '../../../@types/Account';
 
 export const useAdminAccount = () => {

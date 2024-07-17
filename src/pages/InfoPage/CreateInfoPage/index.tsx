@@ -8,11 +8,11 @@ import SelectUI from '../../../components/ui/SelectUI';
 import InputUI from '../../../components/ui/InputUI';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
 import { ThumbnailUploadUI } from '../../../components/ui/ThumbnailUploadUI';
-import { useGetAllCategoryRequest } from '../../../api-requests/InfoCategory';
-import { useCreateInfoRequest } from '../../../api-requests/Info';
+import { useGetAllCategoryRequest } from '../../../api-hooks/InfoCategory';
+import { useCreateInfoRequest } from '../../../api-hooks/Info';
 import toast from 'react-hot-toast';
 import { Flex } from '@chakra-ui/react';
-import { useUploadImageRequest } from '../../../api-requests/ImageUpload';
+import { useUploadImageRequest } from '../../../api-hooks/ImageUpload';
 import { ICategoryData } from '../../../@types/InfoCategory';
 
 type EditorInstance = Editor | null;

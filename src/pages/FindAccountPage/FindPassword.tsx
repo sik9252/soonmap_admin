@@ -1,156 +1,32 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 import { Container, Box, Flex, FormControl, FormHelperText } from '@chakra-ui/react';
 import InputUI from '../../components/ui/InputUI';
 import { DefaultButton } from '../../components/ui/ButtonUI';
-import { checkEmailValidate } from '../../utils/checkEmailValidate';
-import {
-  useFindPasswordValidateRequest,
-  useFindPasswordCertificateConfirmRequest,
-  useChangePasswordRequest,
-} from '../../api-requests/Account';
-import toast from 'react-hot-toast';
 import Timer from '../../utils/timer';
+import useFindPassword from './useFindPassword';
 
 function FindPassword() {
-  const navigate = useNavigate();
-
   const {
-    mutate: findPasswordEmailValidateRequest,
-    data: findPasswordEmailValidateRequestData,
-    error: findPasswordEmailValidateRequestError,
-    isLoading: findPasswordEmailValidateRequestLoading,
-  } = useFindPasswordValidateRequest();
-
-  const {
-    mutate: findPasswordCertificateConfirmRequest,
-    data: findPasswordCertificateConfirmRequestData,
-    error: findPasswordCertificateConfirmRequestError,
-    isLoading: findPasswordCertificateConfirmRequestLoading,
-  } = useFindPasswordCertificateConfirmRequest();
-
-  const {
-    mutate: changePasswordRequest,
-    data: changePasswordRequestData,
-    error: changePasswordRequestError,
-    isLoading: changePasswordRequestLoading,
-  } = useChangePasswordRequest();
-
-  const [userEmail, setUserEmail] = useState('');
-  const [userId, setUserId] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [isEmailAndIdCheckSuccess, setIsEmailAndIdCheckSuccess] = useState(false);
-  const [certificateNum, setCertificateNum] = useState('');
-  const [isTimeUp, setTimeUp] = useState<boolean>(false);
-  const [confirmToken, setConfirmToken] = useState<string | undefined>('');
-
-  const handleUserEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserEmail(e.target.value);
-  };
-
-  const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserId(e.target.value);
-  };
-
-  const handleCertificateNumInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCertificateNum(e.target.value);
-  };
-
-  const handleUserNewPasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPassword(e.target.value);
-  };
-
-  const handleUserNewPasswordConfirmInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPasswordConfirm(e.target.value);
-    if (newPassword !== e.target.value) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
-    }
-  };
-
-  const handleGetCertificateButton = () => {
-    const data = {
-      receiver: userEmail,
-      id: userId,
-    };
-
-    if (!userEmail || !userId || !checkEmailValidate(userEmail)) {
-      toast.error('올바른 이메일 주소 혹은 아이디를 입력해주세요.');
-    } else {
-      findPasswordEmailValidateRequest({ ...data });
-    }
-  };
-
-  useEffect(() => {
-    if (findPasswordEmailValidateRequestData) {
-      toast.success('이메일로 인증번호가 전송되었습니다.');
-      setIsEmailAndIdCheckSuccess(true);
-    } else if (findPasswordEmailValidateRequestError) {
-      toast.error((findPasswordEmailValidateRequestError as Error).message);
-    }
-  }, [findPasswordEmailValidateRequestData, findPasswordEmailValidateRequestError]);
-
-  const handleCertificateButton = () => {
-    const data = {
-      code: certificateNum,
-      receiver: userEmail,
-    };
-
-    if (!certificateNum) {
-      toast.error('인증번호가 입력되지 않았습니다.');
-    } else {
-      findPasswordCertificateConfirmRequest({ ...data });
-    }
-  };
-
-  useEffect(() => {
-    if (findPasswordCertificateConfirmRequestData) {
-      setConfirmToken(findPasswordCertificateConfirmRequestData.data.confirmToken);
-      toast.success('인증이 완료되었습니다.');
-    } else if (findPasswordCertificateConfirmRequestError) {
-      toast.error((findPasswordCertificateConfirmRequestError as Error).message);
-    }
-  }, [findPasswordCertificateConfirmRequestData, findPasswordCertificateConfirmRequestError]);
-
-  const handleChangePasswordButton = () => {
-    const data = {
-      token: confirmToken,
-      pw: newPassword,
-    };
-
-    if (!newPassword || !newPasswordConfirm) {
-      alert('새 비밀번호가 입력되지 않았습니다.');
-    } else {
-      changePasswordRequest({ ...data });
-    }
-  };
-
-  useEffect(() => {
-    if (changePasswordRequestData) {
-      alert('비밀번호 변경이 완료되었습니다. 로그인 페이지로 이동합니다.');
-      navigate('/login');
-    } else if (changePasswordRequestError) {
-      toast.error((changePasswordRequestError as Error).message);
-    }
-  }, [changePasswordRequestData, changePasswordRequestError]);
+    setTimeUp,
+    findPasswordEmailValidateRequestLoading,
+    isEmailAndIdCheckSuccess,
+    findPasswordCertificateConfirmRequestData,
+    findPasswordCertificateConfirmRequestLoading,
+    changePasswordRequestLoading,
+    passwordError,
+    handleUserEmailInput,
+    handleUserIdInput,
+    handleCertificateNumInput,
+    handleUserNewPasswordInput,
+    handleUserNewPasswordConfirmInput,
+    handleGetCertificateButton,
+    handleCertificateButton,
+    handleChangePasswordButton,
+  } = useFindPassword();
 
   const timerComponent = useMemo(() => {
     return <Timer isStart={isEmailAndIdCheckSuccess} setTimeUp={setTimeUp} />;
   }, [isEmailAndIdCheckSuccess]);
-
-  useEffect(() => {
-    if (isTimeUp) {
-      toast.error('인증번호가 만료되었습니다. 다시 받아주세요.');
-      setIsEmailAndIdCheckSuccess(false);
-    }
-
-    setTimeout(() => {
-      setTimeUp(false);
-    }, 500);
-  }, [isTimeUp]);
 
   return (
     <Container>

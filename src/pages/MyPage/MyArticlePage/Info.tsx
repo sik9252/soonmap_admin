@@ -13,7 +13,7 @@ import Pagination from '../../../components/features/Pagination';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { IMyArticleData } from '../../../@types/MyPage';
-import { useGetMyInfoRequest } from '../../../api-requests/MyPage';
+import { useGetMyInfoRequest } from '../../../api-hooks/MyPage';
 
 function Info() {
   const { selectedArticle, setSelectedArticle } = useSelectedArticleAtom();

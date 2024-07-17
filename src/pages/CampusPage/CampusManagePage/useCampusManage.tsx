@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
-import { useGetBuildingRequest } from '../../../api-requests/Building';
+import { useGetBuildingRequest } from '../../../api-hooks/Building';
 import { IBuildingData } from '../../../@types/Building';
 
 const useCampusManage = () => {

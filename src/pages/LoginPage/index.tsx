@@ -7,7 +7,7 @@ import { LoginPageContainer, PageTitle, ButtonSection } from './style';
 
 import { setAuthToken } from '../../utils/setAuthToken';
 import { setAuthHierarchy } from '../../utils/setAuthHierarchy';
-import { useLoginRequest } from '../../api-requests/Auth';
+import { useLoginRequest } from '../../api-hooks/Auth';
 
 function LoginPage() {
   const navigate = useNavigate();

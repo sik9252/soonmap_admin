@@ -4,7 +4,7 @@ import InputUI, { PasswordInputUI } from '../../components/ui/InputUI';
 import { DefaultButton } from '../../components/ui/ButtonUI';
 import toast from 'react-hot-toast';
 import { RegisterPageContainer, PageTitle, ButtonSection } from './style';
-import { useRegisterRequest } from '../../api-requests/Auth';
+import { useRegisterRequest } from '../../api-hooks/Auth';
 import { checkEmailValidate } from '../../utils/checkEmailValidate';
 
 function RegisterPage() {

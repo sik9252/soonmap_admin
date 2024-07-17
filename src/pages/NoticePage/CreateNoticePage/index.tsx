@@ -9,7 +9,7 @@ import CheckboxUI from '../../../components/ui/CheckboxUI';
 import toast from 'react-hot-toast';
 import { DefaultButton } from '../../../components/ui/ButtonUI';
 import { FileUploaderUI } from '../../../components/ui/FileUploaderUI';
-import { useCreateNoticeRequest } from '../../../api-requests/Notice';
+import { useCreateNoticeRequest } from '../../../api-hooks/Notice';
 
 type EditorInstance = Editor | null;
 

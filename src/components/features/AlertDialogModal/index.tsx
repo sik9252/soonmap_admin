@@ -9,11 +9,11 @@ import {
   AlertDialogCloseButton,
   Button,
 } from '@chakra-ui/react';
-import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api-requests/InfoCategory';
-import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api-requests/Info';
-import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api-requests/Notice';
-import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api-requests/Building';
-import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api-requests/MyPage';
+import { useDeleteCategoryRequest, useGetCategoryRequest } from '../../../api-hooks/InfoCategory';
+import { useDeleteInfoRequest, useGetInfoRequest } from '../../../api-hooks/Info';
+import { useDeleteNoticeRequest, useGetNoticeRequest } from '../../../api-hooks/Notice';
+import { useDeleteBuildingRequest, useGetBuildingRequest } from '../../../api-hooks/Building';
+import { useGetMyInfoRequest, useGetMyNoticeRequest } from '../../../api-hooks/MyPage';
 import toast from 'react-hot-toast';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
 import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
@@ -69,7 +69,7 @@ function AlertDialogModal({
     false,
   );
 
-  const { refetch: getBuildingRefetch } = useGetBuildingRequest(
+  const { getBuildingRefetch } = useGetBuildingRequest(
     {
       page: currentPage - 1,
     },

@@ -19,7 +19,7 @@ import {
   useGetFloorRequest,
   useUpdateBuildingRequest,
   useUpdateFloorImageRequest,
-} from '../../../api-requests/Building';
+} from '../../../api-hooks/Building';
 import toast from 'react-hot-toast';
 import { DefaultButton } from '../../ui/ButtonUI';
 import { IFloorQueryResponse } from '../../../@types/Building';
@@ -59,7 +59,7 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
     setUpdatedImgList(Array((buildingUpFloorsCount || 0) + (buildingDownFloorsCount || 0)).fill(''));
   }, [buildingUpFloorsCount, buildingDownFloorsCount]);
 
-  const { refetch: getBuildingRefetch } = useGetBuildingRequest(
+  const { getBuildingRefetch } = useGetBuildingRequest(
     {
       page: currentPage - 1,
     },
@@ -88,7 +88,6 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
     mutate: updateFloorImageRequest,
     data: updateFloorImageData,
     error: updateFloorImageError,
-    isLoading: updateFloorImageLoading,
   } = useUpdateFloorImageRequest();
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import {
   useGetMyInfoRequest,
   useMyEmailChangeRequest,
   useMyEmailChangeValidateRequest,
-} from '../../../api-requests/Account';
+} from '../../../api-hooks/Account';
 import { checkEmailValidate } from '../../../utils/checkEmailValidate';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import RightContainer from '../../../components/layout/RightContainer';

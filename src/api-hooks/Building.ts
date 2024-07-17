@@ -16,7 +16,11 @@ export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: 
   const [buildingList, setBuildingList] = useState<IBuildingData[] | null>([]);
   const [totalPosts, setTotalPosts] = useState(1);
 
-  const { data, error } = useQuery(
+  const {
+    data,
+    error,
+    refetch: getBuildingRefetch,
+  } = useQuery(
     [`/admin/building?page=${params.page}`, params],
     () =>
       httpClient<IBuildingListResponse>({
@@ -35,7 +39,7 @@ export function useGetBuildingRequest(params: IBuildingListRequest, isEnabled?: 
     }
   }, [data, error]);
 
-  return { buildingList, totalPosts };
+  return { buildingList, totalPosts, getBuildingRefetch };
 }
 
 export function useGetFloorRequest(params: IFloorQueryRequest, isEnabled?: boolean) {

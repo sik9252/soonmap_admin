@@ -7,7 +7,7 @@ import {
   useGetAdminAccountRequest,
   useGiveManagerAuthRequest,
   useGetUserAccountRequest,
-} from '../../../api-requests/Account';
+} from '../../../api-hooks/Account';
 import { DefaultButton } from '../../ui/ButtonUI';
 import { AccountInfoText, FooterSection } from './style';
 import { IAccountData } from '../../../@types/Account';
@@ -23,7 +23,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentP
   const location = useLocation();
 
   const { adminAccountRefetch } = useGetAdminAccountRequest({ page: currentPage - 1 });
-  const { refetch: getUserAccountRefetch } = useGetUserAccountRequest({ page: currentPage - 1 });
+  const { accountRefetch } = useGetUserAccountRequest({ page: currentPage - 1 });
 
   const {
     mutate: accountBanStateRequest,
@@ -50,7 +50,7 @@ function DefaultInfo({ selectedAccount, setIsModalOpen, currentPage, setCurrentP
         });
       }
       void adminAccountRefetch();
-      void getUserAccountRefetch();
+      void accountRefetch();
       setIsModalOpen(false);
     } else if (accountBanStateError) {
       toast.error((accountBanStateError as Error).message);

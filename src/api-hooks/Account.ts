@@ -1,5 +1,6 @@
 import { httpClient } from '.';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import {
   IAccountData,
   IAccountRequest,
@@ -11,6 +12,7 @@ import {
   ITotalAccountCountResponse,
 } from '../@types/Account';
 import { useEffect, useState } from 'react';
+
 import toast from 'react-hot-toast';
 
 export function useGetAdminAccountRequest(params: IAccountRequest, isEnabled?: boolean) {
@@ -154,51 +156,152 @@ export function useGetTotalAccountCountRequest(isEnabled?: boolean) {
 
 // 계정 찾기
 export function useFindIdEmailValidateRequest() {
-  return useMutation((data: IFindAccountData) =>
+  const [isEmailCheckSuccess, setIsEmailCheckSuccess] = useState(false);
+
+  const {
+    mutate: findIdEmailValidateRequest,
+    data,
+    error,
+    isLoading: findIdEmailValidateRequestLoading,
+  } = useMutation((data: IFindAccountData) =>
     httpClient({
       method: 'POST',
       url: `/admin/find/id`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('이메일로 인증번호가 전송되었습니다.');
+      setIsEmailCheckSuccess(true);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return { findIdEmailValidateRequest, findIdEmailValidateRequestLoading, isEmailCheckSuccess, setIsEmailCheckSuccess };
 }
 
 export function useFindIdCertificateConfirmRequest() {
-  return useMutation((data: IFindAccountData) =>
+  const {
+    mutate: findIdCertificateConfirmRequest,
+    data: findIdCertificateConfirmRequestData,
+    error,
+    isLoading: findIdCertificateConfirmRequestLoading,
+  } = useMutation((data: IFindAccountData) =>
     httpClient<ICertificateConfirmResponse>({
       method: 'POST',
       url: `/admin/find/id/confirm`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (findIdCertificateConfirmRequestData) {
+      toast.success('인증이 완료되었습니다.');
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [findIdCertificateConfirmRequestData, error]);
+
+  return {
+    findIdCertificateConfirmRequest,
+    findIdCertificateConfirmRequestData,
+    findIdCertificateConfirmRequestLoading,
+  };
 }
 
 export function useFindPasswordValidateRequest() {
-  return useMutation((data: IFindAccountData) =>
+  const [isEmailAndIdCheckSuccess, setIsEmailAndIdCheckSuccess] = useState(false);
+
+  const {
+    mutate: findPasswordEmailValidateRequest,
+    data,
+    error,
+    isLoading: findPasswordEmailValidateRequestLoading,
+  } = useMutation((data: IFindAccountData) =>
     httpClient({
       method: 'POST',
       url: `/admin/find/pw`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      toast.success('이메일로 인증번호가 전송되었습니다.');
+      setIsEmailAndIdCheckSuccess(true);
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return {
+    findPasswordEmailValidateRequest,
+    findPasswordEmailValidateRequestLoading,
+    isEmailAndIdCheckSuccess,
+    setIsEmailAndIdCheckSuccess,
+  };
 }
 
 export function useFindPasswordCertificateConfirmRequest() {
-  return useMutation((data: IFindAccountData) =>
+  const [confirmToken, setConfirmToken] = useState<string | undefined>('');
+
+  const {
+    mutate: findPasswordCertificateConfirmRequest,
+    data: findPasswordCertificateConfirmRequestData,
+    error,
+    isLoading: findPasswordCertificateConfirmRequestLoading,
+  } = useMutation((data: IFindAccountData) =>
     httpClient<ICertificateConfirmResponse>({
       method: 'POST',
       url: `/admin/find/pw/confirm`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (findPasswordCertificateConfirmRequestData) {
+      setConfirmToken(findPasswordCertificateConfirmRequestData.data.confirmToken);
+      toast.success('인증이 완료되었습니다.');
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [findPasswordCertificateConfirmRequestData, error]);
+
+  return {
+    findPasswordCertificateConfirmRequest,
+    findPasswordCertificateConfirmRequestData,
+    findPasswordCertificateConfirmRequestLoading,
+    confirmToken,
+  };
 }
 
 export function useChangePasswordRequest() {
-  return useMutation((data: IFindAccountData) =>
+  const navigate = useNavigate();
+
+  const {
+    mutate: changePasswordRequest,
+    data,
+    error,
+    isLoading: changePasswordRequestLoading,
+  } = useMutation((data: IFindAccountData) =>
     httpClient<ICertificateConfirmResponse>({
       method: 'POST',
       url: `/admin/change/pw`,
       data,
     }),
   );
+
+  useEffect(() => {
+    if (data) {
+      alert('비밀번호 변경이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
+    } else if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [data, error]);
+
+  return { changePasswordRequest, changePasswordRequestLoading };
 }

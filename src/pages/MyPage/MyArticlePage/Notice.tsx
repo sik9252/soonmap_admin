@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGetMyNoticeRequest } from '../../../api-requests/MyPage';
+import { useGetMyNoticeRequest } from '../../../api-hooks/MyPage';
 import {
   MyArticleSection,
   MyArticleListSection,
