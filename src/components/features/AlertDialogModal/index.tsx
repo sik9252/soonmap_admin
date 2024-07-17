@@ -59,7 +59,7 @@ function AlertDialogModal({
     false,
   );
 
-  const { refetch: getNoticeRefetch } = useGetNoticeRequest(
+  const { noticeRefetch } = useGetNoticeRequest(
     {
       page: currentPage - 1,
       startDate: '',
@@ -94,28 +94,16 @@ function AlertDialogModal({
     mutate: categoryDeleteRequest,
     data: categoryDeleteData,
     error: categoryDeleteError,
-    isLoading: categoryDeleteLoading,
   } = useDeleteCategoryRequest();
 
-  const {
-    mutate: infoDeleteRequest,
-    data: infoDeleteData,
-    error: infoDeleteError,
-    isLoading: infoDeleteLoading,
-  } = useDeleteInfoRequest();
+  const { mutate: infoDeleteRequest, data: infoDeleteData, error: infoDeleteError } = useDeleteInfoRequest();
 
-  const {
-    mutate: noticeDeleteRequest,
-    data: noticeDeleteData,
-    error: noticeDeleteError,
-    isLoading: noticeDeleteLoading,
-  } = useDeleteNoticeRequest();
+  const { mutate: noticeDeleteRequest, data: noticeDeleteData, error: noticeDeleteError } = useDeleteNoticeRequest();
 
   const {
     mutate: deleteBuildingRequest,
     data: deleteBuildingData,
     error: deleteBuildingError,
-    isLoading: deleteBuildingLoading,
   } = useDeleteBuildingRequest();
 
   const handleAlertDialog = () => {
@@ -161,7 +149,7 @@ function AlertDialogModal({
   useEffect(() => {
     if (noticeDeleteData) {
       toast.success('삭제되었습니다.');
-      void getNoticeRefetch();
+      void noticeRefetch();
       void myNoticeRefetch();
       setCurrentPage(1);
       resetAtom();

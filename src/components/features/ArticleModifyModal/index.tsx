@@ -56,7 +56,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
     },
     false,
   );
-  const { refetch: getNoticeRefetch } = useGetNoticeRequest(
+  const { noticeRefetch } = useGetNoticeRequest(
     {
       page: currentPage - 1,
       startDate: '',
@@ -191,7 +191,7 @@ function ArticleModifyModal({ location, isModalOpen, setIsModalOpen, currentPage
     if (noticeUpdateData) {
       toast.success('게시글 수정이 완료되었습니다.');
       setIsModalOpen(false);
-      void getNoticeRefetch();
+      void noticeRefetch();
       void myNoticeRefetch();
       setCurrentPage(1);
       resetAtom();
