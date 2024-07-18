@@ -6,14 +6,14 @@ import { TopNotice } from './style';
 import AlertDialogModal from '../../features/AlertDialogModal';
 import ArticleModifyModal from '../../features/ArticleModifyModal';
 import { useSelectedArticleAtom } from '../../../store/articleAtom';
-import { InfoDataType } from '../../../api/Info';
-import { NoticeDataType } from '../../../api/Notice';
+import { IInfoData } from '../../../@types/Info';
+import { INoticeData } from '../../../@types/Notice';
 
 interface CardProps {
-  infoData?: InfoDataType;
-  noticeData?: NoticeDataType;
+  infoData?: IInfoData;
+  noticeData?: INoticeData;
   onClick?: () => void;
-  setPreviewInfo?: React.Dispatch<React.SetStateAction<InfoDataType | null>>;
+  setPreviewInfo?: React.Dispatch<React.SetStateAction<IInfoData | null>>;
   currentLocation?: string;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
@@ -27,7 +27,7 @@ function CardUI({ infoData, noticeData, onClick, currentPage, setCurrentPage }: 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAlertDialog = (info: InfoDataType) => {
+  const handleAlertDialog = (info: IInfoData) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
     } else if (path.pathname === '/notice/manage') {
@@ -38,7 +38,7 @@ function CardUI({ infoData, noticeData, onClick, currentPage, setCurrentPage }: 
     setIsAlertOpen(true);
   };
 
-  const handleArticleModifyModal = (info: InfoDataType) => {
+  const handleArticleModifyModal = (info: IInfoData) => {
     if (path.pathname === '/info/manage') {
       setLocation('정보');
     } else if (path.pathname === '/notice/manage') {

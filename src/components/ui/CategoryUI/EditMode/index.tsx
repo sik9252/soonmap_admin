@@ -1,29 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
-import { CategoryItem } from '../CategoryInput';
 import InputUI from '../../InputUI';
 import { DefaultButton, CancelButton } from '../../ButtonUI';
-import { useGetCategoryRequest, useUpdateCategoryRequest } from '../../../../api/InfoCategory';
+import { useUpdateCategoryRequest } from '../../../../api-hooks/InfoCategory';
 import toast from 'react-hot-toast';
+import { ICategoryData } from '../../../../@types/InfoCategory';
 
 type TodoItemEditorProps = {
-  category: CategoryItem;
+  category: ICategoryData;
   onChangeViewMode: () => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function EditMode({ category, onChangeViewMode, currentPage, setCurrentPage }: TodoItemEditorProps) {
-  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
-    page: currentPage - 1,
-  });
-
-  const {
-    mutate: categoryUpdateRequest,
-    data: categoryUpdateData,
-    error: categoryUpdateError,
-    isLoading: categoryUpdateLoading,
-  } = useUpdateCategoryRequest();
+  const { categoryUpdateRequest } = useUpdateCategoryRequest(currentPage, setCurrentPage, onChangeViewMode);
 
   const [categoryName, setCategoryName] = useState(category.typeName);
   const [categoryDescription, setCategoryDescription] = useState(category.description);
@@ -49,17 +40,6 @@ function EditMode({ category, onChangeViewMode, currentPage, setCurrentPage }: T
       categoryUpdateRequest({ ...data });
     }
   };
-
-  useEffect(() => {
-    if (categoryUpdateData) {
-      toast.success('수정되었습니다.');
-      void getCategoryRefetch();
-      setCurrentPage(1);
-      onChangeViewMode();
-    } else if (categoryUpdateError) {
-      toast.error((categoryUpdateError as Error).message);
-    }
-  }, [categoryUpdateData, categoryUpdateError]);
 
   return (
     <Tr>

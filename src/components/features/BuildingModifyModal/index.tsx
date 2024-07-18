@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react';
 import InputUI from '../../ui/InputUI';
 import { FloorImageUploaderUI } from '../../ui/FloorImageUploaderUI';
@@ -13,213 +12,29 @@ import {
   FloorItem,
   Notice,
 } from './style';
-import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
-import {
-  useGetBuildingRequest,
-  useGetFloorRequest,
-  useUpdateBuildingRequest,
-  useUpdateFloorImageRequest,
-  FloorQueryResponseType,
-} from '../../../api/Building';
-import toast from 'react-hot-toast';
 import { DefaultButton } from '../../ui/ButtonUI';
-
-interface ModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-}
+import { ModalProps } from '../../../@types/Modal';
+import useBuildingModifyModal from './useBuildingModifyModal';
 
 function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurrentPage }: ModalProps) {
-  const { selectedBuilding, resetBuildingAtom } = useSelectedBuildingAtom();
-  const [floorImages, setFloorImages] = useState<FloorQueryResponseType[] | null>([]);
-  const [buildingNumber, setBuildingNumber] = useState<string | undefined>('');
-  const [buildingName, setBuildingName] = useState<string | undefined>('');
-  const [buildingDescription, setBuildingDescription] = useState<string | undefined>('');
-  const [buildingUpFloorsCount, setBuildingUpFloorsCount] = useState<number | undefined>(0);
-  const [buildingDownFloorsCount, setBuildingDownFloorsCount] = useState<number | undefined>(0);
-  const [buildingXpos, setBuildingXpos] = useState<number | undefined>(0);
-  const [buildingYpos, setBuildingYpos] = useState<number | undefined>(0);
-  const [imgPreview, setImgPreview] = useState<string[]>(Array(0).fill(''));
-  const [updatedImgList, setUpdatedImgList] = useState<Blob[] | null>(Array(0).fill(null));
-
-  useEffect(() => {
-    setBuildingNumber(selectedBuilding.uniqueNumber);
-    setBuildingName(selectedBuilding.name);
-    setBuildingDescription(selectedBuilding.description);
-    setBuildingUpFloorsCount(selectedBuilding.floorsUp);
-    setBuildingDownFloorsCount(selectedBuilding.floorsDown);
-    setBuildingXpos(selectedBuilding.latitude);
-    setBuildingYpos(selectedBuilding.longitude);
-  }, [selectedBuilding]);
-
-  useEffect(() => {
-    setImgPreview(Array((buildingUpFloorsCount || 0) + (buildingDownFloorsCount || 0)).fill(''));
-    setUpdatedImgList(Array((buildingUpFloorsCount || 0) + (buildingDownFloorsCount || 0)).fill(''));
-  }, [buildingUpFloorsCount, buildingDownFloorsCount]);
-
-  const { refetch: getBuildingRefetch } = useGetBuildingRequest(
-    {
-      page: currentPage - 1,
-    },
-    false,
-  );
-
   const {
-    data: getFloorResult,
-    isError: getFloorError,
-    refetch: getFloorRefetch,
-  } = useGetFloorRequest(
-    {
-      buildingId: selectedBuilding.id ? selectedBuilding.id : 0,
-    },
-    false,
-  );
-
-  const {
-    mutate: updateBuildingInfoRequest,
-    data: updateBuildingInfoData,
-    error: updateBuildingInfoError,
-    isLoading: updateBuildingInfoLoading,
-  } = useUpdateBuildingRequest();
-
-  const {
-    mutate: updateFloorImageRequest,
-    data: updateFloorImageData,
-    error: updateFloorImageError,
-    isLoading: updateFloorImageLoading,
-  } = useUpdateFloorImageRequest();
-
-  useEffect(() => {
-    if (isModalOpen) void getFloorRefetch();
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    if (getFloorResult) {
-      setFloorImages(getFloorResult?.data as FloorQueryResponseType[] | null);
-    } else if (getFloorError) {
-      toast.error('건물 목록을 불러오는데 실패했습니다.');
-    }
-  }, [getFloorResult, getFloorError]);
-
-  useEffect(() => {
-    const floorImageList: string[] = [];
-
-    floorImages?.forEach((image) => {
-      if (image) {
-        floorImageList.push(image.dir || '');
-      }
-    });
-
-    setImgPreview(floorImageList);
-  }, [floorImages]);
-
-  const handleBuildingModifyModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleBuildingNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingNumber(e.target.value);
-  };
-
-  const handleBuildingName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingName(e.target.value);
-  };
-
-  const handleBuildingDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingDescription(e.target.value);
-  };
-
-  const handleBuildingUpFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingUpFloorsCount(Number(e.target.value));
-  };
-
-  const handleBuildingDownFloorsCount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingDownFloorsCount(Number(e.target.value));
-  };
-
-  const handleBuildingXpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingXpos(Number(e.target.value));
-  };
-
-  const handleBuildingYpos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuildingYpos(Number(e.target.value));
-  };
-
-  const handleImageChange = (defaultIndex: number, index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(index);
-    e.preventDefault();
-
-    const updatedImageList: Blob[] = [];
-
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImgPreview((prevImgPreview) => [
-          ...prevImgPreview.slice(0, defaultIndex),
-          reader.result as string,
-          ...prevImgPreview.slice(defaultIndex + 1),
-        ]);
-      };
-      reader.readAsDataURL(e.target.files[0]);
-
-      updatedImageList[defaultIndex] = e.target.files[0];
-      setUpdatedImgList(updatedImageList);
-    }
-  };
-
-  const handleBuildingInfoUpdateButton = () => {
-    const data = {
-      id: selectedBuilding.id,
-      name: buildingName,
-      floorsUp: buildingUpFloorsCount,
-      floorsDown: buildingDownFloorsCount,
-      description: buildingDescription,
-      latitude: buildingXpos,
-      longitude: buildingYpos,
-      uniqueNumber: buildingNumber,
-    };
-
-    if (
-      !buildingName ||
-      !buildingUpFloorsCount ||
-      !buildingDescription ||
-      !buildingXpos ||
-      !buildingYpos ||
-      !buildingNumber
-    ) {
-      toast.error('모든 항목은 필수값입니다.');
-    } else {
-      updateBuildingInfoRequest({ ...data });
-    }
-  };
-
-  useEffect(() => {
-    if (updateBuildingInfoData) {
-      toast.success('건물 정보 수정이 완료되었습니다.');
-      void getBuildingRefetch();
-      setCurrentPage(1);
-    } else if (updateBuildingInfoError) {
-      toast.error((updateBuildingInfoError as Error).message);
-    }
-  }, [updateBuildingInfoData, updateBuildingInfoError]);
-
-  const handleFloorImageUpdate = (floorId?: number, image?: Blob) => {
-    updateFloorImageRequest({
-      floorId: floorId,
-      image: image,
-    });
-  };
-
-  useEffect(() => {
-    if (updateFloorImageData) {
-      toast.success('도면 수정이 완료되었습니다.');
-      setCurrentPage(1);
-    } else if (updateFloorImageError) {
-      toast.error('수정할 이미지가 등록되지 않았습니다.');
-    }
-  }, [updateFloorImageData, updateFloorImageError]);
+    selectedBuilding,
+    imgPreview,
+    updatedImgList,
+    handleBuildingModifyModal,
+    handleBuildingNumber,
+    handleBuildingName,
+    handleBuildingDescription,
+    handleBuildingUpFloorsCount,
+    handleBuildingDownFloorsCount,
+    handleBuildingXpos,
+    handleBuildingYpos,
+    handleImageChange,
+    handleBuildingInfoUpdateButton,
+    handleFloorImageUpdate,
+    floorImages,
+    updateBuildingInfoLoading,
+  } = useBuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurrentPage });
 
   return (
     <>
@@ -332,41 +147,6 @@ function BuildingModifyModal({ isModalOpen, setIsModalOpen, currentPage, setCurr
                           </FloorItem>
                         ),
                       )}
-                      {/* {Array.from({ length: selectedBuilding.floorsDown || 0 }).map((_, index) => (
-                        <FloorItem key={index}>
-                          <div style={{ color: '#48aaad' }}>{index - (selectedBuilding.floorsDown || 0)}층</div>
-                          <FloorImageUploaderUI
-                            index={index}
-                            imgPreview={imgPreview.slice(0, selectedBuilding.floorsDown)}
-                            onImageChange={handleImageChange}
-                          />
-                          <DefaultButton
-                            onClick={() => handleFloorImageUpdate(floorImages[index].id, updatedImgList![index])}
-                          >
-                            {index - (selectedBuilding.floorsDown || 0)}층 도면 수정하기
-                          </DefaultButton>
-                        </FloorItem>
-                      ))}
-                      {Array.from({ length: selectedBuilding.floorsUp || 0 }).map((_, index) => (
-                        <FloorItem key={index + (buildingDownFloorsCount || 0)}>
-                          <div>{index + 1}층</div>
-                          <FloorImageUploaderUI
-                            index={index + (buildingDownFloorsCount || 0)}
-                            imgPreview={imgPreview}
-                            onImageChange={handleImageChange}
-                          />
-                          <DefaultButton
-                            onClick={() =>
-                              handleFloorImageUpdate(
-                                floorImages[index + (buildingDownFloorsCount || 0)].id,
-                                updatedImgList![index + (buildingDownFloorsCount || 0)],
-                              )
-                            }
-                          >
-                            {index + 1}층 도면 수정하기
-                          </DefaultButton>
-                        </FloorItem>
-                      ))} */}
                     </>
                   ) : (
                     <div>도면이 존재하지 않는 건물입니다.</div>

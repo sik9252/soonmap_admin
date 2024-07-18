@@ -1,8 +1,8 @@
 import { Select } from '@chakra-ui/react';
-import { CategoryDataType } from '../../../api/InfoCategory';
+import { ICategoryData } from '../../../@types/InfoCategory';
 
 interface SelectProps {
-  options: CategoryDataType[];
+  options: ICategoryData[];
   defaultValue?: string;
   handleCategory: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }

@@ -1,77 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import InputUI, { PasswordInputUI } from '../../components/ui/InputUI';
 import { DefaultButton } from '../../components/ui/ButtonUI';
-import toast from 'react-hot-toast';
 import { RegisterPageContainer, PageTitle, ButtonSection } from './style';
-import { useRegisterRequest } from '../../api/Auth';
-import { checkEmailValidate } from '../../utils/checkEmailValidate';
+import useRegister from './useRegister';
 
 function RegisterPage() {
-  const navigate = useNavigate();
-
-  const [show, setShow] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [userName, setUserName] = useState('');
-  const [userId, setUserId] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userPw, setUserPw] = useState('');
-
-  const handleUserNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-  };
-
-  const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserId(e.target.value);
-  };
-
-  const handleUserEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserEmail(e.target.value);
-  };
-
-  const handleUserPwInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserPw(e.target.value);
-  };
-
-  const clickShowPassword = () => {
-    setShow((prevState) => !prevState);
-  };
-
   const {
-    mutate: adminRegisterRequest,
-    data: adminRegisterData,
-    error: adminRegisterError,
-    isLoading: adminRegisterLoading,
-  } = useRegisterRequest();
-
-  const clickRegisterSubmit = () => {
-    const data = {
-      name: userName,
-      userId: userId,
-      email: userEmail,
-      userPw: userPw,
-    };
-
-    if (!userName || !userId || !userEmail || !userPw) {
-      toast.error('모든 입력 칸을 채워주세요.');
-    } else {
-      if (checkEmailValidate(userEmail)) {
-        adminRegisterRequest({ ...data });
-      } else {
-        toast.error('올바른 이메일 주소를 입력해주세요.');
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (adminRegisterData) {
-      toast.success('회원가입이 완료되었습니다.');
-      navigate('/login');
-    } else if (adminRegisterError) {
-      toast.error((adminRegisterError as Error).message);
-    }
-  }, [adminRegisterData, adminRegisterError]);
+    show,
+    handleUserNameInput,
+    handleUserIdInput,
+    handleUserEmailInput,
+    handleUserPwInput,
+    clickShowPassword,
+    clickRegisterSubmit,
+    adminRegisterLoading,
+  } = useRegister();
 
   return (
     <RegisterPageContainer>

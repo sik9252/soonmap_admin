@@ -7,7 +7,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 import toast from 'react-hot-toast';
 import AccordionUI from '../../ui/AccordionUI';
 import { Accordion } from '@chakra-ui/react';
-import { useLogoutRequest } from '../../../api/Auth';
+import { useLogoutRequest } from '../../../api-hooks/Auth';
 
 function SideMenu() {
   const navigate = useNavigate();

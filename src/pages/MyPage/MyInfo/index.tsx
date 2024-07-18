@@ -1,120 +1,28 @@
-import { useState, useEffect, useMemo } from 'react';
-import {
-  MyInfoResponseType,
-  useGetMyInfoRequest,
-  useMyEmailChangeRequest,
-  useMyEmailChangeValidateRequest,
-} from '../../../api/Account';
-import { checkEmailValidate } from '../../../utils/checkEmailValidate';
+import { useMemo } from 'react';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import RightContainer from '../../../components/layout/RightContainer';
-import { toast } from 'react-hot-toast';
 import Timer from '../../../utils/timer';
+import useMyInfo from './useMyInfo';
 
 function MyInfoPage() {
-  const { data: myInfoData, error: myInfoError, refetch: myInfoRefetch } = useGetMyInfoRequest();
-
   const {
-    mutate: myEmailChangeRequest,
-    data: myEmailChangeData,
-    error: myEmailChangeError,
-    isLoading: myEmailChangeLoading,
-  } = useMyEmailChangeRequest();
-
-  const {
-    mutate: myEmailChangeValidateRequest,
-    data: myEmailChangeValidateData,
-    error: myEmailChangeValidateError,
-    isLoading: myEmailChangeValidateLoading,
-  } = useMyEmailChangeValidateRequest();
-
-  const [myInfo, setMyInfo] = useState<MyInfoResponseType>({});
-  const [emailChangeBtnClicked, setEmailChangeBtnClicked] = useState(false);
-  const [isEmailCheckSuccess, setIsEmailCheckSuccess] = useState(false);
-  const [newEmail, setNewEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [isTimeUp, setTimeUp] = useState<boolean>(false);
-
-  const handleNewEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewEmail(e.target.value);
-  };
-
-  const handleCodeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
-  };
-
-  useEffect(() => {
-    if (myInfoData) {
-      setMyInfo(myInfoData.data);
-    } else if (myInfoError) {
-      toast.error((myInfoError as Error).message);
-    }
-  }, [myInfoData, myInfoError]);
-
-  const handleEmailModifyBtn = () => {
-    setEmailChangeBtnClicked((prevState) => !prevState);
-  };
-
-  const handleEmailChangeBtn = () => {
-    const data = {
-      newEmail: newEmail,
-    };
-
-    if (!newEmail || !checkEmailValidate(newEmail)) {
-      toast.error('올바른 이메일 주소를 입력해주세요.');
-    } else {
-      myEmailChangeRequest({ ...data });
-    }
-  };
-
-  const handleEmailChangeValidateBtn = () => {
-    const data = {
-      newEmail: newEmail,
-      code: code,
-    };
-
-    if (!newEmail || !checkEmailValidate(newEmail)) {
-      toast.error('올바른 이메일 주소를 입력해주세요.');
-    } else if (!code) {
-      toast.error('올바른 인증번호를 입력해주세요.');
-    } else {
-      myEmailChangeValidateRequest({ ...data });
-    }
-  };
-
-  useEffect(() => {
-    if (myEmailChangeData) {
-      toast.success('인증번호가 전송되었습니다.');
-      setIsEmailCheckSuccess(true);
-    } else if (myEmailChangeError) {
-      toast.error((myEmailChangeError as Error).message);
-    }
-  }, [myEmailChangeData, myEmailChangeError]);
-
-  useEffect(() => {
-    if (myEmailChangeValidateData) {
-      toast.success('이메일 변경이 완료되었습니다.');
-      setEmailChangeBtnClicked(false);
-      void myInfoRefetch();
-    } else if (myEmailChangeValidateError) {
-      toast.error((myEmailChangeValidateError as Error).message);
-    }
-  }, [myEmailChangeValidateData, myEmailChangeValidateError]);
+    setTimeUp,
+    myInfo,
+    myEmailChangeData,
+    myEmailChangeLoading,
+    isEmailCheckSuccess,
+    myEmailChangeValidateLoading,
+    emailChangeBtnClicked,
+    handleNewEmailInput,
+    handleCodeInput,
+    handleEmailModifyBtn,
+    handleEmailChangeBtn,
+    handleEmailChangeValidateBtn,
+  } = useMyInfo();
 
   const timerComponent = useMemo(() => {
     return <Timer isStart={isEmailCheckSuccess} setTimeUp={setTimeUp} />;
   }, [isEmailCheckSuccess]);
-
-  useEffect(() => {
-    if (isTimeUp) {
-      toast.error('인증번호가 만료되었습니다. 다시 받아주세요.');
-      setIsEmailCheckSuccess(false);
-    }
-
-    setTimeout(() => {
-      setTimeUp(false);
-    }, 500);
-  }, [isTimeUp]);
 
   return (
     <RightContainer title={'내 정보 관리'}>

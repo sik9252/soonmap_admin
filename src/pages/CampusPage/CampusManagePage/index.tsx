@@ -1,54 +1,26 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Table, Thead, Tbody, Tr, Td, Th, TableContainer } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import RightContainer from '../../../components/layout/RightContainer';
 import AlertDialogModal from '../../../components/features/AlertDialogModal';
 import BuildingModifyModal from '../../../components/features/BuildingModifyModal';
 import Pagination from '../../../components/features/Pagination';
-import { useSelectedBuildingAtom } from '../../../store/buildingAtom';
-import toast from 'react-hot-toast';
-import { BuildingDataType, useGetBuildingRequest } from '../../../api/Building';
+import useCampusManage from './useCampusManage';
 
 function CampusManagePage() {
-  const path = useLocation();
-  const [location, setLocation] = useState('');
-  const { selectedBuilding, setSelectedBuilding } = useSelectedBuildingAtom();
-
-  const [buildingList, setBuildingList] = useState<BuildingDataType[] | null>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(1);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const { data: getBuildingResult, isError: getBuildingError } = useGetBuildingRequest({ page: currentPage - 1 });
-
-  useEffect(() => {
-    if (getBuildingResult) {
-      setBuildingList(getBuildingResult?.data.buildingResponseDtoList);
-      setTotalPosts(getBuildingResult?.data.totalPage);
-    } else if (getBuildingError) {
-      toast.error('건물 목록을 불러오는데 실패했습니다.');
-    }
-  }, [getBuildingResult, getBuildingError]);
-
-  const handleAlertDialog = (building: BuildingDataType) => {
-    if (path.pathname === '/campus/manage') {
-      setLocation('건물');
-    }
-
-    setSelectedBuilding(building);
-    setIsAlertOpen(true);
-  };
-
-  const handleBuildingModifyModal = (building: BuildingDataType) => {
-    if (path.pathname === '/campus/manage') {
-      setLocation('건물');
-    }
-
-    setSelectedBuilding(building);
-    setIsModalOpen(true);
-  };
+  const {
+    location,
+    selectedBuilding,
+    currentPage,
+    setCurrentPage,
+    isAlertOpen,
+    setIsAlertOpen,
+    isModalOpen,
+    setIsModalOpen,
+    buildingList,
+    totalPosts,
+    handleAlertDialog,
+    handleBuildingModifyModal,
+  } = useCampusManage();
 
   return (
     <RightContainer title={'건물 및 강의실 관리'}>

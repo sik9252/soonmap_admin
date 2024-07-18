@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
 import InputUI from '../../InputUI';
 import { DefaultButton, CancelButton } from '../../ButtonUI';
-import { useCreateCategoryRequest, useGetCategoryRequest } from '../../../../api/InfoCategory';
+import useCreateCategoryRequest, { useGetCategoryRequest } from '../../../../api-hooks/InfoCategory';
 import toast from 'react-hot-toast';
 
 interface AddModeProps {
@@ -10,7 +10,7 @@ interface AddModeProps {
 }
 
 function AddMode({ setIsAddClick }: AddModeProps) {
-  const { refetch: getCategoryRefetch } = useGetCategoryRequest({
+  const { getCategoryRefetch } = useGetCategoryRequest({
     page: 0,
   });
 
