@@ -6,7 +6,7 @@ import Spinner from '../components/layout/Spinner';
 const HomePage = lazy(() => import('../pages/HomePage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
-const CreateCampusPage = lazy(() => import('../pages/HomePage'));
+const CreateCampusPage = lazy(() => import('../pages/CampusPage/CreateCampusPage'));
 const CampusManagePage = lazy(() => import('../pages/CampusPage/CampusManagePage'));
 const CreateNoticePage = lazy(() => import('../pages/NoticePage/CreateNoticePage'));
 const NoticeManagePage = lazy(() => import('../pages/NoticePage/NoticeManagePage'));
@@ -35,7 +35,7 @@ function Router() {
           <Route element={<Layout />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/campus/*">
-              <Route path="" element={<Navigate replace to="/notice/create" />} />
+              <Route path="" element={<Navigate replace to="/campus/create" />} />
               <Route path="create" element={<CreateCampusPage />} />
               <Route path="manage" element={<CampusManagePage />} />
             </Route>
